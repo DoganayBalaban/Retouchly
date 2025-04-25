@@ -6,7 +6,13 @@ export default async function Home() {
 
   // Protect the route by checking if the user is signed in
   if (!userId) {
-    return <div>Sign in to view this page</div>;
+    return (
+      <div>
+        <div className="flex items-center justify-center mt-15">
+          <h1 className="text-4xl font-extrabold">FOTOĞRAF EDİTÖRÜ</h1>
+        </div>
+      </div>
+    );
   }
 
   // Get the Backend API User object when you need access to the user's information

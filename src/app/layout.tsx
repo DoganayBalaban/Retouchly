@@ -8,6 +8,7 @@ import {
   SignedOut,
   UserButton,
 } from "@clerk/nextjs";
+import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
   title: "Retouchly",
@@ -22,16 +23,8 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body>
-          <header className="flex justify-end items-center p-4 gap-4 h-16">
-            <SignedOut>
-              <SignInButton>Google ile oturum aç</SignInButton>
-              <SignUpButton>Google ile kayıt ol</SignUpButton>
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </header>
+        <body className="">
+          <Navbar />
           {children}
         </body>
       </html>
