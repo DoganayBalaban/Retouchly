@@ -7,7 +7,7 @@ export default function Testimonials() {
       <div className="mx-auto max-w-6xl space-y-8 px-6 md:space-y-16">
         <div className="relative z-10 mx-auto max-w-xl space-y-6 text-center md:space-y-12 text-[#E4E4E4]">
           <h2 className="text-4xl font-medium lg:text-5xl ">
-            AI Görsel Düzenleme ile Yüzbinlerce Kullanıcı Memnun
+            RETOUCHLY ile Yüzbinlerce Kullanıcı Memnun
           </h2>
           <p>
             AI ile fotoğraflarınızı anında düzenleyin ve profesyonel sonuçlar
@@ -39,7 +39,7 @@ export default function Testimonials() {
                   <div>
                     <cite className="text-sm font-medium">Doğanay Balaban</cite>
                     <span className="text-muted-foreground block text-sm">
-                      UX Designer
+                      Developer
                     </span>
                   </div>
                 </div>
