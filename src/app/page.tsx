@@ -1,5 +1,6 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { HeroGeometric } from "@/components/ui/shape-landing-hero";
+import ImageShowcase from "../components/ImageShowcase";
 
 export default async function Home() {
   // Get the userId from auth() -- if null, the user is not signed in
@@ -8,11 +9,16 @@ export default async function Home() {
   // Protect the route by checking if the user is signed in
   if (!userId) {
     return (
-      <div className="flex items-center justify-center ">
-        <HeroGeometric
-          title1="Fotoğrafına Sihirli Dokunuş Yap!"
-          title2="Ücretsiz Dene"
-        />
+      <div className="bg-[#030304]">
+        <div className="w-full ">
+          <HeroGeometric
+            title1="Fotoğrafına Sihirli Dokunuş Yap!"
+            title2="Ücretsiz Dene"
+          />
+        </div>
+        <div className="">
+          <ImageShowcase />
+        </div>
       </div>
     );
   }
