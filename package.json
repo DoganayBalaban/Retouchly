@@ -11,6 +11,7 @@
   "dependencies": {
     "@clerk/nextjs": "^6.18.0",
     "@number-flow/react": "^0.5.9",
+    "@radix-ui/react-avatar": "^1.1.7",
     "@radix-ui/react-slot": "^1.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
