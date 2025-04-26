@@ -9,6 +9,7 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Retouchly",
@@ -26,6 +27,7 @@ export default function RootLayout({
         <body>
           <Navbar />
           {children}
+          <Footer />
         </body>
       </html>
     </ClerkProvider>
