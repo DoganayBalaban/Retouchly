@@ -1,9 +1,11 @@
 "use client";
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
+// Tüm gerekli modülleri doğru şekilde import edin
 import { Autoplay } from "swiper/modules";
-import "swiper/css/autoplay";
+// CSS dosyalarını doğru sırayla import edin
 import "swiper/css";
+import "swiper/css/autoplay";
 import Image from "next/image";
 const ImageShowcase = () => {
   return (
@@ -12,10 +14,15 @@ const ImageShowcase = () => {
         <Swiper
           modules={[Autoplay]}
           spaceBetween={30}
-          slidesPerView={3}
+          slidesPerView={1}
+          breakpoints={{
+            640: { slidesPerView: 2 },
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+          }}
           loop={true}
           autoplay={{
-            delay: 0,
+            delay: 300,
             disableOnInteraction: false,
             pauseOnMouseEnter: false,
           }}
@@ -28,7 +35,7 @@ const ImageShowcase = () => {
               alt="foto1"
               width={350}
               height={350}
-              className="rounded-lg"
+              className="rounded-lg  object-cover"
             />
           </SwiperSlide>
           <SwiperSlide>
@@ -37,7 +44,7 @@ const ImageShowcase = () => {
               alt="foto2"
               width={350}
               height={350}
-              className="rounded-lg"
+              className="rounded-lg  object-cover"
             />
           </SwiperSlide>
           <SwiperSlide>
@@ -46,7 +53,7 @@ const ImageShowcase = () => {
               alt="foto3"
               width={350}
               height={350}
-              className="rounded-lg"
+              className="rounded-lg  object-cover"
             />
           </SwiperSlide>
           <SwiperSlide>
@@ -55,7 +62,7 @@ const ImageShowcase = () => {
               alt="foto4"
               width={350}
               height={350}
-              className="rounded-lg"
+              className="rounded-lg  object-cover"
             />
           </SwiperSlide>
         </Swiper>
