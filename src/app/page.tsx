@@ -1,8 +1,7 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
 import { HeroGeometric } from "@/components/ui/shape-landing-hero";
 import ImageShowcase from "../components/ImageShowcase";
 import Testimonials from "@/components/testimonials";
-export default async function Home() {
+const page = () => {
   const testimonials = [
     {
       author: {
@@ -32,32 +31,23 @@ export default async function Home() {
       text: "Görsellerimi hemen paylaştım, arkadaşlarım şok oldu! Kesinlikle öneriyorum.",
     },
   ];
-  // Get the userId from auth() -- if null, the user is not signed in
-  const { userId } = await auth();
 
-  // Protect the route by checking if the user is signed in
-  if (!userId) {
-    return (
-      <div className="bg-[#030304]">
-        <div className="w-full ">
-          <HeroGeometric
-            title1="Fotoğrafına Sihirli Dokunuş Yap!"
-            title2="Ücretsiz Dene"
-          />
-        </div>
-        <div>
-          <ImageShowcase />
-        </div>
-        <div className="bg-[#030304]">
-          <Testimonials />
-        </div>
+  return (
+    <div className="bg-[#030304]">
+      <div className="w-full ">
+        <HeroGeometric
+          title1="Fotoğrafına Sihirli Dokunuş Yap!"
+          title2="Ücretsiz Dene"
+        />
       </div>
-    );
-  }
+      <div>
+        <ImageShowcase />
+      </div>
+      <div className="bg-[#030304]">
+        <Testimonials />
+      </div>
+    </div>
+  );
+};
 
-  // Get the Backend API User object when you need access to the user's information
-  const user = await currentUser();
-
-  // Use `user` to render user details or create UI elements
-  return <div>Welcome, {user?.firstName}!</div>;
-}
+export default page;
