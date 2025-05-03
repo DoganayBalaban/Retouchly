@@ -12,14 +12,27 @@ import SignInDialog from "./SignInDialog";
 
 const Navbar = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+  // Auth değişimlerini dinle
+  useEffect(() => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    // Cleanup
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
+
+  // İlk mount anında kullanıcıyı kontrol et
   useEffect(() => {
     (async () => {
       const { data, error } = await supabase.auth.getUser();
-      if (!error && data.user) setUser(data.user);
-      setLoading(false);
+      if (!error) setUser(data.user);
     })();
   }, []);
 
@@ -36,7 +49,7 @@ const Navbar = () => {
   return (
     <header className="w-full bg-[#030304] p-2">
       <nav className="flex items-center justify-between p-4 text-white">
-        {/* Logo + Sol Menü */}
+        {/* Sol - Logo + Fiyatlandırma */}
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-4 text-2xl font-thin">
             <Image src="/logo2.png" alt="logo" width={75} height={75} />
@@ -51,16 +64,9 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Sağ Menü */}
+        {/* Sağ - Auth alanı */}
         <div className="flex items-center space-x-4">
-          {!loading && !user && (
-            <>
-              <SignUpDialog />
-              <SignInDialog />
-            </>
-          )}
-
-          {user && (
+          {user ? (
             <button
               onClick={handleLogOut}
               className="p-2 hover:text-red-400 transition"
@@ -68,6 +74,11 @@ const Navbar = () => {
             >
               <LogOut />
             </button>
+          ) : (
+            <>
+              <SignUpDialog />
+              <SignInDialog />
+            </>
           )}
         </div>
       </nav>

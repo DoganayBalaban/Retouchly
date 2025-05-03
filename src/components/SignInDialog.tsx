@@ -1,35 +1,57 @@
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
+  DialogTrigger,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogDescription,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useId, useState } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Loader } from "lucide-react";
+import { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const SignInDialog = () => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
   const handleSignIn = async () => {
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
-    if (error) {
-      console.error("Sign In Error:", error.message);
-    } else {
-      console.log("Sign In Success");
-    }
     setLoading(false);
+
+    if (error) {
+      toast.error("Giriş başarısız!");
+    } else {
+      toast.success("Giriş başarılı!");
+      router.refresh(); // Navbar güncellensin
+      router.push("/dashboard");
+    }
   };
+  const handleGoogleAuth = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+
+    if (error) {
+      toast.error("Google ile oturum açılamadı.");
+      console.error("Google Auth Error:", error.message);
+    }
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -43,11 +65,7 @@ const SignInDialog = () => {
             className="flex size-11 shrink-0 items-center justify-center rounded-full border border-border"
             aria-hidden="true"
           >
-            <img
-              src="/logo2.png"
-              alt="logo"
-              className="h-11 w-11 rounded-full object-cover"
-            />
+            <img src="/logo2.png" alt="logo" />
           </div>
           <DialogHeader>
             <DialogTitle className="sm:text-center">Welcome back</DialogTitle>
@@ -57,50 +75,56 @@ const SignInDialog = () => {
           </DialogHeader>
         </div>
 
-        <form className="space-y-5">
+        <form
+          className="space-y-5"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSignIn();
+          }}
+        >
           <div className="space-y-4">
             <div className="space-y-2">
               <Label>Email</Label>
               <Input
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
-                placeholder="hi@yourcompany.com"
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
             <div className="space-y-2">
               <Label>Password</Label>
               <Input
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
-                placeholder="Enter your password"
                 type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>
           </div>
-          <div className="flex justify-between gap-2">
+
+          <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <Checkbox />
-              <Label className="font-normal text-muted-foreground">
-                Remember me
-              </Label>
+              <Label>Remember me</Label>
             </div>
-            <a className="text-sm underline hover:no-underline" href="#">
+            <a className="text-sm underline" href="#">
               Forgot password?
             </a>
           </div>
-          <Button type="button" className="w-full" onClick={handleSignIn}>
-            Sign in
+
+          <Button type="submit" disabled={loading} className="w-full">
+            {loading ? <Loader className="animate-spin" /> : "Sign In"}
           </Button>
         </form>
 
-        <div className="flex items-center gap-3 before:h-px before:flex-1 before:bg-border after:h-px after:flex-1 after:bg-border">
+        <div className="flex items-center gap-3 before:flex-1 before:h-px before:bg-border after:flex-1 after:h-px after:bg-border">
           <span className="text-xs text-muted-foreground">Or</span>
         </div>
 
-        <Button variant="outline">Login with Google</Button>
+        <Button variant="outline" onClick={handleGoogleAuth}>
+          Login with Google
+        </Button>
       </DialogContent>
     </Dialog>
   );
