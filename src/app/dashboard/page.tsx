@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import ImageUploader from "@/components/ImageUploader";
+import { Loader } from "lucide-react";
 
 export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
@@ -14,9 +16,9 @@ export default function DashboardPage() {
       const { data, error } = await supabase.auth.getUser();
 
       if (error || !data.user) {
-        router.push("/sign-in"); // Giriş yoksa yönlendir
+        router.push("/sign-in");
       } else {
-        setUser(data.user); // Kullanıcı varsa state'e kaydet
+        setUser(data.user);
       }
       setLoading(false);
     }
@@ -25,13 +27,13 @@ export default function DashboardPage() {
   }, [router]);
 
   if (loading) {
-    return <div>Yükleniyor...</div>; // İstersen güzel bir loader koyarsın
+    return <Loader className="animate-spin" />;
   }
 
   return (
-    <div>
-      <h1>Dashboard</h1>
-      <p>Hoş geldin, {user?.email}</p>
+    <div className="max-w-xl mx-auto mt-10">
+      <h1 className="text-xl font-bold mb-4">Görsel Yükle</h1>
+      <ImageUploader />
     </div>
   );
 }

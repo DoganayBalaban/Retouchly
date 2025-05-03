@@ -19,6 +19,7 @@ export default function page() {
     });
     if (error) console.error("Sign In Error:", error.message);
     else console.log("Sign In Success:", data);
+    router.push("/dashboard");
   };
 
   const handleSignInWithGoogle = async () => {

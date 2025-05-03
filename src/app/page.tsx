@@ -1,7 +1,28 @@
+"use client";
 import { HeroGeometric } from "@/components/ui/shape-landing-hero";
 import ImageShowcase from "../components/ImageShowcase";
 import Testimonials from "@/components/testimonials";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 const page = () => {
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
+  const router = useRouter();
+  useEffect(() => {
+    async function checkUser() {
+      const { data, error } = await supabase.auth.getUser();
+
+      if (error || !data.user) {
+        console.error(error);
+      } else {
+        setUser(data.user);
+      }
+      setLoading(false);
+    }
+
+    checkUser();
+  }, [router]);
   const testimonials = [
     {
       author: {

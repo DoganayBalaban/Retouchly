@@ -120,8 +120,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-html,
-body {
-  background-color: #030304; /* istediğin bir renk */
-}
