@@ -9,6 +9,7 @@ import { supabase } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
 import SignUpDialog from "./SignUpDialog";
 import SignInDialog from "./SignInDialog";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -41,6 +42,7 @@ const Navbar = () => {
     if (error) {
       console.error("Log Out Error:", error.message);
     } else {
+      toast.success("Başarıyla çıkış yapıldı.");
       setUser(null);
       router.push("/");
     }
@@ -62,6 +64,14 @@ const Navbar = () => {
           >
             Fiyatlandırma
           </Link>
+          {user && (
+            <Link
+              href="/dashboard"
+              className="rounded-4xl p-4 text-xl transition duration-300 hover:bg-gray-700"
+            >
+              Getting started
+            </Link>
+          )}
         </div>
 
         {/* Sağ - Auth alanı */}

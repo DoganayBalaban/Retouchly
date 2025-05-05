@@ -42,9 +42,7 @@ const SignUpDialog = () => {
       toast.error("Kayıt sırasında hata oluştu.");
       console.error("Sign Up Error:", error.message);
     } else {
-      toast.success("Kayıt başarılı! Giriş yapılıyor...");
-      router.refresh(); // navbar güncellesin
-      router.push("/dashboard");
+      toast.success("Kayıt başarılı! Mailinizi kontrol edin.");
     }
   };
 
