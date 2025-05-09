@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -8,30 +9,22 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Image from "next/image";
-const images = [
-  {
-    src: "/showcase1.png",
-    alt: "foto",
-  },
-  {
-    src: "/showcase2.png",
-    alt: "foto",
-  },
-  {
-    src: "/showcase3.png",
-    alt: "foto",
-  },
-  {
-    src: "/showcase4.png",
-    alt: "foto",
-  },
-];
+import useGeneratedStore from "@/store/useGeneratedStore";
+import { Loader } from "lucide-react";
+
 const GeneratedImages = () => {
+  const { images, loading } = useGeneratedStore();
   if (images.length === 0) {
     return (
       <Card className="w-full max-w-2xl bg-muted">
         <CardContent className="flex aspect-square items-center justify-center p-6">
-          <p className="text-2xl">Henüz oluşturulmuş bir görsel yok.</p>
+          <p className="text-2xl">
+            {loading ? (
+              <Loader className="animate-spin" />
+            ) : (
+              "Görsel üretmek için prompt giriniz."
+            )}
+          </p>
         </CardContent>
       </Card>
     );
@@ -40,13 +33,13 @@ const GeneratedImages = () => {
     <Carousel className="w-full max-w-2xl">
       <CarouselContent>
         {images.map((image, index) => (
-          <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+          <CarouselItem key={index} className="">
             <div className="flex items-center justify-center rounded-lg overflow-hidden">
               <Image
-                src={image.src}
-                alt={image.alt}
-                width={512}
-                height={512}
+                src={image.url}
+                alt={"generated image"}
+                width={1024}
+                height={1024}
                 className="object-cover w-full h-full"
               />
             </div>

@@ -35,7 +35,7 @@ const SignInDialog = () => {
     } else {
       toast.success("Giriş başarılı!");
       router.refresh(); // Navbar güncellensin
-      router.push("/dashboard");
+      router.push("/");
     }
   };
   const handleGoogleAuth = async () => {

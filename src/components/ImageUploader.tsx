@@ -4,8 +4,10 @@ import { useDropzone } from "react-dropzone";
 import { useState, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { ImagePlus, Loader } from "lucide-react";
+import useGeneratedStore from "@/store/useGeneratedStore";
 
 export default function ImageUploader() {
+  const { removeBackground, bgImages } = useGeneratedStore();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
   const [uploadedPath, setUploadedPath] = useState<string | null>(null);
@@ -83,35 +85,10 @@ export default function ImageUploader() {
     setPreviewUrl(null);
     setAiImageUrl(null);
   };
-
-  const matchColors = async () => {
+  const handleRemoveBackground = async () => {
     if (!uploadedUrl) return alert("Görsel yüklenmeden işlem yapılamaz.");
-    setLoading(true);
 
-    try {
-      const res = await fetch("/api/color-matcher", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ inputImage: uploadedUrl }),
-      });
-
-      const data = await res.json();
-      console.log("Color Matcher:", data);
-
-      const output = data.output;
-
-      // ✅ burada artık object içinden url alınmalı
-      if (typeof output === "object" && typeof output.url === "string") {
-        setAiImageUrl(output.url);
-      } else {
-        console.warn("Beklenmeyen çıktı:", output);
-        alert("AI çıktı alınamadı.");
-      }
-    } catch (err) {
-      alert("AI çağrısı başarısız.");
-    } finally {
-      setLoading(false);
-    }
+    await removeBackground({ image: uploadedUrl });
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -157,7 +134,7 @@ export default function ImageUploader() {
         )}
 
         <button
-          onClick={matchColors}
+          onClick={handleRemoveBackground}
           className="bg-blue-600 text-white px-4 py-2 w-full rounded"
         >
           Renk Uyumu Uygula (AI)
@@ -170,11 +147,13 @@ export default function ImageUploader() {
         {aiImageUrl && (
           <>
             <p className="text-sm text-gray-500">AI Sonucu:</p>
-            <img
-              src={aiImageUrl}
-              alt="AI Output"
-              className="max-w-xs rounded border"
-            />
+            {bgImages.map((image) => (
+              <img
+                src={image.url}
+                alt="AI Output"
+                className="max-w-xs rounded border"
+              />
+            ))}
           </>
         )}
       </div>

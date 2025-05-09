@@ -20,7 +20,6 @@ export default function RootLayout({
         <Navbar />
         <main className="flex-grow">
           {children}
-
           <Toaster
             position="top-right"
             toastOptions={{

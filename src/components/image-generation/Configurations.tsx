@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -30,20 +30,25 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "../ui/textarea";
 import { Info } from "lucide-react";
+import { generateImages } from "@/app/actions/image-actions";
+import useGeneratedStore from "@/store/useGeneratedStore";
+import { supabase } from "@/lib/supabase";
+import type { User } from "@supabase/supabase-js";
+import SignUpDialog from "../SignUpDialog";
+import SignInDialog from "../SignInDialog";
 
-const formSchema = z.object({
-  model: z.string({ required_error: "Model seçiniz" }),
+export const imageFormSchema = z.object({
   prompt: z.string({ required_error: "Prompt giriniz" }),
   guidance: z
-    .number({ invalid_type_error: "Guidance Scale sayı olmalı" })
+    .number({ invalid_type_error: "Yönlendirme değeri sayı olmalı" })
     .min(1)
-    .max(100),
+    .max(10),
   num_outputs: z
     .number({ invalid_type_error: "Sayı giriniz" })
     .min(1, { message: "En az 1 çıktı olmalı" })
     .max(4, { message: "Maksimum 4 çıktı olabilir" }),
-  aspect_ratio: z.string({ required_error: "Aspect Ratio seçiniz" }),
-  output_format: z.string({ required_error: "Output Format seçiniz" }),
+  aspect_ratio: z.string({ required_error: "En-boy oranı seçiniz" }),
+  output_format: z.string({ required_error: "Çıktı formatı seçiniz" }),
   output_quality: z
     .number({ invalid_type_error: "Kalite sayı olmalı" })
     .min(1)
@@ -55,12 +60,30 @@ const formSchema = z.object({
 });
 
 const Configurations = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const [user, setUser] = useState<User | null>(null);
+  useEffect(() => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const { data, error } = await supabase.auth.getUser();
+      if (!error) setUser(data.user);
+    })();
+  }, []);
+  const { generateImages } = useGeneratedStore();
+  const form = useForm<z.infer<typeof imageFormSchema>>({
+    resolver: zodResolver(imageFormSchema),
     defaultValues: {
-      model: "black-forest-labs/flux-dev",
       prompt: "",
-      guidance: 50,
+      guidance: 5,
       num_outputs: 1,
       aspect_ratio: "1:1",
       output_format: "jpg",
@@ -69,8 +92,8 @@ const Configurations = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof imageFormSchema>) {
+    await generateImages(values);
   }
 
   const renderLabelWithTooltip = (label: string, tooltipText: string) => (
@@ -88,250 +111,231 @@ const Configurations = () => {
   );
 
   return (
-    <TooltipProvider>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <fieldset className="grid gap-6 p-4 bg-background rounded-lg border">
-            <legend className="text-2xl font-bold">Ayarlar</legend>
+    <div className="flex flex-col">
+      <TooltipProvider>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <fieldset className="grid gap-6 p-4 bg-background rounded-lg border">
+              <legend className="text-2xl font-bold">Görsel Ayarları</legend>
 
-            <FormField
-              control={form.control}
-              name="model"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    {renderLabelWithTooltip(
-                      "Model",
-                      "Kullanılacak yapay zeka modelini seçin."
-                    )}
-                  </FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Model seçiniz" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="black-forest-labs/flux-dev">
-                        Flux Dev
-                      </SelectItem>
-                      <SelectItem value="black-forest-labs/flux-schnell">
-                        Flux Schnell
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="aspect_ratio"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {renderLabelWithTooltip(
+                          "En-Boy Oranı",
+                          "Görselin en-boy oranını belirler."
+                        )}
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Seçiniz" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {[
+                            "1:1",
+                            "16:9",
+                            "9:16",
+                            "21:9",
+                            "9:21",
+                            "4:5",
+                            "5:4",
+                            "4:3",
+                            "3:4",
+                            "2:3",
+                          ].map((ratio) => (
+                            <SelectItem key={ratio} value={ratio}>
+                              {ratio}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="aspect_ratio"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      {renderLabelWithTooltip(
-                        "Aspect Ratio",
-                        "Görselin en-boy oranını belirler."
-                      )}
-                    </FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                <FormField
+                  control={form.control}
+                  name="num_outputs"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {renderLabelWithTooltip(
+                          "Görsel Sayısı",
+                          "Üretilmesini istediğiniz görsel sayısı."
+                        )}
+                      </FormLabel>
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Seçiniz" />
-                        </SelectTrigger>
+                        <Input
+                          type="number"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value))
+                          }
+                        />
                       </FormControl>
-                      <SelectContent>
-                        {[
-                          "1:1",
-                          "16:9",
-                          "9:16",
-                          "21:9",
-                          "9:21",
-                          "4:5",
-                          "5:4",
-                          "4:3",
-                          "3:4",
-                          "2:3",
-                        ].map((ratio) => (
-                          <SelectItem key={ratio} value={ratio}>
-                            {ratio}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="num_outputs"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      {renderLabelWithTooltip(
-                        "Number of Outputs",
-                        "Üretilmesini istediğiniz görsel sayısı."
-                      )}
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="guidance"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center justify-between">
-                      {renderLabelWithTooltip(
-                        "Guidance",
-                        "Modelin prompt'a ne kadar sadık kalacağını belirler."
-                      )}
-                      <span>{field.value}</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Slider
-                        value={[field.value]}
-                        min={0}
-                        max={100}
-                        step={1}
-                        onValueChange={(value) => field.onChange(value[0])}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="num_inference_steps"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center justify-between">
-                      {renderLabelWithTooltip(
-                        "Inference Steps",
-                        "Modelin çıktıyı üretmek için kaç adım kullanacağını belirler."
-                      )}
-                      <span>{field.value}</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Slider
-                        value={[field.value]}
-                        min={1}
-                        max={50}
-                        step={1}
-                        onValueChange={(value) => field.onChange(value[0])}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="output_quality"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center justify-between">
-                      {renderLabelWithTooltip(
-                        "Output Quality",
-                        "Görselin kalite seviyesini belirler (1-100)."
-                      )}
-                      <span>{field.value}</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Slider
-                        value={[field.value]}
-                        min={50}
-                        max={100}
-                        step={1}
-                        onValueChange={(value) => field.onChange(value[0])}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="output_format"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      {renderLabelWithTooltip(
-                        "Output Format",
-                        "Çıktı görselinin dosya formatı."
-                      )}
-                    </FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                <FormField
+                  control={form.control}
+                  name="guidance"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center justify-between">
+                        {renderLabelWithTooltip(
+                          "Yönlendirme",
+                          "Modelin komuta ne kadar sadık kalacağını belirler."
+                        )}
+                        <span>{field.value}</span>
+                      </FormLabel>
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Format seçiniz" />
-                        </SelectTrigger>
+                        <Slider
+                          value={[field.value]}
+                          min={1}
+                          max={10}
+                          step={1}
+                          onValueChange={(value) => field.onChange(value[0])}
+                        />
                       </FormControl>
-                      <SelectContent>
-                        {["jpg", "png", "webp"].map((format) => (
-                          <SelectItem key={format} value={format}>
-                            {format}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="prompt"
-                render={({ field }) => (
-                  <FormItem className="col-span-2">
-                    <FormLabel>
-                      {renderLabelWithTooltip(
-                        "Prompt",
-                        "Modelin görsel üretmesi için kullanacağı metin."
-                      )}
-                    </FormLabel>
-                    <FormControl>
-                      <Textarea {...field} rows={6} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+                <FormField
+                  control={form.control}
+                  name="num_inference_steps"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center justify-between">
+                        {renderLabelWithTooltip(
+                          "Üretim Adımı Sayısı",
+                          "Modelin görseli üretmek için kaç adım kullanacağını belirler."
+                        )}
+                        <span>{field.value}</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Slider
+                          value={[field.value]}
+                          min={1}
+                          max={50}
+                          step={1}
+                          onValueChange={(value) => field.onChange(value[0])}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <Button type="submit">Generate</Button>
-          </fieldset>
-        </form>
-      </Form>
-    </TooltipProvider>
+                <FormField
+                  control={form.control}
+                  name="output_quality"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center justify-between">
+                        {renderLabelWithTooltip(
+                          "Görsel Kalitesi",
+                          "Çıktı görselinin kalite düzeyi (1–100)."
+                        )}
+                        <span>{field.value}</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Slider
+                          value={[field.value]}
+                          min={50}
+                          max={100}
+                          step={1}
+                          onValueChange={(value) => field.onChange(value[0])}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="output_format"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {renderLabelWithTooltip(
+                          "Çıktı Formatı",
+                          "Görselin dosya formatını seçin."
+                        )}
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Format seçiniz" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {["jpg", "png", "webp"].map((format) => (
+                            <SelectItem key={format} value={format}>
+                              {format}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="prompt"
+                  render={({ field }) => (
+                    <FormItem className="col-span-2">
+                      <FormLabel>
+                        {renderLabelWithTooltip(
+                          "Komut (Prompt)",
+                          "Modelin görsel üretmesi için kullanacağı metin komutu."
+                        )}
+                      </FormLabel>
+                      <FormControl>
+                        <Textarea {...field} rows={6} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </fieldset>
+          </form>
+        </Form>
+        <div className="mt-4">
+          {user ? (
+            <Button
+              type="submit"
+              onClick={form.handleSubmit(onSubmit)}
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+            >
+              Görseli Üret
+            </Button>
+          ) : (
+            <SignInDialog />
+          )}
+        </div>
+      </TooltipProvider>
+    </div>
   );
 };
 

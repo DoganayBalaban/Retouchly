@@ -10,26 +10,30 @@ import type { User } from "@supabase/supabase-js";
 import SignUpDialog from "./SignUpDialog";
 import SignInDialog from "./SignInDialog";
 import toast from "react-hot-toast";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
 
 const Navbar = () => {
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
-  // Auth değişimlerini dinle
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setUser(session?.user ?? null);
       }
     );
-
-    // Cleanup
     return () => {
       authListener.subscription.unsubscribe();
     };
   }, []);
 
-  // İlk mount anında kullanıcıyı kontrol et
   useEffect(() => {
     (async () => {
       const { data, error } = await supabase.auth.getUser();
@@ -49,37 +53,60 @@ const Navbar = () => {
   };
 
   return (
-    <header className="w-full bg-[#030304] p-2">
-      <nav className="flex items-center justify-between p-4 text-white">
-        {/* Sol - Logo + Fiyatlandırma */}
-        <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-4 text-2xl font-thin">
-            <Image src="/logo2.png" alt="logo" width={75} height={75} />
-            <h1 className="text-3xl font-bold tracking-wider">RETOUCHLY</h1>
+    <header className="w-full bg-black px-6 py-3">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between text-white">
+        {/* Sol: Logo + Linkler */}
+        <div className="flex items-center gap-8">
+          <Link href="/" className="flex items-center gap-3">
+            <Image src="/logo2.png" alt="logo" width={40} height={40} />
+            <span className="text-2xl font-bold">RETOUCHLY</span>
           </Link>
 
           <Link
             href="/pricing"
-            className="rounded-4xl p-4 text-xl transition duration-300 hover:bg-gray-700"
+            className="text-white text-base hover:bg-[#1A1A1A] p-3 rounded-xl"
           >
             Fiyatlandırma
           </Link>
-          {user && (
-            <Link
-              href="/dashboard"
-              className="rounded-4xl p-4 text-xl transition duration-300 hover:bg-gray-700"
-            >
-              Getting started
-            </Link>
-          )}
+
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="text-base bg-black">
+                  Araçlar
+                </NavigationMenuTrigger>
+                <NavigationMenuContent className="bg-white text-black p-4 rounded shadow-md ">
+                  <ul className="grid gap-3 w-full">
+                    <li>
+                      <NavigationMenuLink asChild>
+                        <Link href="/image-generation">Görsel Üretici</Link>
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink asChild>
+                        <Link href="/image-editor">Görsel Düzenleyici</Link>
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink asChild>
+                        <Link href="/background-remover">
+                          Arka Plan Temizleyici
+                        </Link>
+                      </NavigationMenuLink>
+                    </li>
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
         </div>
 
-        {/* Sağ - Auth alanı */}
-        <div className="flex items-center space-x-4">
+        {/* Sağ: Auth */}
+        <div className="flex items-center gap-2">
           {user ? (
             <button
               onClick={handleLogOut}
-              className="p-2 hover:text-red-400 transition"
+              className="p-2 text-white transition hover:text-red-400"
               title="Çıkış Yap"
             >
               <LogOut />
