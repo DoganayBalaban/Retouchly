@@ -5,15 +5,12 @@ import { useState, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { ImagePlus, Loader } from "lucide-react";
 import useGeneratedStore from "@/store/useGeneratedStore";
-import RemovedBackgrounds from "./RemovedBackgrounds";
 
 export default function ImageUploader() {
-  const { removeBackground } = useGeneratedStore();
+  const { faceRestoration } = useGeneratedStore();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
   const [uploadedPath, setUploadedPath] = useState<string | null>(null);
-  const [aiImageUrl, setAiImageUrl] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
 
   const resizeImage = (file: File, maxSize = 512): Promise<Blob> => {
     return new Promise((resolve, reject) => {
@@ -54,7 +51,6 @@ export default function ImageUploader() {
     const file = acceptedFiles[0];
     if (!file) return;
 
-    setLoading(true);
     try {
       const resized = await resizeImage(file);
       const preview = URL.createObjectURL(resized);
@@ -73,7 +69,6 @@ export default function ImageUploader() {
     } catch (err) {
       alert("Hata: " + err);
     } finally {
-      setLoading(false);
     }
   }, []);
 
@@ -84,12 +79,11 @@ export default function ImageUploader() {
     setUploadedUrl(null);
     setUploadedPath(null);
     setPreviewUrl(null);
-    setAiImageUrl(null);
   };
-  const handleRemoveBackground = async () => {
+  const handleFaceRestoration = async () => {
     if (!uploadedUrl) return alert("Görsel yüklenmeden işlem yapılamaz.");
 
-    await removeBackground({ image: uploadedUrl });
+    await faceRestoration({ image: uploadedUrl });
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -135,10 +129,10 @@ export default function ImageUploader() {
         )}
 
         <button
-          onClick={handleRemoveBackground}
+          onClick={handleFaceRestoration}
           className="bg-blue-600 text-white px-4 py-2 w-full rounded"
         >
-          Arka Planı Kaldır
+          <span>Yüz Restorasyonu Başlat</span>
         </button>
       </div>
     </div>

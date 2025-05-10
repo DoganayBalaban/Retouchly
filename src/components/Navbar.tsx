@@ -84,7 +84,7 @@ const Navbar = () => {
                     </li>
                     <li>
                       <NavigationMenuLink asChild>
-                        <Link href="/image-editor">Yüz İyileştirme</Link>
+                        <Link href="/face-restoration">Yüz İyileştirme</Link>
                       </NavigationMenuLink>
                     </li>
                     <li>
