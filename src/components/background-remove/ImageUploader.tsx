@@ -5,15 +5,12 @@ import { useState, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { ImagePlus, Loader } from "lucide-react";
 import useGeneratedStore from "@/store/useGeneratedStore";
-import RemovedBackgrounds from "./RemovedBackgrounds";
 
 export default function ImageUploader() {
   const { removeBackground } = useGeneratedStore();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
   const [uploadedPath, setUploadedPath] = useState<string | null>(null);
-  const [aiImageUrl, setAiImageUrl] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
 
   const resizeImage = (file: File, maxSize = 512): Promise<Blob> => {
     return new Promise((resolve, reject) => {
@@ -84,7 +81,6 @@ export default function ImageUploader() {
     setUploadedUrl(null);
     setUploadedPath(null);
     setPreviewUrl(null);
-    setAiImageUrl(null);
   };
   const handleRemoveBackground = async () => {
     if (!uploadedUrl) return alert("Görsel yüklenmeden işlem yapılamaz.");
