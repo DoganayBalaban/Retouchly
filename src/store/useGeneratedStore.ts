@@ -6,7 +6,7 @@ import { removeBackground } from '@/app/actions/background-actions';
 interface GeneratedStore {
     loading: boolean;
     images: Array<{url: string}>;
-    bgImages: Array<{url: string}>;
+    bgImage: string | null;
     error: string | null;
     generateImages: (values: z.infer<typeof imageFormSchema>) => Promise<void>;
     removeBackground: (input: {image:string}) => Promise<void>;
@@ -14,7 +14,7 @@ interface GeneratedStore {
 const useGeneratedStore = create<GeneratedStore>((set) => ({
     loading: false,
     images: [],
-    bgImages: [],
+    bgImage: null,
     error: null,
     generateImages: async (values: z.infer<typeof imageFormSchema>) => {
         set({ loading: true, error: null });
@@ -41,16 +41,13 @@ const useGeneratedStore = create<GeneratedStore>((set) => ({
         set({ loading: true, error: null });
         try {
             const {error, success, data} = await removeBackground(input);
+            console.log("removeBackground", data);
             if (!success) {
                 set({ loading: false, error });
                 return
             }
-            const dataWithUrl = data.map((url: string) => {
-                return {
-                    url
-                }
-        })
-            set({ loading: false, bgImages: dataWithUrl });
+            
+            set({ loading: false, bgImage: data });
         } catch (error) {
             console.error("Replicate API Hatası:", error);
             set({ loading: false, error: (error as Error).message });

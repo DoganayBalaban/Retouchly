@@ -5,9 +5,10 @@ import { useState, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { ImagePlus, Loader } from "lucide-react";
 import useGeneratedStore from "@/store/useGeneratedStore";
+import RemovedBackgrounds from "./RemovedBackgrounds";
 
 export default function ImageUploader() {
-  const { removeBackground, bgImages } = useGeneratedStore();
+  const { removeBackground } = useGeneratedStore();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
   const [uploadedPath, setUploadedPath] = useState<string | null>(null);
@@ -139,23 +140,6 @@ export default function ImageUploader() {
         >
           Renk Uyumu Uygula (AI)
         </button>
-      </div>
-
-      {/* Sağ */}
-      <div className="flex-1 flex flex-col items-center justify-center space-y-4">
-        {loading && <Loader className="animate-spin text-blue-500 size-8" />}
-        {aiImageUrl && (
-          <>
-            <p className="text-sm text-gray-500">AI Sonucu:</p>
-            {bgImages.map((image) => (
-              <img
-                src={image.url}
-                alt="AI Output"
-                className="max-w-xs rounded border"
-              />
-            ))}
-          </>
-        )}
       </div>
     </div>
   );

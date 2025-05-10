@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import ImageUploader from "@/components/ImageUploader";
+import ImageUploader from "@/components/background-remove/ImageUploader";
 import { Loader } from "lucide-react";
 
 export default function DashboardPage() {

@@ -1,12 +1,14 @@
-import ImageUploader from "@/components/ImageUploader";
+"use client";
+import ImageUploader from "@/components/background-remove/ImageUploader";
+import RemovedBackgrounds from "@/components/background-remove/RemovedBackgrounds";
 import React from "react";
 
 const BackgroundRemover = () => {
   return (
     <div>
-      <div className="max-w-xl mx-auto mt-10">
-        <h1 className="text-xl font-bold mb-4">Görsel Yükle</h1>
+      <div className="flex justify-center items-center">
         <ImageUploader />
+        <RemovedBackgrounds />
       </div>
     </div>
   );
