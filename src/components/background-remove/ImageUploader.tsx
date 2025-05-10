@@ -5,6 +5,7 @@ import { useState, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { ImagePlus, Loader } from "lucide-react";
 import useGeneratedStore from "@/store/useGeneratedStore";
+import toast from "react-hot-toast";
 
 export default function ImageUploader() {
   const { removeBackground } = useGeneratedStore();
@@ -46,12 +47,10 @@ export default function ImageUploader() {
       image.onerror = () => reject("Görsel yüklenemedi.");
     });
   };
-
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (!file) return;
 
-    setLoading(true);
     try {
       const resized = await resizeImage(file);
       const preview = URL.createObjectURL(resized);
@@ -67,17 +66,18 @@ export default function ImageUploader() {
       const { data } = supabase.storage.from("images").getPublicUrl(fileName);
       setUploadedUrl(data.publicUrl);
       setUploadedPath(fileName);
+      toast.success("Görsel yüklendi.");
     } catch (err) {
       alert("Hata: " + err);
+      toast.error("Görsel yüklenirken hata oluştu.");
     } finally {
-      setLoading(false);
     }
   }, []);
-
   const handleCancel = async () => {
     if (uploadedPath) {
       await supabase.storage.from("images").remove([uploadedPath]);
     }
+    toast.success("Görsel silindi.");
     setUploadedUrl(null);
     setUploadedPath(null);
     setPreviewUrl(null);
@@ -85,9 +85,14 @@ export default function ImageUploader() {
   const handleRemoveBackground = async () => {
     if (!uploadedUrl) return alert("Görsel yüklenmeden işlem yapılamaz.");
 
-    await removeBackground({ image: uploadedUrl });
+    try {
+      await removeBackground({ image: uploadedUrl });
+      toast.success("Arka plan kaldırılıyor...");
+    } catch (error) {
+      console.error("Hata:", error);
+      toast.error("Arka plan kaldırılırken hata oluştu.");
+    }
   };
-
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: { "image/*": [] },

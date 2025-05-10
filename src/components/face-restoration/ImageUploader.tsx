@@ -5,6 +5,7 @@ import { useState, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { ImagePlus, Loader } from "lucide-react";
 import useGeneratedStore from "@/store/useGeneratedStore";
+import toast from "react-hot-toast";
 
 export default function ImageUploader() {
   const { faceRestoration } = useGeneratedStore();
@@ -46,7 +47,6 @@ export default function ImageUploader() {
       image.onerror = () => reject("Görsel yüklenemedi.");
     });
   };
-
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (!file) return;
@@ -66,12 +66,12 @@ export default function ImageUploader() {
       const { data } = supabase.storage.from("images").getPublicUrl(fileName);
       setUploadedUrl(data.publicUrl);
       setUploadedPath(fileName);
+      toast.success("Görsel yüklendi.");
     } catch (err) {
       alert("Hata: " + err);
     } finally {
     }
   }, []);
-
   const handleCancel = async () => {
     if (uploadedPath) {
       await supabase.storage.from("images").remove([uploadedPath]);
@@ -79,11 +79,18 @@ export default function ImageUploader() {
     setUploadedUrl(null);
     setUploadedPath(null);
     setPreviewUrl(null);
+    toast.success("Görsel silindi.");
   };
   const handleFaceRestoration = async () => {
     if (!uploadedUrl) return alert("Görsel yüklenmeden işlem yapılamaz.");
 
-    await faceRestoration({ image: uploadedUrl });
+    try {
+      await faceRestoration({ image: uploadedUrl });
+      toast.success("Yüz restorasyonu başlatıldı.");
+    } catch (error) {
+      console.error("Yüz restorasyonu hatası:", error);
+      toast.error("Yüz restorasyonu sırasında hata oluştu.");
+    }
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
