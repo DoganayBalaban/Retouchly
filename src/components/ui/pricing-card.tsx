@@ -1,33 +1,33 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { BadgeCheck, ArrowRight } from "lucide-react"
-import NumberFlow from "@number-flow/react"
+import * as React from "react";
+import { BadgeCheck, ArrowRight } from "lucide-react";
+import NumberFlow from "@number-flow/react";
 
-import { cn } from "@/lib/utils"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
+import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 export interface PricingTier {
-  name: string
-  price: Record<string, number | string>
-  description: string
-  features: string[]
-  cta: string
-  highlighted?: boolean
-  popular?: boolean
+  name: string;
+  price: Record<string, number | string>;
+  description: string;
+  features: string[];
+  cta: string;
+  highlighted?: boolean;
+  popular?: boolean;
 }
 
 interface PricingCardProps {
-  tier: PricingTier
-  paymentFrequency: string
+  tier: PricingTier;
+  paymentFrequency: string;
 }
 
 export function PricingCard({ tier, paymentFrequency }: PricingCardProps) {
-  const price = tier.price[paymentFrequency]
-  const isHighlighted = tier.highlighted
-  const isPopular = tier.popular
+  const price = tier.price[paymentFrequency];
+  const isHighlighted = tier.highlighted;
+  const isPopular = tier.popular;
 
   return (
     <Card
@@ -46,7 +46,7 @@ export function PricingCard({ tier, paymentFrequency }: PricingCardProps) {
         {tier.name}
         {isPopular && (
           <Badge variant="secondary" className="mt-1 z-10">
-            🔥 Most Popular
+            🔥 Popüler
           </Badge>
         )}
       </h2>
@@ -57,7 +57,7 @@ export function PricingCard({ tier, paymentFrequency }: PricingCardProps) {
             <NumberFlow
               format={{
                 style: "currency",
-                currency: "USD",
+                currency: "TRY",
                 trailingZeroDisplay: "stripIfInteger",
               }}
               value={price}
@@ -98,13 +98,13 @@ export function PricingCard({ tier, paymentFrequency }: PricingCardProps) {
         <ArrowRight className="ml-2 h-4 w-4" />
       </Button>
     </Card>
-  )
+  );
 }
 
 const HighlightedBackground = () => (
   <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:45px_45px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
-)
+);
 
 const PopularBackground = () => (
   <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.1),rgba(255,255,255,0))]" />
-)
+);

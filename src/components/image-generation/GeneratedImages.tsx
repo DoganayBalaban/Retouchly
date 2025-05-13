@@ -16,7 +16,7 @@ const GeneratedImages = () => {
   const { images, loading } = useGeneratedStore();
   if (images.length === 0) {
     return (
-      <Card className="w-full max-w-2xl bg-muted">
+      <Card className="w-full max-w-2xl bg-muted m-5 ">
         <CardContent className="flex aspect-square items-center justify-center p-6">
           <p className="text-2xl">
             {loading ? (

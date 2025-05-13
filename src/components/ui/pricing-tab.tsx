@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { motion } from "framer-motion"
+import * as React from "react";
+import { motion } from "framer-motion";
 
-import { cn } from "@/lib/utils"
-import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 interface TabProps {
-  text: string
-  selected: boolean
-  setSelected: (text: string) => void
-  discount?: boolean
+  text: string;
+  selected: boolean;
+  setSelected: (text: string) => void;
+  discount?: boolean;
 }
 
 export function Tab({
@@ -44,9 +44,9 @@ export function Tab({
             selected && "bg-muted"
           )}
         >
-          Save 35%
+          35% indirim
         </Badge>
       )}
     </button>
-  )
+  );
 }

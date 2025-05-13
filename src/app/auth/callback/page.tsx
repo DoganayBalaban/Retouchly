@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import toast from "react-hot-toast";
+import { Loader } from "lucide-react";
 
 export default function AuthCallbackPage() {
   const router = useRouter();
@@ -19,7 +20,7 @@ export default function AuthCallbackPage() {
       } else {
         toast.success("Giriş başarılı!");
         router.refresh(); // Navbar güncellensin
-        router.push("/dashboard");
+        router.push("/");
       }
     };
 
@@ -27,6 +28,8 @@ export default function AuthCallbackPage() {
   }, [router]);
 
   return (
-    <p className="text-center mt-10">Giriş yapılıyor, lütfen bekleyin...</p>
+    <div className="flex items-center justify-center h-screen">
+      <Loader className="animate-spin w-12 h-12 flex items-center justify-center text-center" />
+    </div>
   );
 }

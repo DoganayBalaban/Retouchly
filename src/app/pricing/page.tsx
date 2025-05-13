@@ -5,68 +5,68 @@ export const PAYMENT_FREQUENCIES = ["monthly", "yearly"];
 export const TIERS = [
   {
     id: "free",
-    name: "Free",
+    name: "Ücretsiz",
     price: {
-      monthly: "Free",
-      yearly: "Free",
+      monthly: "Ücretsiz",
+      yearly: "Ücretsiz",
     },
-    description: "Try before you buy",
+    description: "Satın almadan önce deneyin",
     features: [
-      "3 AI conversions per day",
-      "Standard AI model",
-      "Limited styles",
-      "Watermarked output",
+      "Günde 3 yapay zeka dönüşümü",
+      "Standart yapay zeka modeli",
+      "Sınırlı stiller",
+      "Filigranlı çıktı",
     ],
-    cta: "Start for Free",
+    cta: "Ücretsiz Başla",
   },
   {
     id: "basic-plus",
     name: "Basic Plus",
     price: {
-      monthly: 4.99,
-      yearly: 49.99, // bonus: 2 ay bedava gibi
+      monthly: 19.99,
+      yearly: 199.99, // bonus: 2 ay bedava gibi
     },
-    description: "More power for casual users",
+    description: "Günlük kullanıcılar için daha fazla güç",
     features: [
-      "15 AI conversions/day",
-      "3 bonus styles",
-      "No watermark",
-      "Faster processing",
+      "Günde 15 yapay zeka dönüşümü",
+      "3 bonus stil",
+      "Filigran yok",
+      "Daha hızlı işlem",
     ],
-    cta: "Upgrade Now",
+    cta: "Hemen Yükselt",
   },
   {
     id: "pro",
     name: "Pro",
     price: {
-      monthly: 9.99,
-      yearly: 89.99, // 2 ay indirimli
+      monthly: 39.99,
+      yearly: 399.99, // 2 ay indirimli
     },
-    description: "Unlimited AI transformations",
+    description: "Sınırsız yapay zeka dönüşümü",
     features: [
-      "Unlimited usage",
-      "All styles unlocked",
-      "Priority processing",
-      "Access to image history",
+      "Sınırsız kullanım",
+      "Tüm stiller açık",
+      "Öncelikli işlem",
+      "Görsel geçmişine erişim",
     ],
-    cta: "Go Pro",
+    cta: "Pro Ol",
     popular: true,
   },
   {
     id: "enterprise",
-    name: "Enterprise",
+    name: "Kurumsal",
     price: {
-      monthly: "Custom",
-      yearly: "Custom",
+      monthly: "Özel",
+      yearly: "Özel",
     },
-    description: "Tailored plan for agencies",
+    description: "Ajanslar için özel plan",
     features: [
-      "Custom limits & features",
-      "API Access",
-      "White-labeling",
-      "Priority support",
+      "Özel limitler ve özellikler",
+      "API erişimi",
+      "Markasız kullanım (white-label)",
+      "Öncelikli destek",
     ],
-    cta: "Contact Us",
+    cta: "Bize Ulaşın",
     highlighted: true,
   },
 ];
@@ -78,8 +78,8 @@ const page = () => {
         <div className="h-full w-full bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:35px_35px] opacity-30 [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
       </div>
       <PricingSection
-        title="Simple Pricing"
-        subtitle="Choose the best plan for your needs"
+        title="Basit Fiyatlandırma"
+        subtitle="İhtiyacınıza en uygun planı seçin"
         frequencies={PAYMENT_FREQUENCIES}
         tiers={TIERS}
       />
