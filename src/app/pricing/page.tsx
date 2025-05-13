@@ -1,8 +1,8 @@
 import { PricingSection } from "@/components/blocks/pricing-section";
 
-export const PAYMENT_FREQUENCIES = ["monthly", "yearly"];
+const PAYMENT_FREQUENCIES = ["monthly", "yearly"];
 
-export const TIERS = [
+const TIERS = [
   {
     id: "free",
     name: "Ücretsiz",
