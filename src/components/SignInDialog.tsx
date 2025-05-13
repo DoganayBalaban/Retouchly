@@ -38,6 +38,7 @@ const SignInDialog = () => {
       router.push("/");
     }
   };
+
   const handleGoogleAuth = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -56,7 +57,7 @@ const SignInDialog = () => {
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="outline" className="text-black">
-          Sign in
+          Giriş Yap
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -68,9 +69,11 @@ const SignInDialog = () => {
             <img src="/logo2.png" alt="logo" />
           </div>
           <DialogHeader>
-            <DialogTitle className="sm:text-center">Welcome back</DialogTitle>
+            <DialogTitle className="sm:text-center">
+              Tekrar Hoş Geldiniz
+            </DialogTitle>
             <DialogDescription className="sm:text-center">
-              Enter your credentials to login to your account.
+              Hesabınıza giriş yapmak için bilgilerinizi girin.
             </DialogDescription>
           </DialogHeader>
         </div>
@@ -84,7 +87,7 @@ const SignInDialog = () => {
         >
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>Email</Label>
+              <Label>E-posta</Label>
               <Input
                 type="email"
                 value={email}
@@ -93,7 +96,7 @@ const SignInDialog = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label>Password</Label>
+              <Label>Şifre</Label>
               <Input
                 type="password"
                 value={password}
@@ -106,24 +109,24 @@ const SignInDialog = () => {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <Checkbox />
-              <Label>Remember me</Label>
+              <Label>Beni hatırla</Label>
             </div>
             <a className="text-sm underline" href="#">
-              Forgot password?
+              Şifremi unuttum?
             </a>
           </div>
 
           <Button type="submit" disabled={loading} className="w-full">
-            {loading ? <Loader className="animate-spin" /> : "Sign In"}
+            {loading ? <Loader className="animate-spin" /> : "Giriş Yap"}
           </Button>
         </form>
 
         <div className="flex items-center gap-3 before:flex-1 before:h-px before:bg-border after:flex-1 after:h-px after:bg-border">
-          <span className="text-xs text-muted-foreground">Or</span>
+          <span className="text-xs text-muted-foreground">veya</span>
         </div>
 
         <Button variant="outline" onClick={handleGoogleAuth}>
-          Login with Google
+          Google ile Giriş Yap
         </Button>
       </DialogContent>
     </Dialog>

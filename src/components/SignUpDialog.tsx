@@ -63,7 +63,7 @@ const SignUpDialog = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="default">Sign up</Button>
+        <Button variant="default">Kayıt Ol</Button>
       </DialogTrigger>
       <DialogContent>
         <div className="flex flex-col items-center gap-2">
@@ -76,10 +76,10 @@ const SignUpDialog = () => {
           </div>
           <DialogHeader>
             <DialogTitle className="text-center">
-              Sign up to Retouchly
+              Retouchly'e Kayıt Ol
             </DialogTitle>
             <DialogDescription className="text-center">
-              We just need a few details to get you started.
+              Başlamak için sadece birkaç bilgiye ihtiyacımız var.
             </DialogDescription>
           </DialogHeader>
         </div>
@@ -93,9 +93,9 @@ const SignUpDialog = () => {
         >
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>Full name</Label>
+              <Label>Ad Soyad</Label>
               <Input
-                placeholder="Matt Welsh"
+                placeholder="Doğanay Balaban"
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
@@ -103,45 +103,45 @@ const SignUpDialog = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label>Email</Label>
+              <Label>E-posta</Label>
               <Input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="hi@yourcompany.com"
+                placeholder="ornek@eposta.com"
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label>Password</Label>
+              <Label>Şifre</Label>
               <Input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
+                placeholder="Şifrenizi girin"
                 required
               />
             </div>
           </div>
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? <Loader className="animate-spin" /> : "Create account"}
+            {loading ? <Loader className="animate-spin" /> : "Hesap Oluştur"}
           </Button>
         </form>
 
         <div className="flex items-center gap-3 before:flex-1 before:h-px before:bg-border after:flex-1 after:h-px after:bg-border">
-          <span className="text-xs text-muted-foreground">Or</span>
+          <span className="text-xs text-muted-foreground">veya</span>
         </div>
 
         <Button variant="outline" onClick={handleGoogleSignUp}>
-          Continue with Google
+          Google ile Devam Et
         </Button>
 
         <p className="text-center text-xs text-muted-foreground">
-          By signing up, you agree to our{" "}
+          Kayıt olarak{" "}
           <a className="underline hover:no-underline" href="#">
-            Terms
-          </a>
-          .
+            Kullanım Şartları'nı
+          </a>{" "}
+          kabul etmiş olursunuz.
         </p>
       </DialogContent>
     </Dialog>
