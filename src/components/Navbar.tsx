@@ -18,7 +18,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-
+import { useIsMobile } from "@/hooks/use-mobile";
 const Navbar = () => {
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();

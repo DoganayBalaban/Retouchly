@@ -30,7 +30,6 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "../ui/textarea";
 import { Info } from "lucide-react";
-import { generateImages } from "@/app/actions/image-actions";
 import useGeneratedStore from "@/store/useGeneratedStore";
 import { supabase } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
@@ -61,6 +60,7 @@ export const imageFormSchema = z.object({
 
 const Configurations = () => {
   const [user, setUser] = useState<User | null>(null);
+
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
@@ -78,7 +78,9 @@ const Configurations = () => {
       if (!error) setUser(data.user);
     })();
   }, []);
+
   const { generateImages } = useGeneratedStore();
+
   const form = useForm<z.infer<typeof imageFormSchema>>({
     resolver: zodResolver(imageFormSchema),
     defaultValues: {
@@ -111,14 +113,14 @@ const Configurations = () => {
   );
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col p-4 sm:p-8">
       <TooltipProvider>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <fieldset className="grid gap-6 p-4 bg-background rounded-lg border">
               <legend className="text-2xl font-bold">Görsel Ayarları</legend>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="aspect_ratio"
@@ -132,7 +134,7 @@ const Configurations = () => {
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <FormControl>
                           <SelectTrigger>
@@ -181,6 +183,9 @@ const Configurations = () => {
                           onChange={(e) =>
                             field.onChange(Number(e.target.value))
                           }
+                          min={1}
+                          max={4}
+                          className="w-full"
                         />
                       </FormControl>
                       <FormMessage />
@@ -279,7 +284,7 @@ const Configurations = () => {
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <FormControl>
                           <SelectTrigger>
@@ -303,7 +308,7 @@ const Configurations = () => {
                   control={form.control}
                   name="prompt"
                   render={({ field }) => (
-                    <FormItem className="col-span-2">
+                    <FormItem className="col-span-1 sm:col-span-2">
                       <FormLabel>
                         {renderLabelWithTooltip(
                           "Komut (Prompt)",
@@ -321,6 +326,7 @@ const Configurations = () => {
             </fieldset>
           </form>
         </Form>
+
         <div className="mt-4">
           {user ? (
             <Button

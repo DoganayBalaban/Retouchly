@@ -4,6 +4,8 @@ import { imageFormSchema } from "@/components/image-generation/Configurations";
 import { generateImages } from '@/app/actions/image-actions';
 import { removeBackground } from '@/app/actions/background-actions';
 import { restoreFace } from '@/app/actions/restore-actions';
+import { supabase } from '@/lib/supabase';
+import { saveGeneratedImages } from '@/app/actions/savedImages';
 interface GeneratedStore {
     loading: boolean;
     images: Array<{url: string}>;
@@ -22,6 +24,10 @@ const useGeneratedStore = create<GeneratedStore>((set) => ({
     error: null,
     generateImages: async (values: z.infer<typeof imageFormSchema>) => {
         set({ loading: true, error: null });
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user?.id) {
+  throw new Error("Kullanıcı oturumu bulunamadı.");
+}
         try {
             const {error, success, data} = await generateImages(values);
             if (!success) {
@@ -33,6 +39,7 @@ const useGeneratedStore = create<GeneratedStore>((set) => ({
                     url
                 }
         })
+         await saveGeneratedImages(data, values.prompt, user?.id);
             set({ loading: false, images: dataWithUrl });
         } catch (error) {
             console.error("Replicate API Hatası:", error);
@@ -52,6 +59,7 @@ const useGeneratedStore = create<GeneratedStore>((set) => ({
             }
             
             set({ loading: false, bgImage: data });
+            
         } catch (error) {
             console.error("Replicate API Hatası:", error);
             set({ loading: false, error: (error as Error).message });
