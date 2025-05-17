@@ -6,7 +6,7 @@ export default function DashboardLayout({
   return (
     <html lang="en">
       <body>
-        <main>{children}</main>
+        <main className="">{children}</main>
       </body>
     </html>
   );
