@@ -53,7 +53,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="w-full bg-black px-6 py-3">
+    <header className="w-full bg-[#121212 ] px-6 py-3">
       <nav className="mx-auto flex max-w-7xl items-center justify-between text-white">
         {/* Sol: Logo + Linkler */}
         <div className="flex items-center gap-8">

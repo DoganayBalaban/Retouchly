@@ -12,11 +12,11 @@
  Clerk veya Supabase Auth ile e-posta + sosyal giriş + -> +
  Kullanıcının ürettiği görselleri saklama            - -> +
  Kullanıcıya özel “My History” ekranı                - -> +
- Görsel silme, favori ekleme                         -
+ Görsel silme, favori ekleme                         - -> yarım
 
 🎨 Aşama 3: UI/UX İyileştirmeleri & Estetik
 🎯 Amaç: Profesyonel görünüm ve kolay kullanım
- Tailwind + Shadcn UI ile modern UI
+ Tailwind + Shadcn UI ile modern UI      -> +
  Framer Motion ile geçiş animasyonları
  Dark/light tema desteği
  Mobil uyumlu responsive yapı
