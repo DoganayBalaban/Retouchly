@@ -29,7 +29,7 @@ const links = [
 
 const Footer = () => {
   return (
-    <footer className="border-b py-12 bg-[#030304]">
+    <footer className=" py-12 bg-[#030304]">
       <div className="mx-auto max-w-5xl px-6">
         <div className="flex flex-wrap justify-between gap-6">
           <span className="text-muted-foreground order-last block text-center text-sm md:order-first">

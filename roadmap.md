@@ -9,9 +9,9 @@
 
 🛠️ Aşama 2: Kullanıcı Girişi & Kişiselleştirme
 🎯 Amaç: Kullanıcıya özel deneyim sunmak
- Clerk veya Supabase Auth ile e-posta + sosyal giriş + -> auth'u kendi profile a adapte
- Kullanıcının ürettiği görselleri saklama            -
- Kullanıcıya özel “My History” ekranı                -
+ Clerk veya Supabase Auth ile e-posta + sosyal giriş + -> +
+ Kullanıcının ürettiği görselleri saklama            - -> +
+ Kullanıcıya özel “My History” ekranı                - -> +
  Görsel silme, favori ekleme                         -
 
 🎨 Aşama 3: UI/UX İyileştirmeleri & Estetik

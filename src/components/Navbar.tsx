@@ -104,13 +104,22 @@ const Navbar = () => {
         {/* Sağ: Auth */}
         <div className="flex items-center gap-2">
           {user ? (
-            <button
-              onClick={handleLogOut}
-              className="p-2 text-white transition hover:text-red-400"
-              title="Çıkış Yap"
-            >
-              <LogOut />
-            </button>
+            <>
+              <Link
+                href="/history"
+                className="text-white text-base hover:bg-[#1A1A1A] p-3 rounded-xl"
+              >
+                Geçmiş
+              </Link>
+              <button
+                onClick={handleLogOut}
+                className="p-2 text-white transition hover:text-red-400 flex items-center gap-2  rounded-xl"
+                title="Çıkış Yap"
+              >
+                Çıkış Yap
+                <LogOut />
+              </button>
+            </>
           ) : (
             <>
               <SignUpDialog />

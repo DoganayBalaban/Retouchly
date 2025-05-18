@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase";
 import ImageUploader from "@/components/background-remove/ImageUploader";
 import { Loader } from "lucide-react";
 import { getUserGeneratedImages } from "../actions/userImages/getUserGeneratedImages";
+import Image from "next/image";
 
 export default function DashboardPage() {
   const [data, setData] = useState<any>(null);
@@ -36,22 +37,26 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="bg-[#000000]">
+    <div className="bg-[#121212 ]">
       <h2 className="text-3xl font-light text-white p-6 m-6">
         Üretilmiş Görsellerin
       </h2>
       <div className="grid grid-cols-3 gap-4 rounded-2xl p-6 m-6 border border-white">
         {data?.length === 0 && (
           <div className="col-span-3 flex justify-center items-center">
-            <p>Henüz üretilmiş görsel yok.</p>
+            <p className="text-xl font-extralight text-white">
+              Henüz üretilmiş görsel yok.
+            </p>
           </div>
         )}
         {data?.length > 0 &&
           data.map((item: any) => (
             <div key={item.id} className="relative">
-              <img
+              <Image
                 src={item.image_url}
                 alt="Generated"
+                width={500}
+                height={500}
                 className="w-full h-auto rounded-lg shadow-lg"
               />
               <p className="absolute bottom-2 left-2 bg-white text-black p-2 rounded text-xl font-extralight">

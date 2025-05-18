@@ -113,7 +113,7 @@ const Configurations = () => {
   );
 
   return (
-    <div className="flex flex-col p-4 sm:p-8">
+    <div className="flex flex-col p-4 sm:p-8 bg-[#FFFFFF] rounded-2xl justify-center items-center">
       <TooltipProvider>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

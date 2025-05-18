@@ -16,15 +16,15 @@ const GeneratedImages = () => {
   const { images, loading } = useGeneratedStore();
   if (images.length === 0) {
     return (
-      <Card className="w-full max-w-2xl bg-muted m-5 ">
+      <Card className="w-full max-w-2xl bg-[#121212] m-5 ">
         <CardContent className="flex aspect-square items-center justify-center p-6">
-          <p className="text-2xl">
+          <div className="text-2xl text-white p-6 flex-1">
             {loading ? (
-              <Loader className="animate-spin" />
+              <Loader className="animate-spin text-white" />
             ) : (
               "Görsel üretmek için prompt giriniz."
             )}
-          </p>
+          </div>
         </CardContent>
       </Card>
     );

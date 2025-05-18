@@ -4,14 +4,14 @@ import React from "react";
 
 const page = () => {
   return (
-    <section className="container mx-auto flex gap-6 py-6">
+    <section className="flex items-center justify-center h-screen rounded-2xl">
       {/* Sol: Ayarlar paneli */}
-      <aside className="w-full max-w-sm  p-6 rounded-xl border shadow">
+      <div className="w-full max-w-sm p-3 rounded-xl flex items-center justify-center shadow">
         <Configurations />
-      </aside>
+      </div>
 
       {/* Sağ: Görsel çıktısı */}
-      <main className="flex-1 p-4  rounded-xl min-h-[400px] flex items-center justify-center">
+      <main className="rounded-xl  flex items-center justify-center">
         <GeneratedImages />
       </main>
     </section>
