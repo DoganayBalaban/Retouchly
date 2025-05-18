@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { LogOut } from "lucide-react";
+import { LogOut, Menu } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
@@ -22,7 +22,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
 const Navbar = () => {
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
-
+  const isMobile = useIsMobile();
+  const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
@@ -53,80 +54,140 @@ const Navbar = () => {
   };
 
   return (
-    <header className="w-full bg-[#121212 ] px-6 py-3">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between text-white">
-        {/* Sol: Logo + Linkler */}
-        <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center gap-3">
-            <Image src="/logo2.png" alt="logo" width={40} height={40} />
-            <span className="text-2xl font-bold">RETOUCHLY</span>
-          </Link>
-
-          <Link
-            href="/pricing"
-            className="text-white text-base hover:bg-[#1A1A1A] p-3 rounded-xl"
+    <header className="w-full bg-[#121212] px-4 py-3">
+      <nav className="mx-auto max-w-7xl flex items-center justify-between text-white relative">
+        {/* Sol: Hamburger mobilde */}
+        {isMobile && (
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="p-2 rounded hover:bg-gray-700"
+            aria-label="Menu"
           >
-            Fiyatlandırma
-          </Link>
+            <Menu size={24} />
+          </button>
+        )}
 
-          <NavigationMenu>
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-base bg-black">
-                  Araçlar
-                </NavigationMenuTrigger>
-                <NavigationMenuContent className="bg-white text-black p-4 rounded shadow-md ">
-                  <ul className="grid gap-3 w-full">
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <Link href="/image-generation">Görsel Üretici</Link>
-                      </NavigationMenuLink>
-                    </li>
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <Link href="/face-restoration">Yüz İyileştirme</Link>
-                      </NavigationMenuLink>
-                    </li>
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <Link href="/background-remover">
-                          Arka Plan Temizleyici
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
-        </div>
+        {/* Sol: Logo */}
+        <Link href="/" className="flex items-center gap-3">
+          <Image src="/logo2.png" alt="logo" width={40} height={40} />
+          {!isMobile && <span className="text-2xl font-bold">RETOUCHLY</span>}
+        </Link>
 
-        {/* Sağ: Auth */}
-        <div className="flex items-center gap-2">
-          {user ? (
-            <>
-              <Link
-                href="/history"
-                className="text-white text-base hover:bg-[#1A1A1A] p-3 rounded-xl"
-              >
-                Geçmiş
-              </Link>
-              <button
-                onClick={handleLogOut}
-                className="p-2 text-white transition hover:text-red-400 flex items-center gap-2  rounded-xl"
-                title="Çıkış Yap"
-              >
-                Çıkış Yap
-                <LogOut />
+        {/* Orta: Desktop'da Fiyatlandırma ve Araçlar menüsü */}
+        {!isMobile && (
+          <div className="flex items-center gap-6">
+            <Link
+              href="/pricing"
+              className="text-white text-base hover:bg-[#1A1A1A] p-3 rounded-xl"
+            >
+              Fiyatlandırma
+            </Link>
+
+            {/* Araçlar dropdown */}
+            <div className="relative group">
+              <button className="text-white text-base p-3 rounded-xl hover:bg-[#1A1A1A]">
+                Araçlar
               </button>
+              <div className="absolute hidden group-hover:block bg-[#121212] border border-gray-700 rounded shadow-md mt-1 w-48 z-50">
+                <Link
+                  href="/image-generation"
+                  className="block px-4 py-2 hover:bg-gray-700"
+                >
+                  Görsel Üretici
+                </Link>
+                <Link
+                  href="/face-restoration"
+                  className="block px-4 py-2 hover:bg-gray-700"
+                >
+                  Yüz İyileştirme
+                </Link>
+                <Link
+                  href="/background-remover"
+                  className="block px-4 py-2 hover:bg-gray-700"
+                >
+                  Arka Plan Temizleyici
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Sağ: Auth butonları */}
+        <div className="flex items-center gap-3">
+          {!user ? (
+            <>
+              <SignInDialog />
+              <SignUpDialog />
             </>
           ) : (
             <>
-              <SignUpDialog />
-              <SignInDialog />
+              {!isMobile && (
+                <Link
+                  href="/history"
+                  className="text-base hover:bg-[#1A1A1A] p-3 rounded-xl"
+                >
+                  Geçmiş
+                </Link>
+              )}
+              <button
+                onClick={handleLogOut}
+                className="flex items-center gap-2 p-2 rounded hover:text-red-400"
+              >
+                Çıkış Yap <LogOut />
+              </button>
             </>
           )}
         </div>
+
+        {/* Mobilde Menü Açılır */}
+        {menuOpen && isMobile && (
+          <div className="absolute top-full left-0 w-full bg-[#121212] border-t border-gray-700 p-4 z-50">
+            <ul className="flex flex-col gap-4">
+              <li>
+                <Link
+                  href="/pricing"
+                  className="block px-2 py-1 hover:bg-gray-700 rounded"
+                >
+                  Fiyatlandırma
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/image-generation"
+                  className="block px-2 py-1 hover:bg-gray-700 rounded"
+                >
+                  Görsel Üretici
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/face-restoration"
+                  className="block px-2 py-1 hover:bg-gray-700 rounded"
+                >
+                  Yüz İyileştirme
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/background-remover"
+                  className="block px-2 py-1 hover:bg-gray-700 rounded"
+                >
+                  Arka Plan Temizleyici
+                </Link>
+              </li>
+              {user && (
+                <li>
+                  <Link
+                    href="/history"
+                    className="block px-2 py-1 hover:bg-gray-700 rounded"
+                  >
+                    Geçmiş
+                  </Link>
+                </li>
+              )}
+            </ul>
+          </div>
+        )}
       </nav>
     </header>
   );
