@@ -6,7 +6,7 @@ import React from "react";
 const BackgroundRemover = () => {
   return (
     <div>
-      <div className="flex justify-center items-center">
+      <div className="flex flex-col mt-3 md:flex-row justify-center items-center h-screen">
         <ImageUploader />
         <RemovedBackgrounds />
       </div>

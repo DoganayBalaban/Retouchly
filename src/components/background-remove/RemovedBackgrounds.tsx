@@ -16,15 +16,15 @@ const RemovedBackgrounds = () => {
   console.log("bgImages[0]", bgImage);
   if (bgImage === null) {
     return (
-      <Card className="w-full max-w-2xl bg-muted m-5 ">
+      <Card className="bg-[#121212] m-5">
         <CardContent className="flex aspect-square items-center justify-center p-6">
-          <p className="text-2xl">
+          <div className="text-2xl text-white p-6 flex">
             {loading ? (
               <Loader className="animate-spin" />
             ) : (
-              "Henüz görüntü yüklenmedi"
+              "Henüz bir görüntü yüklemediniz"
             )}
-          </p>
+          </div>
         </CardContent>
       </Card>
     );

@@ -5,7 +5,7 @@ import RestoredFace from "@/components/face-restoration/RestoredFace";
 
 const FaceRestoration = () => {
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center h-screen">
       <ImageUploader />
       <RestoredFace />
     </div>

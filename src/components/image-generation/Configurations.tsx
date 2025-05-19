@@ -332,7 +332,7 @@ const Configurations = () => {
             <Button
               type="submit"
               onClick={form.handleSubmit(onSubmit)}
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+              className="w-full rounded font-bold p-2 transition duration-200"
             >
               Görseli Üret
             </Button>

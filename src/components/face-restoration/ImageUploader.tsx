@@ -115,14 +115,6 @@ export default function ImageUploader() {
           </div>
         </div>
 
-        {previewUrl && (
-          <img
-            src={previewUrl}
-            alt="Önizleme"
-            className="max-w-xs rounded shadow"
-          />
-        )}
-
         {uploadedUrl && (
           <div className="space-y-2">
             <img src={uploadedUrl} alt="Yüklendi" className="max-w-xs border" />
