@@ -5,9 +5,13 @@ import RestoredFace from "@/components/face-restoration/RestoredFace";
 
 const FaceRestoration = () => {
   return (
-    <div className="flex items-center justify-center h-screen">
-      <ImageUploader />
-      <RestoredFace />
+    <div className="flex flex-col mt-3 md:flex-row justify-center items-center h-screen">
+      <div>
+        <ImageUploader />
+      </div>
+      <div>
+        <RestoredFace />
+      </div>
     </div>
   );
 };

@@ -113,11 +113,11 @@ const Configurations = () => {
   );
 
   return (
-    <div className="flex flex-col p-4 sm:p-8 bg-[#FFFFFF] rounded-2xl justify-center items-center">
+    <div className="flex w-full flex-col p-4 sm:p-8 bg-[#FFFFFF] rounded-2xl justify-center items-center">
       <TooltipProvider>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <fieldset className="grid gap-6 p-4 bg-background rounded-lg border">
+            <fieldset className="grid gap-6 w-full p-4 bg-background rounded-lg border">
               <legend className="text-2xl font-bold">Görsel Ayarları</legend>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

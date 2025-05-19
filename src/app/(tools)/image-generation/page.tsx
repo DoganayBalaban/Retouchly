@@ -4,7 +4,7 @@ import React from "react";
 
 const page = () => {
   return (
-    <section className="flex items-center justify-center h-screen rounded-2xl">
+    <section className="flex flex-col mt-3 md:flex-row justify-center items-center h-screen ">
       {/* Sol: Ayarlar paneli */}
       <div className="w-full max-w-sm p-3 rounded-xl flex items-center justify-center shadow">
         <Configurations />
