@@ -5,6 +5,7 @@ import Testimonials from "@/components/testimonials";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import StatsSection from "@/components/StatsSections";
 const page = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
@@ -66,6 +67,9 @@ const page = () => {
       </div>
       <div className="bg-[#030304]">
         <Testimonials />
+      </div>
+      <div>
+        <StatsSection />
       </div>
     </div>
   );

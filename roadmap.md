@@ -12,7 +12,7 @@
  Clerk veya Supabase Auth ile e-posta + sosyal giriş + -> +
  Kullanıcının ürettiği görselleri saklama            - -> +
  Kullanıcıya özel “My History” ekranı                - -> +
- Görsel silme, favori ekleme                         - -> yarım
+ Görsel silme, favori ekleme                         +- -> yarım
 
 🎨 Aşama 3: UI/UX İyileştirmeleri & Estetik
 🎯 Amaç: Profesyonel görünüm ve kolay kullanım
@@ -20,6 +20,8 @@
  Framer Motion ile geçiş animasyonları
  Dark/light tema desteği
  Mobil uyumlu responsive yapı
+
+ # En-Boy, Görsel Sayısı, ve Prompt hariç diğerlerini çıkar.
 
 🤖 Aşama 4: AI Fonksiyonlarının Genişletilmesi
 🎯 Amaç: Kullanıcıya daha fazla değer sunmak

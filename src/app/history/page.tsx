@@ -168,7 +168,7 @@ export default function HistoryPage() {
                 <DropdownMenuTrigger className="text-white p-3 absolute">
                   <Settings />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
+                <DropdownMenuContent className="w-full h-full">
                   <DropdownMenuItem onClick={() => handleDelete(item.id)}>
                     Sil
                   </DropdownMenuItem>
@@ -199,9 +199,6 @@ export default function HistoryPage() {
                 height={500}
                 className="w-full h-auto rounded-lg shadow-lg"
               />
-              <p className="absolute bottom-2 left-2 bg-white text-black p-2 rounded text-xl font-extralight hidden lg:block">
-                {item.prompt}
-              </p>
             </motion.div>
           ))}
       </div>
