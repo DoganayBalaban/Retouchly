@@ -17,10 +17,10 @@ const GeneratedImages = () => {
   if (images.length === 0) {
     return (
       <Card className="w-full max-w-2xl bg-[#121212] m-5 ">
-        <CardContent className="flex aspect-square items-center justify-center p-6">
+        <CardContent className="flex aspect-square items-center justify-center p-6 ">
           <div className="text-2xl text-white p-6 flex-1">
             {loading ? (
-              <Loader className="animate-spin text-white" />
+              <Loader className="animate-spin text-white w-10 h-10" />
             ) : (
               "Görsel üretmek için prompt giriniz."
             )}

@@ -1,5 +1,11 @@
 "use client";
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,6 +18,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
+
 import {
   Form,
   FormControl,
@@ -117,10 +124,13 @@ const Configurations = () => {
       <TooltipProvider>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <fieldset className="grid gap-6 w-full p-4 bg-background rounded-lg border">
+            <fieldset className="gap-3 w-full p-4 bg-background rounded-lg border">
               <legend className="text-2xl font-bold">Görsel Ayarları</legend>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div
+                className="
+              flex flex-col space-y-4"
+              >
                 <FormField
                   control={form.control}
                   name="aspect_ratio"
@@ -192,117 +202,129 @@ const Configurations = () => {
                     </FormItem>
                   )}
                 />
-
-                <FormField
-                  control={form.control}
-                  name="guidance"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex items-center justify-between">
-                        {renderLabelWithTooltip(
-                          "Yönlendirme",
-                          "Modelin komuta ne kadar sadık kalacağını belirler."
+                <Accordion type="single" collapsible>
+                  <AccordionItem value="item-1">
+                    <AccordionTrigger>Gelişmiş Seçenekler</AccordionTrigger>
+                    <AccordionContent className="flex flex-col space-y-4">
+                      <FormField
+                        control={form.control}
+                        name="guidance"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center justify-between">
+                              {renderLabelWithTooltip(
+                                "Yönlendirme",
+                                "Modelin komuta ne kadar sadık kalacağını belirler."
+                              )}
+                              <span>{field.value}</span>
+                            </FormLabel>
+                            <FormControl>
+                              <Slider
+                                value={[field.value]}
+                                min={1}
+                                max={10}
+                                step={1}
+                                onValueChange={(value) =>
+                                  field.onChange(value[0])
+                                }
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
                         )}
-                        <span>{field.value}</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Slider
-                          value={[field.value]}
-                          min={1}
-                          max={10}
-                          step={1}
-                          onValueChange={(value) => field.onChange(value[0])}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                      />
 
-                <FormField
-                  control={form.control}
-                  name="num_inference_steps"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex items-center justify-between">
-                        {renderLabelWithTooltip(
-                          "Üretim Adımı Sayısı",
-                          "Modelin görseli üretmek için kaç adım kullanacağını belirler."
+                      <FormField
+                        control={form.control}
+                        name="num_inference_steps"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center justify-between">
+                              {renderLabelWithTooltip(
+                                "Üretim Adımı Sayısı",
+                                "Modelin görseli üretmek için kaç adım kullanacağını belirler."
+                              )}
+                              <span>{field.value}</span>
+                            </FormLabel>
+                            <FormControl>
+                              <Slider
+                                value={[field.value]}
+                                min={1}
+                                max={50}
+                                step={1}
+                                onValueChange={(value) =>
+                                  field.onChange(value[0])
+                                }
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
                         )}
-                        <span>{field.value}</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Slider
-                          value={[field.value]}
-                          min={1}
-                          max={50}
-                          step={1}
-                          onValueChange={(value) => field.onChange(value[0])}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                      />
 
-                <FormField
-                  control={form.control}
-                  name="output_quality"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex items-center justify-between">
-                        {renderLabelWithTooltip(
-                          "Görsel Kalitesi",
-                          "Çıktı görselinin kalite düzeyi (1–100)."
+                      <FormField
+                        control={form.control}
+                        name="output_quality"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center justify-between">
+                              {renderLabelWithTooltip(
+                                "Görsel Kalitesi",
+                                "Çıktı görselinin kalite düzeyi (1–100)."
+                              )}
+                              <span>{field.value}</span>
+                            </FormLabel>
+                            <FormControl>
+                              <Slider
+                                value={[field.value]}
+                                min={50}
+                                max={100}
+                                step={1}
+                                onValueChange={(value) =>
+                                  field.onChange(value[0])
+                                }
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
                         )}
-                        <span>{field.value}</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Slider
-                          value={[field.value]}
-                          min={50}
-                          max={100}
-                          step={1}
-                          onValueChange={(value) => field.onChange(value[0])}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                      />
 
-                <FormField
-                  control={form.control}
-                  name="output_format"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        {renderLabelWithTooltip(
-                          "Çıktı Formatı",
-                          "Görselin dosya formatını seçin."
+                      <FormField
+                        control={form.control}
+                        name="output_format"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              {renderLabelWithTooltip(
+                                "Çıktı Formatı",
+                                "Görselin dosya formatını seçin."
+                              )}
+                            </FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Format seçiniz" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {["jpg", "png", "webp"].map((format) => (
+                                  <SelectItem key={format} value={format}>
+                                    {format}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
                         )}
-                      </FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Format seçiniz" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {["jpg", "png", "webp"].map((format) => (
-                            <SelectItem key={format} value={format}>
-                              {format}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                      />
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
 
                 <FormField
                   control={form.control}

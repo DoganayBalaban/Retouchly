@@ -1,27 +1,10 @@
-✅ Aşama 1: MVP (Mevcut Sürüm)
-🔹 Prompt’a göre görsel üretimi (Replicate)
-🔹 Arka plan silme
-🔹 Netleştirme / Upscale
-🔹 Next.js frontend
-🔹 Supabase backend (verisiz çalışma)
-🔹 Basit demo arayüzü
-🔹 Deploy edilmiş (Vercel) ve çalışıyor
-
-🛠️ Aşama 2: Kullanıcı Girişi & Kişiselleştirme
-🎯 Amaç: Kullanıcıya özel deneyim sunmak
- Clerk veya Supabase Auth ile e-posta + sosyal giriş + -> +
- Kullanıcının ürettiği görselleri saklama            - -> +
- Kullanıcıya özel “My History” ekranı                - -> +
- Görsel silme, favori ekleme                         +- -> yarım
+favorileri çekip gösterme *
 
 🎨 Aşama 3: UI/UX İyileştirmeleri & Estetik
-🎯 Amaç: Profesyonel görünüm ve kolay kullanım
- Tailwind + Shadcn UI ile modern UI      -> +
  Framer Motion ile geçiş animasyonları
  Dark/light tema desteği
  Mobil uyumlu responsive yapı
 
- # En-Boy, Görsel Sayısı, ve Prompt hariç diğerlerini çıkar.
 
 🤖 Aşama 4: AI Fonksiyonlarının Genişletilmesi
 🎯 Amaç: Kullanıcıya daha fazla değer sunmak
