@@ -172,44 +172,43 @@ const Navbar = () => {
               <span className="text-2xl font-bold text-white">RETOUCHLY</span>
             </Link>
 
-            <NavigationMenu>
-              <NavigationMenuList className="">
-                <NavigationMenuItem className="">
-                  <NavigationMenuLink
-                    className="bg-[#121212] text-white"
-                    asChild
-                  >
-                    <Link href="/pricing" passHref>
-                      Fiyatlandırma
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger className="bg-[#121212] text-white">
-                    Araçlar
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <ul className="grid w-[200px] gap-1 p-2">
-                      {tools.map((tool) => (
-                        <li key={tool.href}>
-                          <NavigationMenuLink asChild className="">
-                            <Link
-                              href={tool.href}
-                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-100 text-black focus:bg-gray-100"
-                            >
-                              {tool.name}
-                            </Link>
-                          </NavigationMenuLink>
-                        </li>
-                      ))}
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
-
             <div className="flex items-center gap-4">
+              <NavigationMenu>
+                <NavigationMenuList className="gap-4">
+                  <NavigationMenuItem>
+                    <NavigationMenuLink
+                      className="bg-[#121212] text-white"
+                      asChild
+                    >
+                      <Link href="/pricing" passHref>
+                        Fiyatlandırma
+                      </Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger className="bg-[#121212] text-white">
+                      Araçlar
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul className="grid w-[200px] gap-1 p-2">
+                        {tools.map((tool) => (
+                          <li key={tool.href}>
+                            <NavigationMenuLink asChild className="">
+                              <Link
+                                href={tool.href}
+                                className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-100 text-black focus:bg-gray-100"
+                              >
+                                {tool.name}
+                              </Link>
+                            </NavigationMenuLink>
+                          </li>
+                        ))}
+                      </ul>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
               {!user ? (
                 <>
                   <SignInDialog />

@@ -1,7 +1,5 @@
 favorileri çekip gösterme *
 
-🎨 Aşama 3: UI/UX İyileştirmeleri & Estetik
- Framer Motion ile geçiş animasyonları
 
 
 🤖 Aşama 4: AI Fonksiyonlarının Genişletilmesi
