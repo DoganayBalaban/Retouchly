@@ -2,13 +2,11 @@ favorileri çekip gösterme *
 
 🎨 Aşama 3: UI/UX İyileştirmeleri & Estetik
  Framer Motion ile geçiş animasyonları
- Dark/light tema desteği
- Mobil uyumlu responsive yapı
 
 
 🤖 Aşama 4: AI Fonksiyonlarının Genişletilmesi
 🎯 Amaç: Kullanıcıya daha fazla değer sunmak
- Yazıya göre (prompt) stili seçilebilir görsel üretimi
+doğum haritası 
  Görsel segmentasyonu (Segment Anything)
  Otomatik filtre, ışık düzeltme
  Emoji/sticker/AI overlay ekleme

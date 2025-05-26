@@ -1,5 +1,6 @@
 "use client";
 
+import * as motion from "motion/react-client";
 import {
   Accordion,
   AccordionContent,
@@ -202,129 +203,131 @@ const Configurations = () => {
                     </FormItem>
                   )}
                 />
-                <Accordion type="single" collapsible>
-                  <AccordionItem value="item-1">
-                    <AccordionTrigger>Gelişmiş Seçenekler</AccordionTrigger>
-                    <AccordionContent className="flex flex-col space-y-4">
-                      <FormField
-                        control={form.control}
-                        name="guidance"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex items-center justify-between">
-                              {renderLabelWithTooltip(
-                                "Yönlendirme",
-                                "Modelin komuta ne kadar sadık kalacağını belirler."
-                              )}
-                              <span>{field.value}</span>
-                            </FormLabel>
-                            <FormControl>
-                              <Slider
-                                value={[field.value]}
-                                min={1}
-                                max={10}
-                                step={1}
-                                onValueChange={(value) =>
-                                  field.onChange(value[0])
-                                }
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="num_inference_steps"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex items-center justify-between">
-                              {renderLabelWithTooltip(
-                                "Üretim Adımı Sayısı",
-                                "Modelin görseli üretmek için kaç adım kullanacağını belirler."
-                              )}
-                              <span>{field.value}</span>
-                            </FormLabel>
-                            <FormControl>
-                              <Slider
-                                value={[field.value]}
-                                min={1}
-                                max={50}
-                                step={1}
-                                onValueChange={(value) =>
-                                  field.onChange(value[0])
-                                }
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="output_quality"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex items-center justify-between">
-                              {renderLabelWithTooltip(
-                                "Görsel Kalitesi",
-                                "Çıktı görselinin kalite düzeyi (1–100)."
-                              )}
-                              <span>{field.value}</span>
-                            </FormLabel>
-                            <FormControl>
-                              <Slider
-                                value={[field.value]}
-                                min={50}
-                                max={100}
-                                step={1}
-                                onValueChange={(value) =>
-                                  field.onChange(value[0])
-                                }
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="output_format"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              {renderLabelWithTooltip(
-                                "Çıktı Formatı",
-                                "Görselin dosya formatını seçin."
-                              )}
-                            </FormLabel>
-                            <Select
-                              onValueChange={field.onChange}
-                              value={field.value}
-                            >
+                <div>
+                  <Accordion type="single" collapsible>
+                    <AccordionItem value="item-1">
+                      <AccordionTrigger>Gelişmiş Seçenekler</AccordionTrigger>
+                      <AccordionContent className="flex flex-col space-y-4">
+                        <FormField
+                          control={form.control}
+                          name="guidance"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="flex items-center justify-between">
+                                {renderLabelWithTooltip(
+                                  "Yönlendirme",
+                                  "Modelin komuta ne kadar sadık kalacağını belirler."
+                                )}
+                                <span>{field.value}</span>
+                              </FormLabel>
                               <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Format seçiniz" />
-                                </SelectTrigger>
+                                <Slider
+                                  value={[field.value]}
+                                  min={1}
+                                  max={10}
+                                  step={1}
+                                  onValueChange={(value) =>
+                                    field.onChange(value[0])
+                                  }
+                                />
                               </FormControl>
-                              <SelectContent>
-                                {["jpg", "png", "webp"].map((format) => (
-                                  <SelectItem key={format} value={format}>
-                                    {format}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="num_inference_steps"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="flex items-center justify-between">
+                                {renderLabelWithTooltip(
+                                  "Üretim Adımı Sayısı",
+                                  "Modelin görseli üretmek için kaç adım kullanacağını belirler."
+                                )}
+                                <span>{field.value}</span>
+                              </FormLabel>
+                              <FormControl>
+                                <Slider
+                                  value={[field.value]}
+                                  min={1}
+                                  max={50}
+                                  step={1}
+                                  onValueChange={(value) =>
+                                    field.onChange(value[0])
+                                  }
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="output_quality"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="flex items-center justify-between">
+                                {renderLabelWithTooltip(
+                                  "Görsel Kalitesi",
+                                  "Çıktı görselinin kalite düzeyi (1–100)."
+                                )}
+                                <span>{field.value}</span>
+                              </FormLabel>
+                              <FormControl>
+                                <Slider
+                                  value={[field.value]}
+                                  min={50}
+                                  max={100}
+                                  step={1}
+                                  onValueChange={(value) =>
+                                    field.onChange(value[0])
+                                  }
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="output_format"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>
+                                {renderLabelWithTooltip(
+                                  "Çıktı Formatı",
+                                  "Görselin dosya formatını seçin."
+                                )}
+                              </FormLabel>
+                              <Select
+                                onValueChange={field.onChange}
+                                value={field.value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Format seçiniz" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {["jpg", "png", "webp"].map((format) => (
+                                    <SelectItem key={format} value={format}>
+                                      {format}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                </div>
 
                 <FormField
                   control={form.control}
@@ -351,13 +354,22 @@ const Configurations = () => {
 
         <div className="mt-4">
           {user ? (
-            <Button
-              type="submit"
-              onClick={form.handleSubmit(onSubmit)}
-              className="w-full rounded font-bold p-2 transition duration-200"
-            >
-              Görseli Üret
-            </Button>
+            <>
+              <Button
+                asChild
+                type="submit"
+                onClick={form.handleSubmit(onSubmit)}
+                className="w-full"
+              >
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  Görseli Üret
+                </motion.button>
+              </Button>
+            </>
           ) : (
             <SignInDialog />
           )}
