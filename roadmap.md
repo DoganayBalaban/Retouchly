@@ -1,7 +1,6 @@
 favorileri çekip gösterme *
 
 
-
 🤖 Aşama 4: AI Fonksiyonlarının Genişletilmesi
 🎯 Amaç: Kullanıcıya daha fazla değer sunmak
 doğum haritası 

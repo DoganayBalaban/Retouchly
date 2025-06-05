@@ -55,17 +55,12 @@ export async function getUserFavorites(userId: string) {
   const { data, error } = await supabase
     .from("user_favorites")
     .select(`
-      id,
-      created_at,
-      generated_images:generated_images (
-        id,
-        image_url,
-        prompt,
-        created_at
-      )
+     *, generated_images(*)
     `)
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
+
+  
 
   if (error) throw error;
   return data;
