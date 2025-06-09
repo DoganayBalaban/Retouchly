@@ -16,7 +16,7 @@ Retouchly, görsel üretme, arka plan silme ve fotoğraf iyileştirme gibi yapay
 | :-------- | :------- | :------------------------- |
 | `image` | `string` | Arkaplan silme modeli için Replicate AI'a istek atar |
 
-#### Öğeyi getir
+#### Görsel üret
 
 ```http
   image-actions
@@ -26,7 +26,7 @@ Retouchly, görsel üretme, arka plan silme ve fotoğraf iyileştirme gibi yapay
 | :-------- | :------- | :-------------------------------- |
 | `image`      | `string` | Görsel üretmek için istek yapar. |
 
-#### Öğeyi getir
+#### Görsel iyileştir
 
 ```http
   restore-actions
@@ -36,7 +36,7 @@ Retouchly, görsel üretme, arka plan silme ve fotoğraf iyileştirme gibi yapay
 | :-------- | :------- | :-------------------------------- |
 | `image`      | `string` | Bulanık görseli netleştirir. |
 
-#### Öğeyi getir
+#### Kaydedilen görüntüleri getir
 
 ```http
   savedImages
@@ -46,7 +46,7 @@ Retouchly, görsel üretme, arka plan silme ve fotoğraf iyileştirme gibi yapay
 | :-------- | :------- | :-------------------------------- |
 | `image`      | `string` | Üretilen görüntüleri kaydeder. |
 
-#### Öğeyi getir
+#### Kullanıcının oluşturduğu görüntüleri getir
 
 ```http
   getUserGeneratedImages
@@ -107,6 +107,7 @@ Bu projeyi çalıştırmak için aşağıdaki ortam değişkenlerini .env dosyan
 - İzleme ve analiz
 
 - Mobil sürüm
+
 ## Destek
 
 Destek için balabandoganay@gmail.com adresine e-posta gönderiniz.
