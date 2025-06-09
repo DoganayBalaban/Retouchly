@@ -1,36 +1,117 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# Retouchly
 
-First, run the development server:
+Retouchly, görsel üretme, arka plan silme ve fotoğraf iyileştirme gibi yapay zeka destekli araçlar sunan modern bir web uygulamasıdır. Kullanıcılar, sezgisel arayüz üzerinden profesyonel kalitede görseller oluşturabilir ve düzenleyebilir. Retouchly, esnek abonelik modeliyle hem bireysel kullanıcılar hem de yaratıcı profesyoneller için ideal bir SaaS çözümüdür.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+## API Kullanımı
+
+#### Arkaplan sil
+
+```http
+  background-actions
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+| Parametre | Tip     | Açıklama                |
+| :-------- | :------- | :------------------------- |
+| `image` | `string` | Arkaplan silme modeli için Replicate AI'a istek atar |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+#### Öğeyi getir
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```http
+  image-actions
+```
 
-## Learn More
+| Parametre | Tip     | Açıklama                       |
+| :-------- | :------- | :-------------------------------- |
+| `image`      | `string` | Görsel üretmek için istek yapar. |
 
-To learn more about Next.js, take a look at the following resources:
+#### Öğeyi getir
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```http
+  restore-actions
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Parametre | Tip     | Açıklama                       |
+| :-------- | :------- | :-------------------------------- |
+| `image`      | `string` | Bulanık görseli netleştirir. |
 
-## Deploy on Vercel
+#### Öğeyi getir
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```http
+  savedImages
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Parametre | Tip     | Açıklama                       |
+| :-------- | :------- | :-------------------------------- |
+| `image`      | `string` | Üretilen görüntüleri kaydeder. |
+
+#### Öğeyi getir
+
+```http
+  getUserGeneratedImages
+```
+
+| Parametre | Tip     | Açıklama                       |
+| :-------- | :------- | :-------------------------------- |
+| `image`      | `string` | Belirli kullanıcının oluşturduğu görüntüleri getirir. |
+
+
+## Demo
+
+https://retouchly-omega.vercel.app/
+
+  
+## Ortam Değişkenleri
+
+Bu projeyi çalıştırmak için aşağıdaki ortam değişkenlerini .env dosyanıza eklemeniz gerekecek
+
+`NEXT_PUBLIC_SUPABASE_URL`
+
+`NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+`REPLICATE_API_TOKEN`
+
+  
+## Özellikler
+
+- Açık/koyu mod geçişi
+- Canlı ön izleme
+- Tam ekran modu
+- Tüm platformlara destek
+- Yapay Zeka Destekli Araçlar 
+- Bulut Tabanlı Depolama 
+- Kredi Sistemi ile Kullanım
+- Güvenli Oturum Açma
+
+  
+## Kullanılan Teknolojiler
+
+**İstemci:** Next, Zustand, TailwindCSS, Shadcn/ui
+
+**Sunucu:** Supabase, Replicate AI
+
+  
+## Yol haritası
+
+- Ek tarayıcı desteği
+
+- Daha fazla entegrasyon ekleme
+
+- Daha fazla AI aracı
+
+- Akıllı asistan
+
+- Cloudinary saklama sistemine geçiş
+
+- İzleme ve analiz
+
+- Mobil sürüm
+## Destek
+
+Destek için balabandoganay@gmail.com adresine e-posta gönderiniz.
+
+  
+![Logo](https://i.ibb.co/ZpqJJCcN/logo2.png)
+
+    
