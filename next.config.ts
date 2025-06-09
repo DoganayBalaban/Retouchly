@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
        
       },
     ],
+    domains: ['ihccembzdpaowyvpsarm.supabase.co'],
   }
 };
 

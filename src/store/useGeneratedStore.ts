@@ -5,7 +5,7 @@ import { generateImages } from '@/app/actions/image-actions';
 import { removeBackground } from '@/app/actions/background-actions';
 import { restoreFace } from '@/app/actions/restore-actions';
 import { supabase } from '@/lib/supabase';
-import { saveGeneratedImages } from '@/app/actions/savedImages';
+import { saveImagesToBucket } from '@/app/actions/savedImages';
 import { dogumHaritasi } from '@/app/actions/dogum-haritasi';
 interface GeneratedStore {
     loading: boolean;
@@ -43,7 +43,8 @@ const useGeneratedStore = create<GeneratedStore>((set) => ({
                 url
             }
         });
-        await saveGeneratedImages(data, values.prompt, user.id);
+        
+        await saveImagesToBucket(data, user.id, values.prompt);
         set({ loading: false, images: dataWithUrl });
     } catch (error) {
         console.error("Replicate API Hatası:", error);

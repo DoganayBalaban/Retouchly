@@ -32,6 +32,7 @@
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.12.1",
     "google-translate-open-api": "^1.3.7",
+    "iyzipay": "^2.0.64",
     "lucide-react": "^0.503.0",
     "motion": "^12.12.1",
     "next": "15.3.1",
@@ -48,6 +49,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/iyzipay": "^2.0.3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
