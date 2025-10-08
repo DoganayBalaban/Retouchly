@@ -19,8 +19,7 @@ export async function getAIAssistanceAction(
     console.error("AI Assistant Action Error:", error);
     return {
       success: false,
-      error:
-        "AI asistan şu anda kullanılamıyor. Lütfen daha sonra tekrar deneyin.",
+      error: "AI assistant is currently unavailable. Please try again later.",
     };
   }
 }

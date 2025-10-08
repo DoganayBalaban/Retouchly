@@ -42,36 +42,36 @@ export async function getAIAssistance(
 
     switch (request.type) {
       case "prompt_suggestion":
-        systemPrompt = `Sen yaratıcı bir AI asistanısın. Kullanıcıların görsel üretimi için en etkili prompt'ları yazmasına yardım ediyorsun. 
-        Türkçe yanıt ver ve her zaman 3-5 farklı prompt önerisi sun. Prompt'lar detaylı, yaratıcı ve teknik terimler içermeli.`;
+        systemPrompt = `You are a creative AI assistant specialized in helping users write effective prompts for image generation. 
+        Always respond in English and provide 3-5 different prompt suggestions. Prompts should be detailed, creative, and include technical terms.`;
 
-        userPrompt = `Kullanıcı "${
-          request.context?.currentPrompt || "bir görsel"
-        }" üretmek istiyor. 
-        ${request.context?.userGoal ? `Amacı: ${request.context.userGoal}` : ""}
-        Lütfen daha iyi prompt önerileri ver.`;
+        userPrompt = `User wants to generate "${
+          request.context?.currentPrompt || "an image"
+        }". 
+        ${request.context?.userGoal ? `Goal: ${request.context.userGoal}` : ""}
+        Please provide better prompt suggestions.`;
         break;
 
       case "image_analysis":
-        systemPrompt = `Sen görsel analiz uzmanısın. Yüklenen görselleri analiz edip, o görsele uygun düzenleme önerileri veriyorsun.
-        Türkçe yanıt ver ve pratik öneriler sun.`;
+        systemPrompt = `You are an image analysis expert. You analyze uploaded images and provide appropriate editing suggestions.
+        Respond in English and give practical recommendations.`;
 
-        userPrompt = `Kullanıcı bir görsel yükledi. ${request.context?.toolType} aracını kullanıyor. 
-        Bu görsele uygun düzenleme önerileri ver.`;
+        userPrompt = `User uploaded an image. They are using ${request.context?.toolType} tool. 
+        Provide editing suggestions suitable for this image.`;
         break;
 
       case "creative_guidance":
-        systemPrompt = `Sen yaratıcı rehber bir AI asistanısın. Kullanıcıların sanatsal projelerinde ilham vermek ve yönlendirmek için varsın.
-        Türkçe yanıt ver ve yaratıcı fikirler öner.`;
+        systemPrompt = `You are a creative guide AI assistant. You exist to inspire and guide users in their artistic projects.
+        Respond in English and suggest creative ideas.`;
 
-        userPrompt = request.message || "Yaratıcı bir proje için fikirler ver.";
+        userPrompt = request.message || "Give me creative project ideas.";
         break;
 
       case "general_help":
-        systemPrompt = `Sen Retouchly AI araçları konusunda uzman bir asistansın. Kullanıcılara platform özelliklerini açıklıyor ve yardım ediyorsun.
-        Türkçe yanıt ver ve dostça bir ton kullan.`;
+        systemPrompt = `You are an expert assistant for Retouchly AI tools. You explain platform features and help users.
+        Respond in English with a friendly tone.`;
 
-        userPrompt = request.message || "Platform hakkında bilgi ver.";
+        userPrompt = request.message || "Tell me about the platform.";
         break;
     }
 
@@ -87,7 +87,7 @@ export async function getAIAssistance(
 
     const response = completion.choices[0]?.message?.content;
     if (!response) {
-      throw new Error("AI yanıt vermedi");
+      throw new Error("AI did not respond");
     }
 
     // Parse response to extract suggestions and explanation
@@ -141,7 +141,7 @@ export async function getAIAssistance(
     console.error("AI Assistant Error:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Bilinmeyen hata",
+      error: error instanceof Error ? error.message : "Unknown error",
     };
   }
 }

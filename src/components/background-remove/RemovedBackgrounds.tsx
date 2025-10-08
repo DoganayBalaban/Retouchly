@@ -34,7 +34,7 @@ const RemovedBackgrounds = () => {
         transition={{ duration: 0.3 }}
         className="w-full"
       >
-        <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 shadow-2xl">
+        <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 shadow-2xl relative z-10">
           <CardContent className="flex aspect-square items-center justify-center p-8">
             <div className="text-center">
               {loading ? (

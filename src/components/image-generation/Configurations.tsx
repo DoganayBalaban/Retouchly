@@ -42,7 +42,7 @@ import useGeneratedStore from "@/store/useGeneratedStore";
 import { supabase } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
 import SignInDialog from "../SignInDialog";
-import AIAssistant, { AIAssistantButton } from "../ai-assistant/AIAssistant";
+import AIAssistant from "../ai-assistant/AIAssistant";
 
 export const imageFormSchema = z.object({
   prompt: z.string({ required_error: "Prompt giriniz" }),
@@ -87,8 +87,7 @@ const Configurations = () => {
     })();
   }, []);
 
-  const { generateImages, aiAssistantVisible, setAIAssistantVisible } =
-    useGeneratedStore();
+  const { generateImages } = useGeneratedStore();
 
   const form = useForm<z.infer<typeof imageFormSchema>>({
     resolver: zodResolver(imageFormSchema),
@@ -162,7 +161,12 @@ const Configurations = () => {
                         type="button"
                         variant="outline"
                         size="sm"
-                        onClick={() => setAIAssistantVisible(true)}
+                        onClick={() => {
+                          // AI asistan zaten her zaman render ediliyor, sadece minimize durumunu değiştiriyoruz
+                          window.dispatchEvent(
+                            new CustomEvent("openAIAssistant")
+                          );
+                        }}
                         className="flex items-center gap-1 text-xs"
                       >
                         <Sparkles className="w-3 h-3" />
@@ -493,21 +497,13 @@ const Configurations = () => {
       </TooltipProvider>
 
       {/* AI Assistant */}
-      {aiAssistantVisible && (
-        <AIAssistant
-          toolType="image-generation"
-          currentPrompt={form.watch("prompt")}
-          onPromptSuggestion={(suggestion) => {
-            form.setValue("prompt", suggestion);
-            setAIAssistantVisible(false);
-          }}
-        />
-      )}
-
-      {/* AI Assistant Button */}
-      {!aiAssistantVisible && (
-        <AIAssistantButton onClick={() => setAIAssistantVisible(true)} />
-      )}
+      <AIAssistant
+        toolType="image-generation"
+        currentPrompt={form.watch("prompt")}
+        onPromptSuggestion={(suggestion) => {
+          form.setValue("prompt", suggestion);
+        }}
+      />
     </div>
   );
 };
