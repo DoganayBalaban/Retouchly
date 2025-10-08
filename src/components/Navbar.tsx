@@ -66,6 +66,7 @@ const Navbar = () => {
     { name: "Görsel Üretici", href: "/image-generation" },
     { name: "Yüz İyileştirme", href: "/face-restoration" },
     { name: "Arka Plan Temizleyici", href: "/background-remover" },
+    { name: "Görsel Düzenleyici", href: "/image-overlay" },
   ];
 
   return (

@@ -41,7 +41,6 @@ import { Info } from "lucide-react";
 import useGeneratedStore from "@/store/useGeneratedStore";
 import { supabase } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
-import SignUpDialog from "../SignUpDialog";
 import SignInDialog from "../SignInDialog";
 
 export const imageFormSchema = z.object({
@@ -121,26 +120,76 @@ const Configurations = () => {
   );
 
   return (
-    <div className="flex w-full flex-col p-4 sm:p-8 bg-[#FFFFFF] rounded-2xl justify-center items-center">
+    <div className="w-full p-3 sm:p-4 bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg border border-gray-100">
       <TooltipProvider>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <fieldset className="gap-3 w-full p-4 bg-background rounded-lg border">
-              <legend className="text-2xl font-bold">Görsel Ayarları</legend>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="w-full space-y-4"
+          >
+            {/* Header */}
+            <div className="text-center mb-4">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-1">
+                Görsel Ayarları
+              </h2>
+              <p className="text-gray-600 text-xs">
+                İstediğiniz görseli oluşturmak için ayarları yapılandırın
+              </p>
+            </div>
 
-              <div
-                className="
-              flex flex-col space-y-4"
-              >
+            {/* Prompt Section - En üstte ve vurgulu */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white p-4 rounded-xl shadow-sm border border-gray-200"
+            >
+              <FormField
+                control={form.control}
+                name="prompt"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base font-semibold text-gray-800 mb-2 block">
+                      {renderLabelWithTooltip(
+                        "✨ Komut (Prompt)",
+                        "Modelin görsel üretmesi için kullanacağı metin komutu. Detaylı açıklamalar daha iyi sonuçlar verir."
+                      )}
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea
+                        {...field}
+                        rows={3}
+                        className="resize-none border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg text-sm"
+                        placeholder="Örnek: Güneşin battığı bir sahilde, mor ve turuncu tonlarında gökyüzü..."
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </motion.div>
+
+            {/* Basic Settings */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+              className="bg-white p-4 rounded-xl shadow-sm border border-gray-200"
+            >
+              <h3 className="text-base font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                🎨 Temel Ayarlar
+              </h3>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="aspect_ratio"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>
+                      <FormLabel className="text-sm font-medium text-gray-700">
                         {renderLabelWithTooltip(
-                          "En-Boy Oranı",
-                          "Görselin en-boy oranını belirler."
+                          "📐 En-Boy Oranı",
+                          "Görselin en-boy oranını belirler. Sosyal medya paylaşımları için uygun oranları seçebilirsiniz."
                         )}
                       </FormLabel>
                       <Select
@@ -148,25 +197,21 @@ const Configurations = () => {
                         value={field.value}
                       >
                         <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Seçiniz" />
+                          <SelectTrigger className="h-10 rounded-lg border-gray-300 focus:border-blue-500">
+                            <SelectValue placeholder="Oran seçiniz" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
                           {[
-                            "1:1",
-                            "16:9",
-                            "9:16",
-                            "21:9",
-                            "9:21",
-                            "4:5",
-                            "5:4",
-                            "4:3",
-                            "3:4",
-                            "2:3",
+                            { value: "1:1", label: "1:1 (Kare - Instagram)" },
+                            { value: "16:9", label: "16:9 (Yatay - YouTube)" },
+                            { value: "9:16", label: "9:16 (Dikey - Stories)" },
+                            { value: "4:3", label: "4:3 (Klasik)" },
+                            { value: "3:4", label: "3:4 (Portre)" },
+                            { value: "21:9", label: "21:9 (Ultra Geniş)" },
                           ].map((ratio) => (
-                            <SelectItem key={ratio} value={ratio}>
-                              {ratio}
+                            <SelectItem key={ratio.value} value={ratio.value}>
+                              {ratio.label}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -181,46 +226,84 @@ const Configurations = () => {
                   name="num_outputs"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>
+                      <FormLabel className="text-sm font-medium text-gray-700">
                         {renderLabelWithTooltip(
-                          "Görsel Sayısı",
-                          "Üretilmesini istediğiniz görsel sayısı."
+                          "🔢 Görsel Sayısı",
+                          "Aynı anda üretilecek görsel sayısı. Daha fazla seçenek için sayıyı artırabilirsiniz."
                         )}
                       </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          {...field}
-                          onChange={(e) =>
-                            field.onChange(Number(e.target.value))
-                          }
-                          min={1}
-                          max={4}
-                          className="w-full"
-                        />
-                      </FormControl>
+                      <div className="flex items-center gap-2">
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            onChange={(e) =>
+                              field.onChange(Number(e.target.value))
+                            }
+                            min={1}
+                            max={4}
+                            className="h-10 w-16 rounded-lg border-gray-300 focus:border-blue-500 text-center font-semibold"
+                          />
+                        </FormControl>
+                        <div className="flex gap-1">
+                          {[1, 2, 3, 4].map((num) => (
+                            <button
+                              key={num}
+                              type="button"
+                              onClick={() => field.onChange(num)}
+                              className={`w-8 h-8 rounded-lg text-sm font-medium transition-all ${
+                                field.value === num
+                                  ? "bg-blue-500 text-white shadow-md"
+                                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                              }`}
+                            >
+                              {num}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <div>
-                  <Accordion type="single" collapsible>
-                    <AccordionItem value="item-1">
-                      <AccordionTrigger>Gelişmiş Seçenekler</AccordionTrigger>
-                      <AccordionContent className="flex flex-col space-y-4">
-                        <FormField
-                          control={form.control}
-                          name="guidance"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="flex items-center justify-between">
-                                {renderLabelWithTooltip(
-                                  "Yönlendirme",
-                                  "Modelin komuta ne kadar sadık kalacağını belirler."
-                                )}
-                                <span>{field.value}</span>
-                              </FormLabel>
-                              <FormControl>
+              </div>
+            </motion.div>
+
+            {/* Advanced Settings */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
+              className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden"
+            >
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="advanced" className="border-none">
+                  <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-gray-50 transition-colors">
+                    <div className="flex items-center gap-2 text-lg font-semibold text-gray-800">
+                      ⚙️ Gelişmiş Seçenekler
+                      <span className="text-sm font-normal text-gray-500 ml-2">
+                        (İsteğe bağlı)
+                      </span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                      <FormField
+                        control={form.control}
+                        name="guidance"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center justify-between text-sm font-medium text-gray-700">
+                              {renderLabelWithTooltip(
+                                "🎯 Yönlendirme Gücü",
+                                "Modelin komuta ne kadar sadık kalacağını belirler. Yüksek değerler daha sadık, düşük değerler daha yaratıcı sonuçlar verir."
+                              )}
+                              <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-lg text-xs font-semibold">
+                                {field.value}
+                              </span>
+                            </FormLabel>
+                            <FormControl>
+                              <div className="px-3">
                                 <Slider
                                   value={[field.value]}
                                   min={1}
@@ -229,151 +312,170 @@ const Configurations = () => {
                                   onValueChange={(value) =>
                                     field.onChange(value[0])
                                   }
+                                  className="w-full"
                                 />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                                  <span>Yaratıcı</span>
+                                  <span>Sadık</span>
+                                </div>
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                        <FormField
-                          control={form.control}
-                          name="num_inference_steps"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="flex items-center justify-between">
-                                {renderLabelWithTooltip(
-                                  "Üretim Adımı Sayısı",
-                                  "Modelin görseli üretmek için kaç adım kullanacağını belirler."
-                                )}
-                                <span>{field.value}</span>
-                              </FormLabel>
-                              <FormControl>
+                      <FormField
+                        control={form.control}
+                        name="num_inference_steps"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center justify-between text-sm font-medium text-gray-700">
+                              {renderLabelWithTooltip(
+                                "🔄 İşlem Adımları",
+                                "Modelin görseli üretmek için kaç adım kullanacağını belirler. Daha fazla adım daha kaliteli ama daha yavaş sonuç verir."
+                              )}
+                              <span className="bg-green-100 text-green-800 px-2 py-1 rounded-lg text-xs font-semibold">
+                                {field.value}
+                              </span>
+                            </FormLabel>
+                            <FormControl>
+                              <div className="px-3">
                                 <Slider
                                   value={[field.value]}
-                                  min={1}
+                                  min={10}
                                   max={50}
-                                  step={1}
+                                  step={2}
                                   onValueChange={(value) =>
                                     field.onChange(value[0])
                                   }
+                                  className="w-full"
                                 />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                                  <span>Hızlı</span>
+                                  <span>Kaliteli</span>
+                                </div>
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                        <FormField
-                          control={form.control}
-                          name="output_quality"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="flex items-center justify-between">
-                                {renderLabelWithTooltip(
-                                  "Görsel Kalitesi",
-                                  "Çıktı görselinin kalite düzeyi (1–100)."
-                                )}
-                                <span>{field.value}</span>
-                              </FormLabel>
-                              <FormControl>
+                      <FormField
+                        control={form.control}
+                        name="output_quality"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center justify-between text-sm font-medium text-gray-700">
+                              {renderLabelWithTooltip(
+                                "✨ Görsel Kalitesi",
+                                "Çıktı görselinin sıkıştırma kalitesi. Yüksek değerler daha büyük dosya boyutu ama daha iyi kalite sağlar."
+                              )}
+                              <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-lg text-xs font-semibold">
+                                {field.value}%
+                              </span>
+                            </FormLabel>
+                            <FormControl>
+                              <div className="px-3">
                                 <Slider
                                   value={[field.value]}
                                   min={50}
                                   max={100}
-                                  step={1}
+                                  step={5}
                                   onValueChange={(value) =>
                                     field.onChange(value[0])
                                   }
+                                  className="w-full"
                                 />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="output_format"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>
-                                {renderLabelWithTooltip(
-                                  "Çıktı Formatı",
-                                  "Görselin dosya formatını seçin."
-                                )}
-                              </FormLabel>
-                              <Select
-                                onValueChange={field.onChange}
-                                value={field.value}
-                              >
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Format seçiniz" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  {["jpg", "png", "webp"].map((format) => (
-                                    <SelectItem key={format} value={format}>
-                                      {format}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
-                </div>
-
-                <FormField
-                  control={form.control}
-                  name="prompt"
-                  render={({ field }) => (
-                    <FormItem className="col-span-1 sm:col-span-2">
-                      <FormLabel>
-                        {renderLabelWithTooltip(
-                          "Komut (Prompt)",
-                          "Modelin görsel üretmesi için kullanacağı metin komutu."
+                                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                                  <span>Küçük dosya</span>
+                                  <span>Yüksek kalite</span>
+                                </div>
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
                         )}
-                      </FormLabel>
-                      <FormControl>
-                        <Textarea {...field} rows={6} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </fieldset>
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="output_format"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium text-gray-700">
+                              {renderLabelWithTooltip(
+                                "📁 Dosya Formatı",
+                                "Görselin kaydedileceği dosya formatı. PNG şeffaflık destekler, JPG daha küçük dosya boyutu sağlar."
+                              )}
+                            </FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="h-12 rounded-xl border-gray-300 focus:border-blue-500">
+                                  <SelectValue placeholder="Format seçiniz" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {[
+                                  { value: "jpg", label: "JPG (Küçük dosya)" },
+                                  { value: "png", label: "PNG (Şeffaflık)" },
+                                  { value: "webp", label: "WebP (Modern)" },
+                                ].map((format) => (
+                                  <SelectItem
+                                    key={format.value}
+                                    value={format.value}
+                                  >
+                                    {format.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </motion.div>
           </form>
         </Form>
 
-        <div className="mt-4">
+        {/* Generate Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.3 }}
+          className="mt-8"
+        >
           {user ? (
-            <>
-              <Button
-                asChild
-                type="submit"
-                onClick={form.handleSubmit(onSubmit)}
-                className="w-full"
+            <Button
+              type="submit"
+              onClick={form.handleSubmit(onSubmit)}
+              className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+            >
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="flex items-center gap-2"
               >
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  Görseli Üret
-                </motion.button>
-              </Button>
-            </>
+                🎨 Görseli Üret
+              </motion.div>
+            </Button>
           ) : (
-            <SignInDialog />
+            <div className="text-center">
+              <p className="text-gray-600 mb-4">
+                Görsel üretmek için giriş yapmanız gerekiyor
+              </p>
+              <SignInDialog />
+            </div>
           )}
-        </div>
+        </motion.div>
       </TooltipProvider>
     </div>
   );

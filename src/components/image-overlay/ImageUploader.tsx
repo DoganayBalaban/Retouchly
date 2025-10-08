@@ -4,19 +4,19 @@ import { useDropzone } from "react-dropzone";
 import { useState, useCallback } from "react";
 import * as motion from "motion/react-client";
 import { supabase } from "@/lib/supabase";
-import { ImagePlus, Loader, Upload, X, Scissors } from "lucide-react";
+import { Upload, X, Image as ImageIcon } from "lucide-react";
 import useGeneratedStore from "@/store/useGeneratedStore";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function ImageUploader() {
-  const { removeBackground } = useGeneratedStore();
+  const { setUploadedImage, uploadedImage, clearOverlays } =
+    useGeneratedStore();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
   const [uploadedPath, setUploadedPath] = useState<string | null>(null);
 
-  const resizeImage = (file: File, maxSize = 512): Promise<Blob> => {
+  const resizeImage = (file: File, maxSize = 1024): Promise<Blob> => {
     return new Promise((resolve, reject) => {
       const image = new Image();
       image.src = URL.createObjectURL(file);
@@ -50,65 +50,61 @@ export default function ImageUploader() {
       image.onerror = () => reject("Görsel yüklenemedi.");
     });
   };
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    const file = acceptedFiles[0];
-    if (!file) return;
 
-    try {
-      const resized = await resizeImage(file);
-      const preview = URL.createObjectURL(resized);
-      setPreviewUrl(preview);
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      const file = acceptedFiles[0];
+      if (!file) return;
 
-      const fileName = `${Date.now()}.jpeg`;
-      const { error } = await supabase.storage
-        .from("images")
-        .upload(fileName, resized);
+      try {
+        const resized = await resizeImage(file);
+        const preview = URL.createObjectURL(resized);
+        setPreviewUrl(preview);
 
-      if (error) throw new Error(error.message);
+        const fileName = `overlay-${Date.now()}.jpeg`;
+        const { error } = await supabase.storage
+          .from("images")
+          .upload(fileName, resized);
 
-      const { data } = supabase.storage.from("images").getPublicUrl(fileName);
-      setUploadedUrl(data.publicUrl);
-      setUploadedPath(fileName);
-      toast.success("Görsel yüklendi.");
-    } catch (err) {
-      alert("Hata: " + err);
-      toast.error("Görsel yüklenirken hata oluştu.");
-    } finally {
-    }
-  }, []);
+        if (error) throw new Error(error.message);
+
+        const { data } = supabase.storage.from("images").getPublicUrl(fileName);
+        setUploadedImage(data.publicUrl);
+        setUploadedPath(fileName);
+        clearOverlays(); // Clear existing overlays when new image is uploaded
+        toast.success("Görsel yüklendi.");
+      } catch (err) {
+        toast.error("Görsel yüklenirken hata oluştu: " + err);
+      }
+    },
+    [setUploadedImage, clearOverlays]
+  );
+
   const handleCancel = async () => {
     if (uploadedPath) {
       await supabase.storage.from("images").remove([uploadedPath]);
     }
-    toast.success("Görsel silindi.");
-    setUploadedUrl(null);
+    setUploadedImage(null);
     setUploadedPath(null);
     setPreviewUrl(null);
+    clearOverlays();
+    toast.success("Görsel silindi.");
   };
-  const handleRemoveBackground = async () => {
-    if (!uploadedUrl) return alert("Görsel yüklenmeden işlem yapılamaz.");
 
-    try {
-      await removeBackground({ image: uploadedUrl });
-      toast.success("Arka plan kaldırılıyor...");
-    } catch (error) {
-      console.error("Hata:", error);
-      toast.error("Arka plan kaldırılırken hata oluştu.");
-    }
-  };
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: { "image/*": [] },
+    maxFiles: 1,
   });
 
   return (
     <div className="w-full p-3 sm:p-4 bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg border border-gray-100">
       <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-1">
+        <h2 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-1">
           Görsel Yükle
         </h2>
         <p className="text-gray-600 text-xs">
-          Arka planını kaldırmak istediğiniz görseli yükleyin
+          Düzenlemek istediğiniz görseli yükleyin
         </p>
       </div>
 
@@ -125,8 +121,8 @@ export default function ImageUploader() {
                 {...getRootProps()}
                 className={`relative border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all duration-300 ${
                   isDragActive
-                    ? "border-purple-500 bg-purple-50"
-                    : "border-gray-300 bg-white hover:border-purple-400 hover:bg-purple-50/50"
+                    ? "border-orange-500 bg-orange-50"
+                    : "border-gray-300 bg-white hover:border-orange-400 hover:bg-orange-50/50"
                 }`}
               >
                 <input {...getInputProps()} />
@@ -134,7 +130,7 @@ export default function ImageUploader() {
                   whileHover={{ scale: 1.05 }}
                   className="flex flex-col items-center gap-4"
                 >
-                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center">
                     <Upload className="w-8 h-8 text-white" />
                   </div>
                   <div>
@@ -185,48 +181,28 @@ export default function ImageUploader() {
           </motion.div>
         )}
 
-        {/* Action Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.2 }}
-        >
-          <Button
-            onClick={handleRemoveBackground}
-            disabled={!uploadedUrl}
-            className="w-full h-12 text-base font-semibold bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-          >
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="flex items-center gap-2"
-            >
-              <Scissors className="w-5 h-5" />
-              Arka Planı Kaldır
-            </motion.div>
-          </Button>
-        </motion.div>
-
         {/* Info Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6">
-          <div className="bg-purple-50 p-3 rounded-lg border border-purple-200">
+        <div className="grid grid-cols-1 gap-3 mt-6">
+          <div className="bg-orange-50 p-3 rounded-lg border border-orange-200">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-purple-600">✂️</span>
-              <span className="text-sm font-medium text-purple-800">
-                Otomatik
+              <span className="text-orange-600">🎨</span>
+              <span className="text-sm font-medium text-orange-800">
+                Özellikler
               </span>
             </div>
-            <p className="text-xs text-purple-700">
-              AI algoritması arka planı otomatik olarak tespit eder
+            <p className="text-xs text-orange-700">
+              Emoji, sticker ve metin ekleyebilirsiniz
             </p>
           </div>
-          <div className="bg-pink-50 p-3 rounded-lg border border-pink-200">
+          <div className="bg-red-50 p-3 rounded-lg border border-red-200">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-pink-600">🎯</span>
-              <span className="text-sm font-medium text-pink-800">Hassas</span>
+              <span className="text-red-600">✨</span>
+              <span className="text-sm font-medium text-red-800">
+                AI Destekli
+              </span>
             </div>
-            <p className="text-xs text-pink-700">
-              Kenarları koruyan gelişmiş algoritma
+            <p className="text-xs text-red-700">
+              Akıllı konumlandırma ve boyutlandırma
             </p>
           </div>
         </div>
