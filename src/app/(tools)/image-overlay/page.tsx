@@ -3,6 +3,9 @@ import ImageUploader from "@/components/image-overlay/ImageUploader";
 import OverlayEditor from "@/components/image-overlay/OverlayEditor";
 import React from "react";
 
+// Force dynamic rendering
+export const dynamic = "force-dynamic";
+
 const ImageOverlay = () => {
   return (
     <div className="container mx-auto px-4 py-6">

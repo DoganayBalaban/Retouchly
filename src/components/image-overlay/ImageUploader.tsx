@@ -3,7 +3,7 @@
 import { useDropzone } from "react-dropzone";
 import { useState, useCallback } from "react";
 import * as motion from "motion/react-client";
-import { supabase } from "@/lib/supabase";
+// Supabase will be imported dynamically
 import { Upload, X, Image as ImageIcon } from "lucide-react";
 import useGeneratedStore from "@/store/useGeneratedStore";
 import toast from "react-hot-toast";
@@ -62,6 +62,10 @@ export default function ImageUploader() {
         setPreviewUrl(preview);
 
         const fileName = `overlay-${Date.now()}.jpeg`;
+
+        // Dynamic import of supabase
+        const { supabase } = await import("@/lib/supabase");
+
         const { error } = await supabase.storage
           .from("images")
           .upload(fileName, resized);
@@ -82,6 +86,7 @@ export default function ImageUploader() {
 
   const handleCancel = async () => {
     if (uploadedPath) {
+      const { supabase } = await import("@/lib/supabase");
       await supabase.storage.from("images").remove([uploadedPath]);
     }
     setUploadedImage(null);

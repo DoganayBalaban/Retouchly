@@ -3,7 +3,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+// Supabase will be imported dynamically
 import toast from "react-hot-toast";
 import { Loader } from "lucide-react";
 
@@ -12,6 +12,7 @@ export default function AuthCallbackPage() {
 
   useEffect(() => {
     const handleAuth = async () => {
+      const { supabase } = await import("@/lib/supabase");
       const { data, error } = await supabase.auth.getSession();
 
       if (error || !data.session) {
