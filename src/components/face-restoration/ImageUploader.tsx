@@ -9,9 +9,11 @@ import useGeneratedStore from "@/store/useGeneratedStore";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import AIAssistant, { AIAssistantButton } from "../ai-assistant/AIAssistant";
 
 export default function ImageUploader() {
-  const { faceRestoration } = useGeneratedStore();
+  const { faceRestoration, aiAssistantVisible, setAIAssistantVisible } =
+    useGeneratedStore();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
   const [uploadedPath, setUploadedPath] = useState<string | null>(null);
@@ -229,6 +231,19 @@ export default function ImageUploader() {
           </div>
         </div>
       </div>
+
+      {/* AI Assistant */}
+      {aiAssistantVisible && (
+        <AIAssistant
+          toolType="face-restoration"
+          imageUrl={uploadedUrl || undefined}
+        />
+      )}
+
+      {/* AI Assistant Button */}
+      {!aiAssistantVisible && (
+        <AIAssistantButton onClick={() => setAIAssistantVisible(true)} />
+      )}
     </div>
   );
 }

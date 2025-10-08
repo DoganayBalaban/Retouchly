@@ -2,7 +2,6 @@
 🎯 Amaç: Kullanıcıya daha fazla değer sunmak
 Görsel segmentasyonu (Segment Anything)
 Otomatik filtre, ışık düzeltme
-Emoji/sticker/AI overlay ekleme
 Stil transferi (örnek: Van Gogh tarzında yeniden boyama)
 OpenAI Vision ile görselden açıklama üretme (caption generation)
 
@@ -29,16 +28,3 @@ Hangi özellikler ne kadar kullanılıyor → veri ile ölçümleme
 Stripe ile ödeme alma
 Prompt veya görsel başına kredi sistemi
 Kullanım limitleri ve istatistik ekranı
-
-📱 Aşama 9: Mobil Sürüm ve Yaygınlaşma
-🎯 Amaç: Ulaşılabilirliği artırmak
-React Native + Expo ile mobil uygulama
-Push bildirimleri
-App Store + Google Play yayını
-
-🧪 Aşama 10: Topluluk, Beta Test, Geri Bildirim Döngüsü
-🎯 Amaç: Ürünü gerçek kullanıcılarla test et
-Feedback formu / "Bize yaz" alanı
-Discord topluluğu
-Açık beta yayını
-İlk kullanıcılarla e-posta üzerinden test daveti

@@ -28,6 +28,9 @@ interface GeneratedStore {
   uploadedImage: string | null;
   overlays: Overlay[];
   selectedOverlay: string | null;
+  // AI Assistant states
+  aiAssistantVisible: boolean;
+  aiSuggestions: string[];
   generateImages: (values: z.infer<typeof imageFormSchema>) => Promise<void>;
   removeBackground: (input: { image: string }) => Promise<void>;
   faceRestoration: (input: { image: string }) => Promise<void>;
@@ -39,6 +42,9 @@ interface GeneratedStore {
   removeOverlay: (id: string) => void;
   setSelectedOverlay: (id: string | null) => void;
   clearOverlays: () => void;
+  // AI Assistant actions
+  setAIAssistantVisible: (visible: boolean) => void;
+  setAISuggestions: (suggestions: string[]) => void;
 }
 const useGeneratedStore = create<GeneratedStore>((set, get) => ({
   loading: false,
@@ -51,6 +57,9 @@ const useGeneratedStore = create<GeneratedStore>((set, get) => ({
   uploadedImage: null,
   overlays: [],
   selectedOverlay: null,
+  // AI Assistant states
+  aiAssistantVisible: false,
+  aiSuggestions: [],
   generateImages: async (values: z.infer<typeof imageFormSchema>) => {
     set({ loading: true, error: null });
     const {
@@ -156,6 +165,13 @@ const useGeneratedStore = create<GeneratedStore>((set, get) => ({
   },
   clearOverlays: () => {
     set({ overlays: [], selectedOverlay: null });
+  },
+  // AI Assistant actions
+  setAIAssistantVisible: (visible: boolean) => {
+    set({ aiAssistantVisible: visible });
+  },
+  setAISuggestions: (suggestions: string[]) => {
+    set({ aiSuggestions: suggestions });
   },
 }));
 export default useGeneratedStore;

@@ -37,11 +37,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "../ui/textarea";
-import { Info } from "lucide-react";
+import { Info, Bot, Sparkles } from "lucide-react";
 import useGeneratedStore from "@/store/useGeneratedStore";
 import { supabase } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
 import SignInDialog from "../SignInDialog";
+import AIAssistant, { AIAssistantButton } from "../ai-assistant/AIAssistant";
 
 export const imageFormSchema = z.object({
   prompt: z.string({ required_error: "Prompt giriniz" }),
@@ -86,7 +87,8 @@ const Configurations = () => {
     })();
   }, []);
 
-  const { generateImages } = useGeneratedStore();
+  const { generateImages, aiAssistantVisible, setAIAssistantVisible } =
+    useGeneratedStore();
 
   const form = useForm<z.infer<typeof imageFormSchema>>({
     resolver: zodResolver(imageFormSchema),
@@ -149,12 +151,24 @@ const Configurations = () => {
                 name="prompt"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-base font-semibold text-gray-800 mb-2 block">
-                      {renderLabelWithTooltip(
-                        "✨ Komut (Prompt)",
-                        "Modelin görsel üretmesi için kullanacağı metin komutu. Detaylı açıklamalar daha iyi sonuçlar verir."
-                      )}
-                    </FormLabel>
+                    <div className="flex items-center justify-between mb-2">
+                      <FormLabel className="text-base font-semibold text-gray-800">
+                        {renderLabelWithTooltip(
+                          "✨ Komut (Prompt)",
+                          "Modelin görsel üretmesi için kullanacağı metin komutu. Detaylı açıklamalar daha iyi sonuçlar verir."
+                        )}
+                      </FormLabel>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setAIAssistantVisible(true)}
+                        className="flex items-center gap-1 text-xs"
+                      >
+                        <Sparkles className="w-3 h-3" />
+                        AI Yardım
+                      </Button>
+                    </div>
                     <FormControl>
                       <Textarea
                         {...field}
@@ -477,6 +491,23 @@ const Configurations = () => {
           )}
         </motion.div>
       </TooltipProvider>
+
+      {/* AI Assistant */}
+      {aiAssistantVisible && (
+        <AIAssistant
+          toolType="image-generation"
+          currentPrompt={form.watch("prompt")}
+          onPromptSuggestion={(suggestion) => {
+            form.setValue("prompt", suggestion);
+            setAIAssistantVisible(false);
+          }}
+        />
+      )}
+
+      {/* AI Assistant Button */}
+      {!aiAssistantVisible && (
+        <AIAssistantButton onClick={() => setAIAssistantVisible(true)} />
+      )}
     </div>
   );
 };
