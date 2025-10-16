@@ -17,8 +17,6 @@ const nextConfig: NextConfig = {
   },
   // Enable standalone output for Docker
   output: "standalone",
-  // Optimize for production
-  swcMinify: true,
   // Enable experimental features for better performance
   experimental: {
     optimizeCss: true,

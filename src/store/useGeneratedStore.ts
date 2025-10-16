@@ -30,8 +30,8 @@ interface GeneratedStore {
   aiAssistantVisible: boolean;
   aiSuggestions: string[];
   generateImages: (values: z.infer<typeof imageFormSchema>) => Promise<void>;
-  removeBackground: (input: { image: string }) => Promise<void>;
-  faceRestoration: (input: { image: string }) => Promise<void>;
+  removeBackground: (input: { image: string }) => Promise<string | null>;
+  faceRestoration: (input: { image: string }) => Promise<string | null>;
   // Overlay actions
   setUploadedImage: (url: string | null) => void;
   addOverlay: (overlay: Omit<Overlay, "id">) => void;

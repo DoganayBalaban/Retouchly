@@ -292,11 +292,16 @@ export default function HistoryPage() {
       <Card className="py-0! overflow-hidden bg-gray-800/90 backdrop-blur-sm border border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
         <div className="relative aspect-square overflow-hidden">
           <Image
-            src={item.image_url}
+            src={item.image_url || "/placeholder-image.svg"}
             alt={item.prompt || "Generated image"}
             width={500}
             height={500}
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = "/placeholder-image.svg";
+            }}
+            unoptimized={item.image_url?.includes("replicate.delivery")}
           />
 
           {/* Overlay with actions */}
