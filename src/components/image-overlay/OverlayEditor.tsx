@@ -18,6 +18,8 @@ import {
 } from "lucide-react";
 import useGeneratedStore from "@/store/useGeneratedStore";
 import toast from "react-hot-toast";
+import { supabase } from "@/lib/supabase";
+import { addUserActivity } from "@/app/actions/userImages/getUserGeneratedImages";
 
 const EMOJIS = [
   "😀",
@@ -293,7 +295,7 @@ export default function OverlayEditor() {
 
         // Convert to blob and download
         canvas.toBlob(
-          (blob) => {
+          async (blob) => {
             if (blob) {
               const url = URL.createObjectURL(blob);
               const link = document.createElement("a");
@@ -303,6 +305,29 @@ export default function OverlayEditor() {
               link.click();
               document.body.removeChild(link);
               URL.revokeObjectURL(url);
+
+              // Activity kaydet
+              try {
+                const {
+                  data: { user },
+                } = await supabase.auth.getUser();
+                if (user) {
+                  await addUserActivity({
+                    user_id: user.id,
+                    activity_type: "image_overlay",
+                    input_image_url: uploadedImage,
+                    image_url: url, // İndirilen görsel URL'i
+                    metadata: {
+                      overlays_count: overlays.length,
+                      overlay_types: overlays.map((o) => o.type),
+                      final_resolution: `${canvas.width}x${canvas.height}`,
+                    },
+                  });
+                }
+              } catch (error) {
+                console.error("Activity kaydetme hatası:", error);
+              }
+
               toast.dismiss();
               toast.success("Görsel başarıyla indirildi!");
             } else {

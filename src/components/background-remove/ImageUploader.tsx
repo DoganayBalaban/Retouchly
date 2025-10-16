@@ -9,6 +9,7 @@ import useGeneratedStore from "@/store/useGeneratedStore";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { addUserActivity } from "@/app/actions/userImages/getUserGeneratedImages";
 
 export default function ImageUploader() {
   const { removeBackground } = useGeneratedStore();
@@ -88,8 +89,44 @@ export default function ImageUploader() {
   const handleRemoveBackground = async () => {
     if (!uploadedUrl) return alert("Görsel yüklenmeden işlem yapılamaz.");
 
+    const startTime = Date.now();
     try {
-      await removeBackground({ image: uploadedUrl });
+      // removeBackground fonksiyonunu çağır ve sonucu al
+      const result = await removeBackground({ image: uploadedUrl });
+      const processingTime = (Date.now() - startTime) / 1000;
+
+      // Kullanıcı bilgisini al
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        try {
+          // Sonucu kullan - arka planı kaldırılmış görsel
+          const resultUrl = result || uploadedUrl;
+
+          await addUserActivity({
+            user_id: user.id,
+            activity_type: "background_removal",
+            input_image_url: uploadedUrl,
+            image_url: resultUrl, // Arka planı kaldırılmış görsel
+            metadata: {
+              background_detected: true,
+              edge_quality: "smooth",
+              output_format: "png",
+              processing_time: processingTime,
+            },
+          });
+        } catch (activityError) {
+          console.error("Activity kaydetme hatası:", activityError);
+          toast.error(
+            "History'e kaydetme hatası: " + (activityError as Error).message
+          );
+        }
+      } else {
+        toast.error("Kullanıcı oturumu bulunamadı");
+      }
+
       toast.success("Arka plan kaldırılıyor...");
     } catch (error) {
       console.error("Hata:", error);

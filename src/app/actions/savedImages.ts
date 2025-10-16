@@ -1,7 +1,10 @@
 import { supabase } from "@/lib/supabase";
 
-
-export const saveImagesToBucket = async (imageUrls: string[], userId: string, prompt: string) => {
+export const saveImagesToBucket = async (
+  imageUrls: string[],
+  userId: string,
+  prompt: string
+) => {
   const response = await fetch(imageUrls[0]);
   const blob = await response.blob();
 
@@ -17,9 +20,7 @@ export const saveImagesToBucket = async (imageUrls: string[], userId: string, pr
     throw uploadError;
   }
 
-  const publicUrlData = supabase.storage
-    .from("images")
-    .getPublicUrl(fileName);
+  const publicUrlData = supabase.storage.from("images").getPublicUrl(fileName);
 
   if (!publicUrlData.data?.publicUrl) {
     console.error("Public URL alınamadı");
@@ -28,11 +29,18 @@ export const saveImagesToBucket = async (imageUrls: string[], userId: string, pr
 
   const publicUrl = publicUrlData.data.publicUrl;
 
-  const { error: insertError } = await supabase.from("generated_images").insert({
+  const { error: insertError } = await supabase.from("user_activities").insert({
     user_id: userId,
     image_url: publicUrl,
     prompt: prompt,
-    created_at: new Date().toISOString()
+    activity_type: "image_generation", // Yeni kolon
+    metadata: {
+      aspect_ratio: "1:1", // Bu değerler form'dan alınabilir
+      num_outputs: 1,
+      guidance: 7.5,
+      steps: 20,
+    },
+    created_at: new Date().toISOString(),
   });
 
   if (insertError) {
@@ -41,4 +49,4 @@ export const saveImagesToBucket = async (imageUrls: string[], userId: string, pr
   }
 
   return publicUrl;
-}
+};

@@ -6,7 +6,6 @@ import { removeBackground } from "@/app/actions/background-actions";
 import { restoreFace } from "@/app/actions/restore-actions";
 import { supabase } from "@/lib/supabase";
 import { saveImagesToBucket } from "@/app/actions/savedImages";
-import { dogumHaritasi } from "@/app/actions/dogum-haritasi";
 interface Overlay {
   id: string;
   type: "emoji" | "sticker" | "text";
@@ -21,7 +20,6 @@ interface GeneratedStore {
   loading: boolean;
   images: Array<{ url: string }>;
   bgImage: string | null;
-  dogumHaritasiText: string | null;
   restoredFace: string | null;
   error: string | null;
   // Overlay states
@@ -34,7 +32,6 @@ interface GeneratedStore {
   generateImages: (values: z.infer<typeof imageFormSchema>) => Promise<void>;
   removeBackground: (input: { image: string }) => Promise<void>;
   faceRestoration: (input: { image: string }) => Promise<void>;
-  dogumHaritasi: (input: { image: string }) => Promise<void>;
   // Overlay actions
   setUploadedImage: (url: string | null) => void;
   addOverlay: (overlay: Omit<Overlay, "id">) => void;
@@ -94,47 +91,36 @@ const useGeneratedStore = create<GeneratedStore>((set, get) => ({
       console.log("removeBackground", data);
       if (!success) {
         set({ loading: false, error });
-        return;
+        return null;
       }
 
       set({ loading: false, bgImage: data });
+      return data; // Sonucu döndür
     } catch (error) {
       console.error("Replicate API Hatası:", error);
       set({ loading: false, error: (error as Error).message });
+      return null;
     }
   },
   faceRestoration: async (input: { image: string }) => {
     set({ loading: true, error: null });
     try {
       const { error, success, data } = await restoreFace(input);
-      console.log("removeBackground", data);
+      console.log("faceRestoration", data);
       if (!success) {
         set({ loading: false, error });
-        return;
+        return null;
       }
 
       set({ loading: false, restoredFace: data });
+      return data; // Sonucu döndür
     } catch (error) {
       console.error("Replicate API Hatası:", error);
       set({ loading: false, error: (error as Error).message });
+      return null;
     }
   },
-  dogumHaritasi: async (input: { image: string }) => {
-    set({ loading: true, error: null });
-    try {
-      const { error, success, data } = await dogumHaritasi(input);
 
-      if (!success) {
-        set({ loading: false, error });
-        return;
-      }
-
-      set({ loading: false, dogumHaritasiText: data });
-    } catch (error) {
-      console.error("Replicate API Hatası:", error);
-      set({ loading: false, error: (error as Error).message });
-    }
-  },
   // Overlay actions
   setUploadedImage: (url: string | null) => {
     set({ uploadedImage: url });

@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import AIAssistant from "../ai-assistant/AIAssistant";
+import { addUserActivity } from "@/app/actions/userImages/getUserGeneratedImages";
 
 export default function ImageUploader() {
   const { faceRestoration } = useGeneratedStore();
@@ -88,8 +89,42 @@ export default function ImageUploader() {
   const handleFaceRestoration = async () => {
     if (!uploadedUrl) return alert("Görsel yüklenmeden işlem yapılamaz.");
 
+    const startTime = Date.now();
     try {
-      await faceRestoration({ image: uploadedUrl });
+      const result = await faceRestoration({ image: uploadedUrl });
+      const processingTime = (Date.now() - startTime) / 1000;
+
+      // Kullanıcı bilgisini al
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        try {
+          // Sonucu kullan - restore edilmiş yüz görseli
+          const resultUrl = result || uploadedUrl;
+
+          await addUserActivity({
+            user_id: user.id,
+            activity_type: "face_restoration",
+            input_image_url: uploadedUrl,
+            image_url: resultUrl, // Restore edilmiş görsel
+            metadata: {
+              original_quality: "detected",
+              enhancement_level: "high",
+              processing_time: processingTime,
+            },
+          });
+        } catch (activityError) {
+          console.error("Activity kaydetme hatası:", activityError);
+          toast.error(
+            "History'e kaydetme hatası: " + (activityError as Error).message
+          );
+        }
+      } else {
+        toast.error("Kullanıcı oturumu bulunamadı");
+      }
+
       toast.success("Yüz restorasyonu başlatıldı.");
     } catch (error) {
       console.error("Yüz restorasyonu hatası:", error);
