@@ -4,6 +4,7 @@ import { imageFormSchema } from "@/components/image-generation/Configurations";
 import { generateImages } from "@/app/actions/image-actions";
 import { removeBackground } from "@/app/actions/background-actions";
 import { restoreFace } from "@/app/actions/restore-actions";
+import { editImageWithAI } from "@/app/actions/image-edit-actions";
 import { supabase } from "@/lib/supabase";
 import { saveImagesToBucket } from "@/app/actions/savedImages";
 interface Overlay {
@@ -22,6 +23,8 @@ interface GeneratedStore {
   bgImage: string | null;
   restoredFace: string | null;
   originalFaceImage: string | null;
+  editedImage: string | null;
+  originalEditImage: string | null;
   error: string | null;
   // Overlay states
   uploadedImage: string | null;
@@ -34,6 +37,19 @@ interface GeneratedStore {
   removeBackground: (input: { image: string }) => Promise<string | null>;
   faceRestoration: (input: { image: string }) => Promise<string | null>;
   setOriginalFaceImage: (url: string | null) => void;
+  editImage: (input: {
+    image_input: string[];
+    prompt: string;
+    aspect_ratio?:
+      | "match_input_image"
+      | "1:1"
+      | "16:9"
+      | "9:16"
+      | "4:3"
+      | "3:4";
+    output_format?: "jpg" | "png" | "webp";
+  }) => Promise<string | null>;
+  setOriginalEditImage: (url: string | null) => void;
   // Overlay actions
   setUploadedImage: (url: string | null) => void;
   addOverlay: (overlay: Omit<Overlay, "id">) => void;
@@ -52,6 +68,8 @@ const useGeneratedStore = create<GeneratedStore>((set, get) => ({
   dogumHaritasiText: null,
   restoredFace: null,
   originalFaceImage: null,
+  editedImage: null,
+  originalEditImage: null,
   error: null,
   // Overlay states
   uploadedImage: null,
@@ -125,6 +143,42 @@ const useGeneratedStore = create<GeneratedStore>((set, get) => ({
   },
   setOriginalFaceImage: (url: string | null) => {
     set({ originalFaceImage: url });
+  },
+  editImage: async (input: {
+    image_input: string[];
+    prompt: string;
+    aspect_ratio?:
+      | "match_input_image"
+      | "1:1"
+      | "16:9"
+      | "9:16"
+      | "4:3"
+      | "3:4";
+    output_format?: "jpg" | "png" | "webp";
+  }) => {
+    set({
+      loading: true,
+      error: null,
+      originalEditImage: input.image_input[0],
+    });
+    try {
+      const { error, success, data } = await editImageWithAI(input);
+      console.log("editImage", data);
+      if (!success) {
+        set({ loading: false, error });
+        return null;
+      }
+
+      set({ loading: false, editedImage: data });
+      return data; // Return result
+    } catch (error) {
+      console.error("Image editing error:", error);
+      set({ loading: false, error: (error as Error).message });
+      return null;
+    }
+  },
+  setOriginalEditImage: (url: string | null) => {
+    set({ originalEditImage: url });
   },
 
   // Overlay actions
