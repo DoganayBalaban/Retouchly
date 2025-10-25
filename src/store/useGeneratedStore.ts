@@ -21,6 +21,7 @@ interface GeneratedStore {
   images: Array<{ url: string }>;
   bgImage: string | null;
   restoredFace: string | null;
+  originalFaceImage: string | null;
   error: string | null;
   // Overlay states
   uploadedImage: string | null;
@@ -32,6 +33,7 @@ interface GeneratedStore {
   generateImages: (values: z.infer<typeof imageFormSchema>) => Promise<void>;
   removeBackground: (input: { image: string }) => Promise<string | null>;
   faceRestoration: (input: { image: string }) => Promise<string | null>;
+  setOriginalFaceImage: (url: string | null) => void;
   // Overlay actions
   setUploadedImage: (url: string | null) => void;
   addOverlay: (overlay: Omit<Overlay, "id">) => void;
@@ -49,6 +51,7 @@ const useGeneratedStore = create<GeneratedStore>((set, get) => ({
   bgImage: null,
   dogumHaritasiText: null,
   restoredFace: null,
+  originalFaceImage: null,
   error: null,
   // Overlay states
   uploadedImage: null,
@@ -103,7 +106,7 @@ const useGeneratedStore = create<GeneratedStore>((set, get) => ({
     }
   },
   faceRestoration: async (input: { image: string }) => {
-    set({ loading: true, error: null });
+    set({ loading: true, error: null, originalFaceImage: input.image });
     try {
       const { error, success, data } = await restoreFace(input);
       console.log("faceRestoration", data);
@@ -119,6 +122,9 @@ const useGeneratedStore = create<GeneratedStore>((set, get) => ({
       set({ loading: false, error: (error as Error).message });
       return null;
     }
+  },
+  setOriginalFaceImage: (url: string | null) => {
+    set({ originalFaceImage: url });
   },
 
   // Overlay actions

@@ -2,10 +2,9 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import * as motion from "motion/react-client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Bot,
   Send,
@@ -13,7 +12,6 @@ import {
   Sparkles,
   MessageCircle,
   Copy,
-  ThumbsUp,
   RefreshCw,
   X,
 } from "lucide-react";
@@ -52,7 +50,7 @@ export default function AIAssistant({
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isMinimized, setIsMinimized] = useState(true);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -251,7 +249,7 @@ export default function AIAssistant({
           exit={{ opacity: 0, y: 50, scale: 0.9 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
-          <div className="w-72 sm:w-80 h-[30rem] shadow-2xl border-2 border-blue-200 backdrop-blur-md bg-white/98 relative z-[10000] ring-1 ring-black/5 rounded-2xl">
+          <div className="w-80 sm:w-96 h-[35rem] shadow-2xl border-2 border-blue-200 backdrop-blur-md bg-white/98 relative z-[10000] ring-1 ring-black/5 rounded-2xl">
             <div className="p-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -270,9 +268,9 @@ export default function AIAssistant({
                 </Button>
               </div>
             </div>
-            <div className="p-0 flex flex-col h-[25rem]">
+            <div className="p-0 flex flex-col h-[30rem]">
               {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-3 space-y-3">
+              <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {messages.map((message) => (
                   <motion.div
                     key={message.id}
@@ -283,20 +281,22 @@ export default function AIAssistant({
                     }`}
                   >
                     <div
-                      className={`max-w-[90%] rounded-lg p-2 overflow-hidden ${
+                      className={`max-w-[85%] rounded-xl p-3 overflow-hidden shadow-sm ${
                         message.type === "user"
-                          ? "bg-blue-600 text-white"
-                          : "bg-gray-100 text-gray-800"
+                          ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
+                          : "bg-white text-gray-800 border border-gray-200"
                       }`}
                     >
-                      <p className="text-xs">{message.content}</p>
+                      <p className="text-sm leading-relaxed">
+                        {message.content}
+                      </p>
 
                       {/* Suggestions */}
                       {message.suggestions &&
                         message.suggestions.length > 0 && (
                           <div className="mt-2 space-y-1 w-full overflow-hidden">
-                            <p className="text-xs font-semibold flex items-center gap-1">
-                              <Lightbulb className="w-3 h-3" />
+                            <p className="text-sm font-semibold flex items-center gap-2 mb-2">
+                              <Lightbulb className="w-4 h-4" />
                               Suggestions:
                             </p>
                             {message.suggestions.map((suggestion, index) => (
@@ -308,7 +308,7 @@ export default function AIAssistant({
                                   variant="ghost"
                                   size="sm"
                                   onClick={() => applySuggestion(suggestion)}
-                                  className="text-xs p-2 h-auto bg-white/20 hover:bg-white/30 text-left justify-start flex-1 min-w-0 whitespace-normal break-words"
+                                  className="text-sm p-3 h-auto bg-white/20 hover:bg-white/30 text-left justify-start flex-1 min-w-0 whitespace-normal break-words rounded-lg"
                                 >
                                   <span className="block w-full text-left">
                                     {suggestion}
@@ -318,9 +318,9 @@ export default function AIAssistant({
                                   variant="ghost"
                                   size="sm"
                                   onClick={() => copyToClipboard(suggestion)}
-                                  className="p-1 h-auto flex-shrink-0"
+                                  className="p-2 h-auto flex-shrink-0 rounded-lg"
                                 >
-                                  <Copy className="w-3 h-3" />
+                                  <Copy className="w-4 h-4" />
                                 </Button>
                               </div>
                             ))}
@@ -330,11 +330,11 @@ export default function AIAssistant({
                       {/* Tips */}
                       {message.tips && message.tips.length > 0 && (
                         <div className="mt-2">
-                          <p className="text-xs font-semibold flex items-center gap-1">
-                            <Sparkles className="w-3 h-3" />
+                          <p className="text-sm font-semibold flex items-center gap-2 mb-2">
+                            <Sparkles className="w-4 h-4" />
                             Tips:
                           </p>
-                          <ul className="text-xs space-y-1 mt-1">
+                          <ul className="text-sm space-y-2 mt-2">
                             {message.tips.map((tip, index) => (
                               <li
                                 key={index}
@@ -357,9 +357,11 @@ export default function AIAssistant({
                     animate={{ opacity: 1 }}
                     className="flex justify-start"
                   >
-                    <div className="bg-gray-100 rounded-lg p-2 flex items-center gap-2">
-                      <RefreshCw className="w-3 h-3 animate-spin" />
-                      <span className="text-xs">Thinking...</span>
+                    <div className="bg-white border border-gray-200 rounded-xl p-3 flex items-center gap-3 shadow-sm">
+                      <RefreshCw className="w-4 h-4 animate-spin text-blue-600" />
+                      <span className="text-sm text-gray-600">
+                        AI is thinking...
+                      </span>
                     </div>
                   </motion.div>
                 )}
@@ -369,8 +371,8 @@ export default function AIAssistant({
 
               {/* Quick Actions */}
               {messages.length <= 1 && (
-                <div className="p-2 border-t bg-gray-50">
-                  <div className="grid grid-cols-1 gap-1">
+                <div className="p-3 border-t bg-gray-50/50">
+                  <div className="grid grid-cols-1 gap-2">
                     {[
                       "Give me creative prompt suggestions",
                       "How do I use this tool?",
@@ -381,9 +383,9 @@ export default function AIAssistant({
                         variant="ghost"
                         size="sm"
                         onClick={() => handleQuickAction(action)}
-                        className="text-xs justify-start h-6 px-2"
+                        className="text-sm justify-start h-8 px-3 hover:bg-white/80 rounded-lg"
                       >
-                        <MessageCircle className="w-3 h-3 mr-1" />
+                        <MessageCircle className="w-4 h-4 mr-2" />
                         {action}
                       </Button>
                     ))}
@@ -392,25 +394,27 @@ export default function AIAssistant({
               )}
 
               {/* Input */}
-              <div className="p-2 border-t">
-                <div className="flex gap-2">
+              <div className="p-3 border-t bg-gray-50/50">
+                <div className="flex gap-3 items-center">
                   <Input
-                    placeholder="Type your message..."
+                    placeholder="Ask me anything about this tool..."
                     value={inputMessage}
                     onChange={(e) => setInputMessage(e.target.value)}
-                    onKeyPress={(e) =>
-                      e.key === "Enter" && sendMessage(inputMessage)
+                    onKeyDown={(e) =>
+                      e.key === "Enter" &&
+                      !e.shiftKey &&
+                      sendMessage(inputMessage)
                     }
-                    className="text-xs h-8"
+                    className="text-sm h-10 flex-1 bg-white border-gray-200 focus:border-blue-400 focus:ring-blue-400 rounded-lg"
                     disabled={isLoading}
                   />
                   <Button
                     onClick={() => sendMessage(inputMessage)}
                     disabled={isLoading || !inputMessage.trim()}
                     size="sm"
-                    className="h-8 w-8 p-0"
+                    className="h-10 w-10 p-0 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg"
                   >
-                    <Send className="w-3 h-3" />
+                    <Send className="w-4 h-4" />
                   </Button>
                 </div>
               </div>

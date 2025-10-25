@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Loader, Download, Share2, Heart, Sparkles } from "lucide-react";
 import Image from "next/image";
 import useGeneratedStore from "@/store/useGeneratedStore";
+import BeforeAfterSlider from "./BeforeAfterSlider";
 
 const RestoredFace = () => {
-  const { restoredFace, loading } = useGeneratedStore();
+  const { restoredFace, originalFaceImage, loading } = useGeneratedStore();
 
   const downloadImage = async (url: string) => {
     try {
@@ -73,6 +74,17 @@ const RestoredFace = () => {
           </CardContent>
         </Card>
       </motion.div>
+    );
+  }
+
+  // Eğer orijinal resim varsa BeforeAfterSlider kullan, yoksa eski görünümü göster
+  if (originalFaceImage && restoredFace) {
+    return (
+      <BeforeAfterSlider
+        beforeImage={originalFaceImage}
+        afterImage={restoredFace}
+        onDownload={downloadImage}
+      />
     );
   }
 
