@@ -2,6 +2,7 @@
 import * as motion from "motion/react-client";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
 import {
   Loader,
   Settings,
@@ -89,6 +90,7 @@ const getActivityColor = (type: string) => {
 };
 
 export default function HistoryPage() {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [showState, setShowState] = useState("generated"); // "generated" or "favorites"
   const [data, setData] = useState<any>(null);
   const [favorites, setFavorites] = useState<any>(null);
@@ -99,9 +101,27 @@ export default function HistoryPage() {
     "newest"
   );
 
+  const router = useRouter();
+
   const isFavorite = (imageId: string) => {
     return favorites?.some((fav: any) => fav.user_activities?.id === imageId);
   };
+
+  // Auth kontrolü
+  useEffect(() => {
+    const checkAuth = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        router.push("/");
+        return;
+      }
+      setIsAuthenticated(true);
+    };
+
+    checkAuth();
+  }, [router]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -131,6 +151,17 @@ export default function HistoryPage() {
 
     fetchData();
   }, []);
+
+  if (isAuthenticated === null) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black">
+        <div className="text-center">
+          <Loader className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" />
+          <p className="text-gray-400">Yetkilendirme kontrol ediliyor...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
