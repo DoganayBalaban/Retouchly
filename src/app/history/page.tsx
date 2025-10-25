@@ -142,8 +142,8 @@ export default function HistoryPage() {
         setData(imagesData);
         setFavorites(favoritesData);
       } catch (error) {
-        console.error("Veri yükleme hatası:", error);
-        toast.error("Veriler yüklenirken hata oluştu");
+        console.error("Data loading error:", error);
+        toast.error("An error occurred while loading data");
       } finally {
         setLoading(false);
       }
@@ -157,7 +157,7 @@ export default function HistoryPage() {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black">
         <div className="text-center">
           <Loader className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" />
-          <p className="text-gray-400">Yetkilendirme kontrol ediliyor...</p>
+          <p className="text-gray-400">Checking authorization...</p>
         </div>
       </div>
     );
@@ -180,7 +180,7 @@ export default function HistoryPage() {
     try {
       const isDeleted = await deleteUserGeneratedImage(imageId);
       if (isDeleted) {
-        toast.success("Görsel silindi");
+        toast.success("Image deleted");
         setData((prevData: any) =>
           prevData.filter((item: any) => item.id !== imageId)
         );
@@ -189,18 +189,18 @@ export default function HistoryPage() {
           prev.filter((fav: any) => fav.generated_images?.id !== imageId)
         );
       } else {
-        toast.error("Görsel silinirken hata oluştu");
+        toast.error("An error occurred while deleting the image");
       }
     } catch (error) {
-      console.error("Silme hatası:", error);
-      toast.error("Görsel silinirken hata oluştu");
+      console.error("Delete error:", error);
+      toast.error("An error occurred while deleting the image");
     }
   };
 
   const handleDownload = async (url: string) => {
     try {
       const res = await fetch(url, { mode: "cors" });
-      if (!res.ok) throw new Error("Dosya indirilemiyor");
+      if (!res.ok) throw new Error("File cannot be downloaded");
 
       const blob = await res.blob();
       const blobUrl = URL.createObjectURL(blob);
@@ -218,10 +218,10 @@ export default function HistoryPage() {
       document.body.removeChild(link);
 
       URL.revokeObjectURL(blobUrl);
-      toast.success("Görsel indiriliyor...");
+      toast.success("Downloading image...");
     } catch (error) {
-      console.error("İndirme hatası:", error);
-      toast.error("Görsel indirilirken hata oluştu");
+      console.error("Download error:", error);
+      toast.error("An error occurred while downloading the image");
     }
   };
 
@@ -236,10 +236,10 @@ export default function HistoryPage() {
       // Yeni eklenen favorinin tamamını almak için API'yi tekrar çağır
       const updatedFavorites = await getUserFavorites(user.id);
       setFavorites(updatedFavorites);
-      toast.success("Favorilere eklendi");
+      toast.success("Added to favorites");
     } catch (error) {
-      console.error("Favorilere ekleme hatası:", error);
-      toast.error("Favorilere eklenirken hata oluştu");
+      console.error("Add to favorites error:", error);
+      toast.error("An error occurred while adding to favorites");
     }
   };
 
@@ -254,10 +254,10 @@ export default function HistoryPage() {
       setFavorites((prev: any) =>
         prev.filter((fav: any) => fav.generated_images?.id !== imageId)
       );
-      toast.success("Favorilerden kaldırıldı");
+      toast.success("Removed from favorites");
     } catch (error) {
-      console.error("Favorilerden kaldırma hatası:", error);
-      toast.error("Favorilerden kaldırılırken hata oluştu");
+      console.error("Remove from favorites error:", error);
+      toast.error("An error occurred while removing from favorites");
     }
   };
 

@@ -43,13 +43,13 @@ export default function ImageUploader() {
 
         canvas.toBlob(
           (blob) => {
-            blob ? resolve(blob) : reject("Blob oluşturulamadı.");
+            blob ? resolve(blob) : reject("Could not create blob.");
           },
           "image/jpeg",
           0.9
         );
       };
-      image.onerror = () => reject("Görsel yüklenemedi.");
+      image.onerror = () => reject("Could not load image.");
     });
   };
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
@@ -71,9 +71,9 @@ export default function ImageUploader() {
       const { data } = supabase.storage.from("images").getPublicUrl(fileName);
       setUploadedUrl(data.publicUrl);
       setUploadedPath(fileName);
-      toast.success("Görsel yüklendi.");
+      toast.success("Image uploaded.");
     } catch (err) {
-      alert("Hata: " + err);
+      alert("Error: " + err);
     } finally {
     }
   }, []);
@@ -84,10 +84,11 @@ export default function ImageUploader() {
     setUploadedUrl(null);
     setUploadedPath(null);
     setPreviewUrl(null);
-    toast.success("Görsel silindi.");
+    toast.success("Image deleted.");
   };
   const handleFaceRestoration = async () => {
-    if (!uploadedUrl) return alert("Görsel yüklenmeden işlem yapılamaz.");
+    if (!uploadedUrl)
+      return alert("Cannot process without uploading an image.");
 
     const startTime = Date.now();
     try {
@@ -116,19 +117,19 @@ export default function ImageUploader() {
             },
           });
         } catch (activityError) {
-          console.error("Activity kaydetme hatası:", activityError);
+          console.error("Activity save error:", activityError);
           toast.error(
-            "History'e kaydetme hatası: " + (activityError as Error).message
+            "History save error: " + (activityError as Error).message
           );
         }
       } else {
-        toast.error("Kullanıcı oturumu bulunamadı");
+        toast.error("User session not found");
       }
 
-      toast.success("Yüz restorasyonu başlatıldı.");
+      toast.success("Face restoration started.");
     } catch (error) {
-      console.error("Yüz restorasyonu hatası:", error);
-      toast.error("Yüz restorasyonu sırasında hata oluştu.");
+      console.error("Face restoration error:", error);
+      toast.error("An error occurred during face restoration.");
     }
   };
 
@@ -141,10 +142,10 @@ export default function ImageUploader() {
     <div className="w-full p-3 sm:p-4 bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg border border-gray-100">
       <div className="text-center mb-6">
         <h2 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent mb-1">
-          Görsel Yükle
+          Upload Image
         </h2>
         <p className="text-gray-600 text-xs">
-          İyileştirmek istediğiniz yüz görselini yükleyin
+          Upload the face image you want to enhance
         </p>
       </div>
 
@@ -175,13 +176,13 @@ export default function ImageUploader() {
                   </div>
                   <div>
                     <p className="text-lg font-semibold text-gray-800 mb-1">
-                      {isDragActive ? "Görseli buraya bırak" : "Görsel yükle"}
+                      {isDragActive ? "Drop image here" : "Upload image"}
                     </p>
                     <p className="text-sm text-gray-500">
-                      Sürükle & bırak veya tıklayarak seç
+                      Drag & drop or click to select
                     </p>
                     <p className="text-xs text-gray-400 mt-2">
-                      JPG, PNG, WebP desteklenir
+                      JPG, PNG, WebP supported
                     </p>
                   </div>
                 </motion.div>
@@ -200,7 +201,7 @@ export default function ImageUploader() {
           >
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
-                📷 Yüklenen Görsel
+                📷 Uploaded Image
               </h3>
               <Button
                 variant="ghost"
@@ -214,7 +215,7 @@ export default function ImageUploader() {
             <div className="relative rounded-lg overflow-hidden bg-gray-100">
               <img
                 src={previewUrl}
-                alt="Yüklenen görsel"
+                alt="Uploaded image"
                 className="w-full h-auto max-h-64 object-contain"
               />
             </div>
@@ -238,7 +239,7 @@ export default function ImageUploader() {
               className="flex items-center gap-2"
             >
               <Sparkles className="w-5 h-5" />
-              Yüz İyileştirmesini Başlat
+              Start Face Restoration
             </motion.div>
           </Button>
         </motion.div>
@@ -248,19 +249,19 @@ export default function ImageUploader() {
           <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
             <div className="flex items-center gap-2 mb-1">
               <span className="text-blue-600">💡</span>
-              <span className="text-sm font-medium text-blue-800">İpucu</span>
+              <span className="text-sm font-medium text-blue-800">Tip</span>
             </div>
             <p className="text-xs text-blue-700">
-              En iyi sonuçlar için yüksek çözünürlüklü görseller kullanın
+              Use high resolution images for best results
             </p>
           </div>
           <div className="bg-green-50 p-3 rounded-lg border border-green-200">
             <div className="flex items-center gap-2 mb-1">
               <span className="text-green-600">⚡</span>
-              <span className="text-sm font-medium text-green-800">Hızlı</span>
+              <span className="text-sm font-medium text-green-800">Fast</span>
             </div>
             <p className="text-xs text-green-700">
-              İşlem genellikle 10-30 saniye sürer
+              Processing usually takes 10-30 seconds
             </p>
           </div>
         </div>

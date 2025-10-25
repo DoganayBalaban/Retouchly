@@ -28,7 +28,7 @@ const BackgroundRemover = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Loader className="w-8 h-8 animate-spin mx-auto mb-4 text-purple-600" />
-          <p className="text-gray-600">Yetkilendirme kontrol ediliyor...</p>
+          <p className="text-gray-600">Checking authorization...</p>
         </div>
       </div>
     );
@@ -38,10 +38,10 @@ const BackgroundRemover = () => {
     <div className="container mx-auto px-4 py-6">
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
-          Arka Plan Kaldırıcı
+          Background Remover
         </h1>
         <p className="text-gray-600 text-sm">
-          AI ile görsellerinizin arka planını otomatik olarak kaldırın
+          Automatically remove backgrounds from your images with AI
         </p>
       </div>
 
@@ -56,17 +56,16 @@ const BackgroundRemover = () => {
                   <Loader className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                  Giriş Yapın
+                  Sign In
                 </h3>
                 <p className="text-gray-600 text-sm mb-4">
-                  Arka plan kaldırma özelliğini kullanmak için giriş yapmanız
-                  gerekiyor
+                  You need to sign in to use the background removal feature
                 </p>
                 <button
                   onClick={() => setShowSignIn(true)}
                   className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
                 >
-                  Giriş Yap
+                  Sign In
                 </button>
               </div>
             </div>
@@ -83,7 +82,7 @@ const BackgroundRemover = () => {
         onClose={() => setShowSignIn(false)}
         onSuccess={() => {
           setIsAuthenticated(true);
-          window.location.reload(); // Sayfayı yenile
+          window.location.reload(); // Reload page
         }}
       />
     </div>

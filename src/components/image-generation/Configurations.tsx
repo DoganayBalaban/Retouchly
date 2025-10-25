@@ -131,10 +131,10 @@ const Configurations = () => {
             {/* Header */}
             <div className="text-center mb-4">
               <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-1">
-                Görsel Ayarları
+                Image Settings
               </h2>
               <p className="text-gray-600 text-xs">
-                İstediğiniz görseli oluşturmak için ayarları yapılandırın
+                Configure settings to create your desired image
               </p>
             </div>
 
@@ -153,8 +153,8 @@ const Configurations = () => {
                     <div className="flex items-center justify-between mb-2">
                       <FormLabel className="text-base font-semibold text-gray-800">
                         {renderLabelWithTooltip(
-                          "✨ Komut (Prompt)",
-                          "Modelin görsel üretmesi için kullanacağı metin komutu. Detaylı açıklamalar daha iyi sonuçlar verir."
+                          "✨ Command (Prompt)",
+                          "The text command that the model will use to generate the image. Detailed descriptions give better results."
                         )}
                       </FormLabel>
                       <Button
@@ -170,7 +170,7 @@ const Configurations = () => {
                         className="flex items-center gap-1 text-xs"
                       >
                         <Sparkles className="w-3 h-3" />
-                        AI Yardım
+                        AI Help
                       </Button>
                     </div>
                     <FormControl>
@@ -178,7 +178,7 @@ const Configurations = () => {
                         {...field}
                         rows={3}
                         className="resize-none border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg text-sm"
-                        placeholder="Örnek: Güneşin battığı bir sahilde, mor ve turuncu tonlarında gökyüzü..."
+                        placeholder="Example: A beach at sunset with purple and orange tones in the sky..."
                       />
                     </FormControl>
                     <FormMessage />
@@ -195,7 +195,7 @@ const Configurations = () => {
               className="bg-white p-4 rounded-xl shadow-sm border border-gray-200"
             >
               <h3 className="text-base font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                🎨 Temel Ayarlar
+                🎨 Basic Settings
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -206,8 +206,8 @@ const Configurations = () => {
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700">
                         {renderLabelWithTooltip(
-                          "📐 En-Boy Oranı",
-                          "Görselin en-boy oranını belirler. Sosyal medya paylaşımları için uygun oranları seçebilirsiniz."
+                          "📐 Aspect Ratio",
+                          "Determines the aspect ratio of the image. You can choose suitable ratios for social media sharing."
                         )}
                       </FormLabel>
                       <Select
@@ -216,17 +216,23 @@ const Configurations = () => {
                       >
                         <FormControl>
                           <SelectTrigger className="h-10 rounded-lg border-gray-300 focus:border-blue-500">
-                            <SelectValue placeholder="Oran seçiniz" />
+                            <SelectValue placeholder="Select ratio" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
                           {[
-                            { value: "1:1", label: "1:1 (Kare - Instagram)" },
-                            { value: "16:9", label: "16:9 (Yatay - YouTube)" },
-                            { value: "9:16", label: "9:16 (Dikey - Stories)" },
-                            { value: "4:3", label: "4:3 (Klasik)" },
-                            { value: "3:4", label: "3:4 (Portre)" },
-                            { value: "21:9", label: "21:9 (Ultra Geniş)" },
+                            { value: "1:1", label: "1:1 (Square - Instagram)" },
+                            {
+                              value: "16:9",
+                              label: "16:9 (Landscape - YouTube)",
+                            },
+                            {
+                              value: "9:16",
+                              label: "9:16 (Portrait - Stories)",
+                            },
+                            { value: "4:3", label: "4:3 (Classic)" },
+                            { value: "3:4", label: "3:4 (Portrait)" },
+                            { value: "21:9", label: "21:9 (Ultra Wide)" },
                           ].map((ratio) => (
                             <SelectItem key={ratio.value} value={ratio.value}>
                               {ratio.label}
@@ -246,8 +252,8 @@ const Configurations = () => {
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700">
                         {renderLabelWithTooltip(
-                          "🔢 Görsel Sayısı",
-                          "Aynı anda üretilecek görsel sayısı. Daha fazla seçenek için sayıyı artırabilirsiniz."
+                          "🔢 Number of Images",
+                          "Number of images to be generated at once. You can increase the number for more options."
                         )}
                       </FormLabel>
                       <div className="flex items-center gap-2">
@@ -350,8 +356,8 @@ const Configurations = () => {
                           <FormItem>
                             <FormLabel className="flex items-center justify-between text-sm font-medium text-gray-700">
                               {renderLabelWithTooltip(
-                                "🔄 İşlem Adımları",
-                                "Modelin görseli üretmek için kaç adım kullanacağını belirler. Daha fazla adım daha kaliteli ama daha yavaş sonuç verir."
+                                "🔄 Processing Steps",
+                                "Determines how many steps the model will use to generate the image. More steps give higher quality but slower results."
                               )}
                               <span className="bg-green-100 text-green-800 px-2 py-1 rounded-lg text-xs font-semibold">
                                 {field.value}
@@ -370,8 +376,8 @@ const Configurations = () => {
                                   className="w-full"
                                 />
                                 <div className="flex justify-between text-xs text-gray-500 mt-1">
-                                  <span>Hızlı</span>
-                                  <span>Kaliteli</span>
+                                  <span>Fast</span>
+                                  <span>Quality</span>
                                 </div>
                               </div>
                             </FormControl>
@@ -387,8 +393,8 @@ const Configurations = () => {
                           <FormItem>
                             <FormLabel className="flex items-center justify-between text-sm font-medium text-gray-700">
                               {renderLabelWithTooltip(
-                                "✨ Görsel Kalitesi",
-                                "Çıktı görselinin sıkıştırma kalitesi. Yüksek değerler daha büyük dosya boyutu ama daha iyi kalite sağlar."
+                                "✨ Image Quality",
+                                "Compression quality of the output image. Higher values provide larger file size but better quality."
                               )}
                               <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-lg text-xs font-semibold">
                                 {field.value}%
@@ -407,8 +413,8 @@ const Configurations = () => {
                                   className="w-full"
                                 />
                                 <div className="flex justify-between text-xs text-gray-500 mt-1">
-                                  <span>Küçük dosya</span>
-                                  <span>Yüksek kalite</span>
+                                  <span>Small file</span>
+                                  <span>High quality</span>
                                 </div>
                               </div>
                             </FormControl>
@@ -424,8 +430,8 @@ const Configurations = () => {
                           <FormItem>
                             <FormLabel className="text-sm font-medium text-gray-700">
                               {renderLabelWithTooltip(
-                                "📁 Dosya Formatı",
-                                "Görselin kaydedileceği dosya formatı. PNG şeffaflık destekler, JPG daha küçük dosya boyutu sağlar."
+                                "📁 File Format",
+                                "File format in which the image will be saved. PNG supports transparency, JPG provides smaller file size."
                               )}
                             </FormLabel>
                             <Select
@@ -434,13 +440,13 @@ const Configurations = () => {
                             >
                               <FormControl>
                                 <SelectTrigger className="h-12 rounded-xl border-gray-300 focus:border-blue-500">
-                                  <SelectValue placeholder="Format seçiniz" />
+                                  <SelectValue placeholder="Select format" />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
                                 {[
-                                  { value: "jpg", label: "JPG (Küçük dosya)" },
-                                  { value: "png", label: "PNG (Şeffaflık)" },
+                                  { value: "jpg", label: "JPG (Small file)" },
+                                  { value: "png", label: "PNG (Transparency)" },
                                   { value: "webp", label: "WebP (Modern)" },
                                 ].map((format) => (
                                   <SelectItem
@@ -482,13 +488,13 @@ const Configurations = () => {
                 whileTap={{ scale: 0.98 }}
                 className="flex items-center gap-2"
               >
-                🎨 Görseli Üret
+                🎨 Generate Image
               </motion.div>
             </Button>
           ) : (
             <div className="text-center">
               <p className="text-gray-600 mb-4">
-                Görsel üretmek için giriş yapmanız gerekiyor
+                You need to sign in to generate images
               </p>
               <SignInDialog />
             </div>

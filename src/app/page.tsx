@@ -32,7 +32,7 @@ const page = () => {
         avatar:
           "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=face",
       },
-      text: "Fotoğraflarım inanılmaz! AI sayesinde anında mükemmel hale geldi.",
+      text: "My photos are incredible! They became perfect instantly thanks to AI.",
     },
     {
       author: {
@@ -41,7 +41,7 @@ const page = () => {
         avatar:
           "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
       },
-      text: "Harika bir deneyim! Kolayca fotoğrafımı düzenledim ve sonuç beklediğimden çok daha iyi oldu.",
+      text: "Great experience! I easily edited my photo and the result was much better than I expected.",
     },
     {
       author: {
@@ -50,7 +50,7 @@ const page = () => {
         avatar:
           "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face",
       },
-      text: "Görsellerimi hemen paylaştım, arkadaşlarım şok oldu! Kesinlikle öneriyorum.",
+      text: "I shared my images immediately, my friends were shocked! I definitely recommend it.",
     },
   ];
 
@@ -58,8 +58,8 @@ const page = () => {
     <div className="bg-[#030304]">
       <div className="w-full ">
         <HeroGeometric
-          title1="Fotoğrafına Sihirli Dokunuş Yap!"
-          title2="Ücretsiz Dene"
+          title1="Give Your Photos a Magical Touch!"
+          title2="Try for Free"
         />
       </div>
       <div>

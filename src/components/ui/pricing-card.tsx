@@ -46,7 +46,7 @@ export function PricingCard({ tier, paymentFrequency }: PricingCardProps) {
         {tier.name}
         {isPopular && (
           <Badge variant="secondary" className="mt-1 z-10">
-            🔥 Popüler
+            🔥 Popular
           </Badge>
         )}
       </h2>
@@ -57,7 +57,7 @@ export function PricingCard({ tier, paymentFrequency }: PricingCardProps) {
             <NumberFlow
               format={{
                 style: "currency",
-                currency: "TRY",
+                currency: "USD",
                 trailingZeroDisplay: "stripIfInteger",
               }}
               value={price}

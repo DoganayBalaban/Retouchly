@@ -7,11 +7,11 @@ export default function Testimonials() {
       <div className="mx-auto max-w-6xl space-y-8 px-6 md:space-y-16">
         <div className="relative z-10 mx-auto max-w-xl space-y-6 text-center md:space-y-12 text-[#E4E4E4]">
           <h2 className="text-4xl font-medium lg:text-5xl ">
-            RETOUCHLY ile Yüzbinlerce Kullanıcı Memnun
+            Hundreds of Thousands of Users Satisfied with RETOUCHLY
           </h2>
           <p>
-            AI ile fotoğraflarınızı anında düzenleyin ve profesyonel sonuçlar
-            elde edin. İşte kullanıcılarımızdan bazı yorumlar.
+            Edit your photos instantly with AI and get professional results.
+            Here are some comments from our users.
           </p>
         </div>
 
@@ -20,8 +20,9 @@ export default function Testimonials() {
             <CardContent>
               <blockquote className="grid h-full grid-rows-[1fr_auto] gap-6">
                 <p className="text-xl font-medium">
-                  "AI ile fotoğrafımı düzenledim ve sonuç gerçekten muazzam! Yüz
-                  hatlarım pürüzsüzleşti ve fotoğraf daha canlı hale geldi."
+                  "I edited my photo with AI and the result is truly amazing! My
+                  facial features became smoother and the photo became more
+                  vibrant."
                 </p>
 
                 <div className="grid grid-cols-[auto_1fr] items-center gap-3">
@@ -50,8 +51,8 @@ export default function Testimonials() {
             <CardContent className="h-full pt-6">
               <blockquote className="grid h-full grid-rows-[1fr_auto] gap-6">
                 <p className="text-xl font-medium">
-                  "Fotoğraflarımı AI ile düzenlemek çok kolay ve sonuçlar
-                  gerçekten profesyonel görünüyor. Kesinlikle tavsiye ederim!"
+                  "Editing my photos with AI is very easy and the results look
+                  really professional. I definitely recommend it!"
                 </p>
 
                 <div className="grid grid-cols-[auto_1fr] items-center gap-3">
@@ -79,8 +80,8 @@ export default function Testimonials() {
             <CardContent className="h-full pt-6">
               <blockquote className="grid h-full grid-rows-[1fr_auto] gap-6">
                 <p>
-                  "Görsellerim anında harika hale geldi! Gerçekten etkileyici
-                  sonuçlar aldım, mükemmel bir araç."
+                  "My visuals became amazing instantly! I got really impressive
+                  results, it's a perfect tool."
                 </p>
 
                 <div className="grid items-center gap-3 [grid-template-columns:auto_1fr]">
@@ -108,8 +109,8 @@ export default function Testimonials() {
             <CardContent className="h-full pt-6">
               <blockquote className="grid h-full grid-rows-[1fr_auto] gap-6">
                 <p>
-                  "Bu uygulama gerçekten harika! Anında düzenlemeler yaparak
-                  fotoğraflarımı daha profesyonel hale getirdim."
+                  "This app is really great! I made my photos more professional
+                  by making instant edits."
                 </p>
 
                 <div className="grid grid-cols-[auto_1fr] gap-3">

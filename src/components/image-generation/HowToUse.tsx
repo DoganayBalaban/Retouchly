@@ -8,12 +8,11 @@ export default function HowToUse() {
       <div className="@container mx-auto max-w-5xl px-6">
         <div className="text-center text-white">
           <h2 className="text-balance text-4xl font-semibold lg:text-5xl">
-            Nasıl Kullanılır?
+            How to Use?
           </h2>
           <p className="mt-4">
-            Bu araç, kullanıcıların görsel içerik oluşturma sürecini
-            kolaylaştırmak için tasarlanmıştır. İşte nasıl kullanabileceğinize
-            dair adımlar:
+            This tool is designed to simplify the visual content creation
+            process for users. Here are the steps on how you can use it:
           </p>
         </div>
         <div className="@min-4xl:max-w-full @min-4xl:grid-cols-3 mx-auto mt-8 grid max-w-sm gap-6 *:text-center md:mt-16">
@@ -23,13 +22,13 @@ export default function HowToUse() {
                 <Settings2 className="size-6" aria-hidden />
               </CardDecorator>
 
-              <h3 className="mt-6 text-xl  font-medium">Ayarları düzenle</h3>
+              <h3 className="mt-6 text-xl  font-medium">Configure Settings</h3>
             </CardHeader>
 
             <CardContent>
               <p className="text-sm">
-                Ayarları kendi ihtiyaçlarınıza göre özelleştirin. Bu, görselin
-                boyutu, stili ve diğer özelliklerini içerir.
+                Customize the settings according to your needs. This includes
+                the image size, style, and other features.
               </p>
             </CardContent>
           </Card>
@@ -40,13 +39,13 @@ export default function HowToUse() {
                 <Zap className="size-6" aria-hidden />
               </CardDecorator>
 
-              <h3 className="mt-6 text-xl font-medium">Prompt Gir</h3>
+              <h3 className="mt-6 text-xl font-medium">Enter Prompt</h3>
             </CardHeader>
 
             <CardContent>
               <p className="mt-3 text-sm">
-                Görselin içeriğini tanımlayan bir "prompt" girin. Bu, görselin
-                ne hakkında olacağını belirler.
+                Enter a "prompt" that describes the content of the image. This
+                determines what the image will be about.
               </p>
             </CardContent>
           </Card>
@@ -57,14 +56,14 @@ export default function HowToUse() {
                 <Sparkles className="size-6" aria-hidden />
               </CardDecorator>
 
-              <h3 className="mt-6 text-xl  font-medium">Butona tıkla</h3>
+              <h3 className="mt-6 text-xl  font-medium">Click the Button</h3>
             </CardHeader>
 
             <CardContent>
               <p className="mt-3  text-sm">
-                Ayarları ve promptu gözden geçirdikten sonra, görseli oluşturmak
-                için butona tıklayın. Araç, belirttiğiniz ayarlarla görseli
-                oluşturacaktır.
+                After reviewing the settings and prompt, click the button to
+                create the image. The tool will generate the image with the
+                settings you specified.
               </p>
             </CardContent>
           </Card>

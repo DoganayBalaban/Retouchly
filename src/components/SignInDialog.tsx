@@ -31,9 +31,9 @@ const SignInDialog = () => {
     setLoading(false);
 
     if (error) {
-      toast.error("Giriş başarısız!");
+      toast.error("Sign in failed!");
     } else {
-      toast.success("Giriş başarılı!");
+      toast.success("Sign in successful!");
       router.refresh(); // Navbar güncellensin
       router.push("/");
     }
@@ -48,7 +48,7 @@ const SignInDialog = () => {
     });
 
     if (error) {
-      toast.error("Google ile oturum açılamadı.");
+      toast.error("Could not sign in with Google.");
       console.error("Google Auth Error:", error.message);
     }
   };
@@ -57,7 +57,7 @@ const SignInDialog = () => {
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="outline" className="text-black">
-          Giriş Yap
+          Sign In
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -69,11 +69,9 @@ const SignInDialog = () => {
             <img src="/logo2.png" alt="logo" />
           </div>
           <DialogHeader>
-            <DialogTitle className="sm:text-center">
-              Tekrar Hoş Geldiniz
-            </DialogTitle>
+            <DialogTitle className="sm:text-center">Welcome Back</DialogTitle>
             <DialogDescription className="sm:text-center">
-              Hesabınıza giriş yapmak için bilgilerinizi girin.
+              Enter your information to sign in to your account.
             </DialogDescription>
           </DialogHeader>
         </div>
@@ -87,7 +85,7 @@ const SignInDialog = () => {
         >
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>E-posta</Label>
+              <Label>Email</Label>
               <Input
                 type="email"
                 value={email}
@@ -96,7 +94,7 @@ const SignInDialog = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label>Şifre</Label>
+              <Label>Password</Label>
               <Input
                 type="password"
                 value={password}
@@ -109,24 +107,24 @@ const SignInDialog = () => {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <Checkbox />
-              <Label>Beni hatırla</Label>
+              <Label>Remember me</Label>
             </div>
             <a className="text-sm underline" href="#">
-              Şifremi unuttum?
+              Forgot password?
             </a>
           </div>
 
           <Button type="submit" disabled={loading} className="w-full">
-            {loading ? <Loader className="animate-spin" /> : "Giriş Yap"}
+            {loading ? <Loader className="animate-spin" /> : "Sign In"}
           </Button>
         </form>
 
         <div className="flex items-center gap-3 before:flex-1 before:h-px before:bg-border after:flex-1 after:h-px after:bg-border">
-          <span className="text-xs text-muted-foreground">veya</span>
+          <span className="text-xs text-muted-foreground">or</span>
         </div>
 
         <Button variant="outline" onClick={handleGoogleAuth}>
-          Google ile Giriş Yap
+          Sign in with Google
         </Button>
       </DialogContent>
     </Dialog>

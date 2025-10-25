@@ -45,10 +45,10 @@ const RemovedBackgrounds = () => {
                 >
                   <Loader className="animate-spin text-purple-400 w-12 h-12" />
                   <div className="text-white text-lg font-medium">
-                    Arka plan kaldırılıyor...
+                    Removing background...
                   </div>
                   <div className="text-gray-400 text-sm">
-                    AI algoritması çalışıyor, lütfen bekleyin
+                    AI algorithm is working, please wait
                   </div>
                 </motion.div>
               ) : (
@@ -61,10 +61,10 @@ const RemovedBackgrounds = () => {
                     <Scissors className="w-10 h-10 text-white" />
                   </div>
                   <div className="text-white text-xl font-semibold mb-2">
-                    İşlenmiş görsel burada görünecek
+                    Processed image will appear here
                   </div>
                   <div className="text-gray-400 text-sm max-w-sm text-center">
-                    Bir görsel yükleyin ve "Arka Planı Kaldır" butonuna tıklayın
+                    Upload an image and click "Remove Background" button
                   </div>
                 </motion.div>
               )}
@@ -85,9 +85,9 @@ const RemovedBackgrounds = () => {
       <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-4">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-            ✂️ Arka Plan Kaldırıldı
+            ✂️ Background Removed
             <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-lg text-xs font-medium">
-              Tamamlandı
+              Completed
             </span>
           </h3>
         </div>
@@ -114,7 +114,7 @@ const RemovedBackgrounds = () => {
           >
             <Image
               src={bgImage}
-              alt="Arka planı kaldırılmış görsel"
+              alt="Background removed image"
               width={1024}
               height={1024}
               className="object-contain w-full h-full transition-transform duration-300 group-hover:scale-105"
@@ -135,7 +135,7 @@ const RemovedBackgrounds = () => {
                     className="bg-white/90 hover:bg-white text-gray-800 backdrop-blur-sm"
                   >
                     <Download className="w-4 h-4 mr-1" />
-                    İndir
+                    Download
                   </Button>
                   <Button
                     size="sm"
@@ -143,7 +143,7 @@ const RemovedBackgrounds = () => {
                     className="bg-white/90 hover:bg-white text-gray-800 backdrop-blur-sm"
                   >
                     <Share2 className="w-4 h-4 mr-1" />
-                    Paylaş
+                    Share
                   </Button>
                   <Button
                     size="sm"
@@ -162,11 +162,11 @@ const RemovedBackgrounds = () => {
             <div className="flex items-center gap-2">
               <span className="text-purple-600">✅</span>
               <span className="text-sm font-medium text-purple-800">
-                Arka plan başarıyla kaldırıldı!
+                Background successfully removed!
               </span>
             </div>
             <p className="text-xs text-purple-700 mt-1">
-              Görseliniz şeffaf arka plana sahip PNG formatında hazır
+              Your image is ready in PNG format with transparent background
             </p>
           </div>
         </motion.div>
@@ -174,19 +174,21 @@ const RemovedBackgrounds = () => {
         {/* Format info */}
         <div className="mt-4 grid grid-cols-2 gap-3">
           <div className="bg-gray-50 p-3 rounded-lg border border-gray-200 text-center">
-            <div className="text-gray-600 font-semibold text-sm">Öncesi</div>
-            <div className="text-gray-800 text-xs">Arka planlı görsel</div>
+            <div className="text-gray-600 font-semibold text-sm">Before</div>
+            <div className="text-gray-800 text-xs">With background</div>
           </div>
           <div className="bg-purple-50 p-3 rounded-lg border border-purple-200 text-center">
-            <div className="text-purple-600 font-semibold text-sm">Sonrası</div>
-            <div className="text-purple-800 text-xs">Şeffaf arka plan</div>
+            <div className="text-purple-600 font-semibold text-sm">After</div>
+            <div className="text-purple-800 text-xs">
+              Transparent background
+            </div>
           </div>
         </div>
 
         {/* Transparency indicator */}
         <div className="mt-3 text-center">
           <p className="text-xs text-gray-500">
-            🔍 Şeffaf alanlar damalı desen ile gösterilir
+            🔍 Transparent areas are shown with checkered pattern
           </p>
         </div>
       </div>

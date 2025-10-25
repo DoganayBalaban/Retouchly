@@ -116,9 +116,9 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
       <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-4">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-            ✨ Öncesi / Sonrası Karşılaştırma
+            ✨ Before / After Comparison
             <span className="bg-green-100 text-green-800 px-2 py-1 rounded-lg text-xs font-medium">
-              Tamamlandı
+              Completed
             </span>
           </h3>
           <Button
@@ -128,7 +128,7 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
             className="flex items-center gap-1"
           >
             <RotateCcw className="w-4 h-4" />
-            Sıfırla
+            Reset
           </Button>
         </div>
 
@@ -145,23 +145,19 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
             onMouseDown={handleMouseDown}
             onTouchStart={handleTouchStart}
           >
-            {/* Before Image (Background) */}
+            {/* After Image (Background) */}
             <div className="absolute inset-0">
               <Image
-                src={beforeImage}
-                alt="Öncesi"
+                src={afterImage}
+                alt="After"
                 width={1024}
                 height={1024}
                 className="object-cover w-full h-full"
                 draggable={false}
               />
-              {/* Before Label */}
-              <div className="absolute top-4 left-4 bg-red-500/90 text-white px-3 py-1 rounded-lg text-sm font-medium backdrop-blur-sm">
-                Öncesi
-              </div>
             </div>
 
-            {/* After Image (Clipped) */}
+            {/* Before Image (Clipped) */}
             <div
               className="absolute inset-0 transition-all duration-75 ease-out"
               style={{
@@ -169,17 +165,21 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
               }}
             >
               <Image
-                src={afterImage}
-                alt="Sonrası"
+                src={beforeImage}
+                alt="Before"
                 width={1024}
                 height={1024}
                 className="object-cover w-full h-full"
                 draggable={false}
               />
-              {/* After Label */}
-              <div className="absolute top-4 right-4 bg-green-500/90 text-white px-3 py-1 rounded-lg text-sm font-medium backdrop-blur-sm">
-                Sonrası
-              </div>
+            </div>
+
+            {/* Labels on top of images */}
+            <div className="absolute top-4 left-4 bg-red-500/90 text-white px-3 py-1 rounded-lg text-sm font-medium backdrop-blur-sm">
+              Before
+            </div>
+            <div className="absolute top-4 right-4 bg-green-500/90 text-white px-3 py-1 rounded-lg text-sm font-medium backdrop-blur-sm">
+              After
             </div>
 
             {/* Slider Line */}
@@ -204,7 +204,7 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
                 className="bg-black/70 text-white px-4 py-2 rounded-lg text-sm font-medium backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
               >
                 <Eye className="w-4 h-4 inline mr-2" />
-                Kaydırarak karşılaştır
+                Drag to compare
               </motion.div>
             </div>
           </div>
@@ -214,20 +214,20 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
             <Button
               size="sm"
               variant="secondary"
-              onClick={() => downloadImage(beforeImage)}
-              className="bg-red-50 hover:bg-red-100 text-red-700 border-red-200"
-            >
-              <Download className="w-4 h-4 mr-1" />
-              Öncesi İndir
-            </Button>
-            <Button
-              size="sm"
-              variant="secondary"
               onClick={() => downloadImage(afterImage)}
               className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
             >
               <Download className="w-4 h-4 mr-1" />
-              Sonrası İndir
+              Download After
+            </Button>
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={() => downloadImage(beforeImage)}
+              className="bg-red-50 hover:bg-red-100 text-red-700 border-red-200"
+            >
+              <Download className="w-4 h-4 mr-1" />
+              Download Before
             </Button>
             <Button
               size="sm"
@@ -235,7 +235,7 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
               className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
             >
               <Share2 className="w-4 h-4 mr-1" />
-              Paylaş
+              Share
             </Button>
             <Button
               size="sm"
@@ -247,41 +247,28 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
           </div>
         </motion.div>
 
-        {/* Slider Position Indicator */}
-        <div className="mt-4 flex items-center justify-between text-sm text-gray-600">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-            <span>Öncesi: %{Math.round(100 - sliderPosition)}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span>Sonrası: %{Math.round(sliderPosition)}</span>
-            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-          </div>
-        </div>
-
         {/* Success message */}
         <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
           <div className="flex items-center gap-2">
             <span className="text-green-600">✅</span>
             <span className="text-sm font-medium text-green-800">
-              Yüz başarıyla iyileştirildi!
+              Face successfully restored!
             </span>
           </div>
           <p className="text-xs text-green-700 mt-1">
-            Slider'ı kaydırarak öncesi ve sonrası arasındaki farkı
-            görebilirsiniz
+            Drag the slider to see the difference between before and after
           </p>
         </div>
 
         {/* Quality comparison info */}
         <div className="mt-4 grid grid-cols-2 gap-3">
-          <div className="bg-red-50 p-3 rounded-lg border border-red-200 text-center">
-            <div className="text-red-600 font-semibold text-sm">Öncesi</div>
-            <div className="text-red-800 text-xs">Orijinal kalite</div>
-          </div>
           <div className="bg-green-50 p-3 rounded-lg border border-green-200 text-center">
-            <div className="text-green-600 font-semibold text-sm">Sonrası</div>
-            <div className="text-green-800 text-xs">AI ile iyileştirildi</div>
+            <div className="text-green-600 font-semibold text-sm">After</div>
+            <div className="text-green-800 text-xs">AI enhanced</div>
+          </div>
+          <div className="bg-red-50 p-3 rounded-lg border border-red-200 text-center">
+            <div className="text-red-600 font-semibold text-sm">Before</div>
+            <div className="text-red-800 text-xs">Original quality</div>
           </div>
         </div>
       </div>

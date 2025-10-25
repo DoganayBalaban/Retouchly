@@ -181,9 +181,9 @@ function HeroGeometric({
             animate="visible"
           >
             <p className="text-base sm:text-lg md:text-xl text-white/40 mb-8 leading-relaxed font-light tracking-wide max-w-xl mx-auto px-4">
-              Fotoğrafınızı anında güzelleştirin! AI destekli araçlarımızla yüz
-              hatlarınızı düzenleyin, arka planı değiştirin ve istediğiniz stili
-              oluşturun. Ücretsiz başlayın, sınırları zorlayın!
+              Beautify your photos instantly! Edit facial features, change
+              backgrounds, and create your desired style with our AI-powered
+              tools. Start for free, push the limits!
             </p>
           </motion.div>
         </div>

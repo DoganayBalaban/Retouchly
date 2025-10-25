@@ -46,10 +46,10 @@ const RestoredFace = () => {
                 >
                   <Loader className="animate-spin text-green-400 w-12 h-12" />
                   <div className="text-white text-lg font-medium">
-                    Yüz iyileştiriliyor...
+                    Restoring face...
                   </div>
                   <div className="text-gray-400 text-sm">
-                    AI algoritması çalışıyor, lütfen bekleyin
+                    AI algorithm is working, please wait
                   </div>
                 </motion.div>
               ) : (
@@ -62,11 +62,10 @@ const RestoredFace = () => {
                     <Sparkles className="w-10 h-10 text-white" />
                   </div>
                   <div className="text-white text-xl font-semibold mb-2">
-                    İyileştirilmiş yüz burada görünecek
+                    Restored face will appear here
                   </div>
                   <div className="text-gray-400 text-sm max-w-sm text-center">
-                    Bir görsel yükleyin ve "Yüz İyileştirmesini Başlat" butonuna
-                    tıklayın
+                    Upload an image and click "Start Face Restoration" button
                   </div>
                 </motion.div>
               )}
@@ -98,9 +97,9 @@ const RestoredFace = () => {
       <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-4">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-            ✨ İyileştirilmiş Yüz
+            ✨ Restored Face
             <span className="bg-green-100 text-green-800 px-2 py-1 rounded-lg text-xs font-medium">
-              Tamamlandı
+              Completed
             </span>
           </h3>
         </div>
@@ -114,7 +113,7 @@ const RestoredFace = () => {
           <div className="relative rounded-xl overflow-hidden bg-gray-100 aspect-square">
             <Image
               src={restoredFace}
-              alt="İyileştirilmiş yüz"
+              alt="Restored face"
               width={1024}
               height={1024}
               className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
@@ -135,7 +134,7 @@ const RestoredFace = () => {
                     className="bg-white/90 hover:bg-white text-gray-800 backdrop-blur-sm"
                   >
                     <Download className="w-4 h-4 mr-1" />
-                    İndir
+                    Download
                   </Button>
                   <Button
                     size="sm"
@@ -143,7 +142,7 @@ const RestoredFace = () => {
                     className="bg-white/90 hover:bg-white text-gray-800 backdrop-blur-sm"
                   >
                     <Share2 className="w-4 h-4 mr-1" />
-                    Paylaş
+                    Share
                   </Button>
                   <Button
                     size="sm"
@@ -162,11 +161,11 @@ const RestoredFace = () => {
             <div className="flex items-center gap-2">
               <span className="text-green-600">✅</span>
               <span className="text-sm font-medium text-green-800">
-                Yüz başarıyla iyileştirildi!
+                Face successfully restored!
               </span>
             </div>
             <p className="text-xs text-green-700 mt-1">
-              AI algoritması yüzünüzü analiz etti ve kaliteyi artırdı
+              AI algorithm analyzed your face and enhanced the quality
             </p>
           </div>
         </motion.div>
@@ -174,12 +173,12 @@ const RestoredFace = () => {
         {/* Quality comparison info */}
         <div className="mt-4 grid grid-cols-2 gap-3">
           <div className="bg-blue-50 p-3 rounded-lg border border-blue-200 text-center">
-            <div className="text-blue-600 font-semibold text-sm">Öncesi</div>
-            <div className="text-blue-800 text-xs">Orijinal kalite</div>
+            <div className="text-blue-600 font-semibold text-sm">Before</div>
+            <div className="text-blue-800 text-xs">Original quality</div>
           </div>
           <div className="bg-green-50 p-3 rounded-lg border border-green-200 text-center">
-            <div className="text-green-600 font-semibold text-sm">Sonrası</div>
-            <div className="text-green-800 text-xs">AI ile iyileştirildi</div>
+            <div className="text-green-600 font-semibold text-sm">After</div>
+            <div className="text-green-800 text-xs">AI enhanced</div>
           </div>
         </div>
       </div>

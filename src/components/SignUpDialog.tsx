@@ -39,10 +39,10 @@ const SignUpDialog = () => {
     setLoading(false);
 
     if (error) {
-      toast.error("Kayıt sırasında hata oluştu.");
+      toast.error("An error occurred during registration.");
       console.error("Sign Up Error:", error.message);
     } else {
-      toast.success("Kayıt başarılı! Mailinizi kontrol edin.");
+      toast.success("Registration successful! Check your email.");
     }
   };
 
@@ -55,7 +55,7 @@ const SignUpDialog = () => {
     });
 
     if (error) {
-      toast.error("Google ile kayıt başarısız.");
+      toast.error("Registration with Google failed.");
       console.error("Google Sign Up Error:", error.message);
     }
   };
@@ -63,7 +63,7 @@ const SignUpDialog = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="default">Kayıt Ol</Button>
+        <Button variant="default">Sign Up</Button>
       </DialogTrigger>
       <DialogContent>
         <div className="flex flex-col items-center gap-2">
@@ -76,10 +76,10 @@ const SignUpDialog = () => {
           </div>
           <DialogHeader>
             <DialogTitle className="text-center">
-              Retouchly'e Kayıt Ol
+              Sign Up to Retouchly
             </DialogTitle>
             <DialogDescription className="text-center">
-              Başlamak için sadece birkaç bilgiye ihtiyacımız var.
+              We just need a few details to get you started.
             </DialogDescription>
           </DialogHeader>
         </div>
@@ -93,9 +93,9 @@ const SignUpDialog = () => {
         >
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>Ad Soyad</Label>
+              <Label>Full Name</Label>
               <Input
-                placeholder="Doğanay Balaban"
+                placeholder="John Doe"
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
@@ -103,45 +103,45 @@ const SignUpDialog = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label>E-posta</Label>
+              <Label>Email</Label>
               <Input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="ornek@eposta.com"
+                placeholder="example@email.com"
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label>Şifre</Label>
+              <Label>Password</Label>
               <Input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Şifrenizi girin"
+                placeholder="Enter your password"
                 required
               />
             </div>
           </div>
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? <Loader className="animate-spin" /> : "Hesap Oluştur"}
+            {loading ? <Loader className="animate-spin" /> : "Create Account"}
           </Button>
         </form>
 
         <div className="flex items-center gap-3 before:flex-1 before:h-px before:bg-border after:flex-1 after:h-px after:bg-border">
-          <span className="text-xs text-muted-foreground">veya</span>
+          <span className="text-xs text-muted-foreground">or</span>
         </div>
 
         <Button variant="outline" onClick={handleGoogleSignUp}>
-          Google ile Devam Et
+          Continue with Google
         </Button>
 
         <p className="text-center text-xs text-muted-foreground">
-          Kayıt olarak{" "}
+          By signing up, you agree to our{" "}
           <a className="underline hover:no-underline" href="#">
-            Kullanım Şartları'nı
-          </a>{" "}
-          kabul etmiş olursunuz.
+            Terms of Service
+          </a>
+          .
         </p>
       </DialogContent>
     </Dialog>

@@ -28,7 +28,6 @@ const FaceRestoration = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Loader className="w-8 h-8 animate-spin mx-auto mb-4 text-green-600" />
-          <p className="text-gray-600">Yetkilendirme kontrol ediliyor...</p>
         </div>
       </div>
     );
@@ -38,10 +37,10 @@ const FaceRestoration = () => {
     <div className="container mx-auto px-4 py-6">
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent mb-2">
-          Yüz İyileştirme
+          Face Restoration
         </h1>
         <p className="text-gray-600 text-sm">
-          AI ile eski, bulanık veya hasarlı yüzleri restore edin
+          Restore old, blurry or damaged faces with AI
         </p>
       </div>
 
@@ -56,17 +55,16 @@ const FaceRestoration = () => {
                   <Loader className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                  Giriş Yapın
+                  Sign In
                 </h3>
                 <p className="text-gray-600 text-sm mb-4">
-                  Yüz iyileştirme özelliğini kullanmak için giriş yapmanız
-                  gerekiyor
+                  You need to sign in to use the face restoration feature
                 </p>
                 <button
                   onClick={() => setShowSignIn(true)}
                   className="px-6 py-2 bg-gradient-to-r from-green-600 to-blue-600 text-white rounded-lg hover:from-green-700 hover:to-blue-700 transition-all duration-300"
                 >
-                  Giriş Yap
+                  Sign In
                 </button>
               </div>
             </div>
@@ -83,7 +81,7 @@ const FaceRestoration = () => {
         onClose={() => setShowSignIn(false)}
         onSuccess={() => {
           setIsAuthenticated(true);
-          window.location.reload(); // Sayfayı yenile
+          window.location.reload(); // Reload page
         }}
       />
     </div>

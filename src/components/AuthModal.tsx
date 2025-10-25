@@ -34,9 +34,9 @@ const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
     setLoading(false);
 
     if (error) {
-      toast.error("Giriş başarısız!");
+      toast.error("Sign in failed!");
     } else {
-      toast.success("Giriş başarılı!");
+      toast.success("Sign in successful!");
       onClose();
       if (onSuccess) onSuccess();
     }
@@ -51,7 +51,7 @@ const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
     });
 
     if (error) {
-      toast.error("Google ile oturum açılamadı.");
+      toast.error("Could not sign in with Google.");
       console.error("Google Auth Error:", error.message);
     }
   };
@@ -67,9 +67,9 @@ const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
             <img src="/logo2.png" alt="logo" />
           </div>
           <DialogHeader>
-            <DialogTitle className="sm:text-center">Giriş Yapın</DialogTitle>
+            <DialogTitle className="sm:text-center">Sign In</DialogTitle>
             <DialogDescription className="sm:text-center">
-              Bu özelliği kullanmak için hesabınıza giriş yapın.
+              Sign in to your account to use this feature.
             </DialogDescription>
           </DialogHeader>
         </div>
@@ -83,7 +83,7 @@ const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
         >
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>E-posta</Label>
+              <Label>Email</Label>
               <Input
                 type="email"
                 value={email}
@@ -92,7 +92,7 @@ const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
               />
             </div>
             <div className="space-y-2">
-              <Label>Şifre</Label>
+              <Label>Password</Label>
               <Input
                 type="password"
                 value={password}
@@ -105,24 +105,24 @@ const AuthModal = ({ isOpen, onClose, onSuccess }: AuthModalProps) => {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <Checkbox />
-              <Label>Beni hatırla</Label>
+              <Label>Remember me</Label>
             </div>
             <a className="text-sm underline" href="#">
-              Şifremi unuttum?
+              Forgot password?
             </a>
           </div>
 
           <Button type="submit" disabled={loading} className="w-full">
-            {loading ? <Loader className="animate-spin" /> : "Giriş Yap"}
+            {loading ? <Loader className="animate-spin" /> : "Sign In"}
           </Button>
         </form>
 
         <div className="flex items-center gap-3 before:flex-1 before:h-px before:bg-border after:flex-1 after:h-px after:bg-border">
-          <span className="text-xs text-muted-foreground">veya</span>
+          <span className="text-xs text-muted-foreground">or</span>
         </div>
 
         <Button variant="outline" onClick={handleGoogleAuth}>
-          Google ile Giriş Yap
+          Sign in with Google
         </Button>
       </DialogContent>
     </Dialog>

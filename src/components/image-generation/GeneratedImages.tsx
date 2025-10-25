@@ -53,7 +53,7 @@ const GeneratedImages = () => {
                 >
                   <Loader className="animate-spin text-blue-400 w-12 h-12" />
                   <div className="text-white text-lg font-medium">
-                    Görsel üretiliyor...
+                    Generating image...
                   </div>
                   <div className="text-gray-400 text-sm">
                     Bu işlem birkaç saniye sürebilir
@@ -69,11 +69,11 @@ const GeneratedImages = () => {
                     <span className="text-3xl">🎨</span>
                   </div>
                   <div className="text-white text-xl font-semibold mb-2">
-                    Görselleriniz burada görünecek
+                    Your images will appear here
                   </div>
                   <div className="text-gray-400 text-sm max-w-sm text-center">
-                    Bir prompt girin ve "Görseli Üret" butonuna tıklayarak AI
-                    ile görsel oluşturmaya başlayın
+                    Enter a prompt and click "Generate Image" button to start
+                    creating images with AI
                   </div>
                 </motion.div>
               )}
@@ -94,7 +94,7 @@ const GeneratedImages = () => {
       <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-4">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-            ✨ Üretilen Görseller
+            ✨ Generated Images
             <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-lg text-xs font-medium">
               {images.length}
             </span>
@@ -135,7 +135,7 @@ const GeneratedImages = () => {
                             className="bg-white/90 hover:bg-white text-gray-800 backdrop-blur-sm"
                           >
                             <Download className="w-4 h-4 mr-1" />
-                            İndir
+                            Download
                           </Button>
                           <Button
                             size="sm"
@@ -143,7 +143,7 @@ const GeneratedImages = () => {
                             className="bg-white/90 hover:bg-white text-gray-800 backdrop-blur-sm"
                           >
                             <Share2 className="w-4 h-4 mr-1" />
-                            Paylaş
+                            Share
                           </Button>
                           <Button
                             size="sm"
@@ -160,7 +160,7 @@ const GeneratedImages = () => {
                   {/* Image info */}
                   <div className="mt-3 text-center">
                     <p className="text-sm text-gray-600">
-                      Görsel {index + 1} / {images.length}
+                      Image {index + 1} / {images.length}
                     </p>
                   </div>
                 </motion.div>
@@ -180,7 +180,7 @@ const GeneratedImages = () => {
         {images.length > 1 && (
           <div className="mt-6">
             <h4 className="text-sm font-medium text-gray-700 mb-3">
-              Tüm Görseller
+              All Images
             </h4>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {images.map((image, index) => (

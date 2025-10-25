@@ -29,7 +29,7 @@ const page = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Loader className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" />
-          <p className="text-gray-600">Yetkilendirme kontrol ediliyor...</p>
+          <p className="text-gray-600">Checking authorization...</p>
         </div>
       </div>
     );
@@ -39,11 +39,11 @@ const page = () => {
     <div className="container mx-auto px-4 py-6">
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent mb-2">
-          Fotoğraf Oluşturucu
+          Image Generator
         </h1>
         <p className="text-gray-600 text-sm">
-          Fotoğraf oluşturmak için kullanılacak ayarları seçin ve fotoğrafı
-          oluşturun.
+          Select the settings to be used for image generation and create your
+          image.
         </p>
       </div>
       <section className="flex flex-col lg:flex-row gap-6 justify-center items-start">
@@ -57,17 +57,16 @@ const page = () => {
                   <Loader className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                  Giriş Yapın
+                  Sign In
                 </h3>
                 <p className="text-gray-600 text-sm mb-4">
-                  AI görsel üretme özelliğini kullanmak için giriş yapmanız
-                  gerekiyor
+                  You need to sign in to use the AI image generation feature
                 </p>
                 <button
                   onClick={() => setShowSignIn(true)}
                   className="px-6 py-2 bg-gradient-to-r from-green-600 to-blue-600 text-white rounded-lg hover:from-green-700 hover:to-blue-700 transition-all duration-300"
                 >
-                  Giriş Yap
+                  Sign In
                 </button>
               </div>
             </div>
@@ -87,7 +86,7 @@ const page = () => {
         onClose={() => setShowSignIn(false)}
         onSuccess={() => {
           setIsAuthenticated(true);
-          window.location.reload(); // Sayfayı yenile
+          window.location.reload(); // Reload page
         }}
       />
     </div>

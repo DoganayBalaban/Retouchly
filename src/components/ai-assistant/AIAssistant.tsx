@@ -125,7 +125,7 @@ export default function AIAssistant({
     const userMessage: Message = {
       id: Date.now().toString(),
       type: "user",
-      content: message || "Yardım istiyorum",
+      content: message || "I need help",
       timestamp: new Date(),
     };
 
@@ -156,7 +156,7 @@ export default function AIAssistant({
 
         setMessages((prev) => [...prev, assistantMessage]);
       } else {
-        throw new Error(response.error || "Bilinmeyen hata");
+        throw new Error(response.error || "Unknown error");
       }
     } catch (error) {
       toast.error("AI assistant couldn't respond. Please try again.");

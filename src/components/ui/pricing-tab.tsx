@@ -44,7 +44,7 @@ export function Tab({
             selected && "bg-muted"
           )}
         >
-          35% indirim
+          35% off
         </Badge>
       )}
     </button>
