@@ -33,11 +33,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   getCommunityImages,
-  likeImage,
-  unlikeImage,
-  checkIfLiked,
   incrementDownloadCount,
 } from "../actions/community-actions";
+import {
+  likeImageClient,
+  unlikeImageClient,
+  checkIfLikedClient,
+} from "@/lib/community-client";
 import toast from "react-hot-toast";
 import {
   Dialog,
@@ -120,10 +122,12 @@ export default function ExplorePage() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
   const [likedImages, setLikedImages] = useState<Set<string>>(new Set());
-  const [sortBy, setSortBy] = useState<"newest" | "most_liked" | "most_downloaded">(
-    "newest"
+  const [sortBy, setSortBy] = useState<
+    "newest" | "most_liked" | "most_downloaded"
+  >("newest");
+  const [activityType, setActivityType] = useState<string | undefined>(
+    undefined
   );
-  const [activityType, setActivityType] = useState<string | undefined>(undefined);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedImage, setSelectedImage] = useState<any>(null);
   const [imageDialogOpen, setImageDialogOpen] = useState(false);
@@ -144,11 +148,11 @@ export default function ExplorePage() {
   useEffect(() => {
     const loadLikedStatus = async () => {
       if (!user || images.length === 0) return;
-      
+
       const likedSet = new Set<string>();
       for (const image of images) {
         try {
-          const isLiked = await checkIfLiked(image.id, user.id);
+          const isLiked = await checkIfLikedClient(image.id);
           if (isLiked) {
             likedSet.add(image.id);
           }
@@ -158,39 +162,42 @@ export default function ExplorePage() {
       }
       setLikedImages(likedSet);
     };
-    
+
     loadLikedStatus();
   }, [images, user]);
 
-  const loadImages = useCallback(async (currentPage: number = 0, reset: boolean = false) => {
-    setLoading(true);
-    try {
-      const result = await getCommunityImages({
-        sortBy,
-        activityType,
-        limit: 24,
-        offset: currentPage * 24,
-      });
+  const loadImages = useCallback(
+    async (currentPage: number = 0, reset: boolean = false) => {
+      setLoading(true);
+      try {
+        const result = await getCommunityImages({
+          sortBy,
+          activityType,
+          limit: 24,
+          offset: currentPage * 24,
+        });
 
-      if (result.error) {
+        if (result.error) {
+          toast.error("Failed to load images");
+          return;
+        }
+
+        if (reset || currentPage === 0) {
+          setImages(result.data);
+        } else {
+          setImages((prev) => [...prev, ...result.data]);
+        }
+
+        setHasMore(result.data.length === 24);
+      } catch (error) {
+        console.error("Error loading images:", error);
         toast.error("Failed to load images");
-        return;
+      } finally {
+        setLoading(false);
       }
-
-      if (reset || currentPage === 0) {
-        setImages(result.data);
-      } else {
-        setImages((prev) => [...prev, ...result.data]);
-      }
-
-      setHasMore(result.data.length === 24);
-    } catch (error) {
-      console.error("Error loading images:", error);
-      toast.error("Failed to load images");
-    } finally {
-      setLoading(false);
-    }
-  }, [sortBy, activityType]);
+    },
+    [sortBy, activityType]
+  );
 
   useEffect(() => {
     setPage(0);
@@ -213,7 +220,11 @@ export default function ExplorePage() {
 
     try {
       if (isLiked) {
-        await unlikeImage(imageId, user.id);
+        const result = await unlikeImageClient(imageId);
+        if (!result.success) {
+          toast.error(result.error || "Failed to unlike image");
+          return;
+        }
         setLikedImages((prev) => {
           const newSet = new Set(prev);
           newSet.delete(imageId);
@@ -226,9 +237,20 @@ export default function ExplorePage() {
               : img
           )
         );
+        // Update selected image if it's the same
+        if (selectedImage?.id === imageId) {
+          setSelectedImage((prev: any) => ({
+            ...prev,
+            like_count: Math.max(0, (prev.like_count || 0) - 1),
+          }));
+        }
         toast.success("Removed from likes");
       } else {
-        await likeImage(imageId, user.id);
+        const result = await likeImageClient(imageId);
+        if (!result.success) {
+          toast.error(result.error || "Failed to like image");
+          return;
+        }
         setLikedImages((prev) => new Set([...prev, imageId]));
         setImages((prev) =>
           prev.map((img) =>
@@ -237,6 +259,13 @@ export default function ExplorePage() {
               : img
           )
         );
+        // Update selected image if it's the same
+        if (selectedImage?.id === imageId) {
+          setSelectedImage((prev: any) => ({
+            ...prev,
+            like_count: (prev.like_count || 0) + 1,
+          }));
+        }
         toast.success("Added to likes");
       }
     } catch (error: any) {
@@ -279,6 +308,13 @@ export default function ExplorePage() {
             : img
         )
       );
+      // Update selected image if it's the same
+      if (selectedImage?.id === imageId) {
+        setSelectedImage((prev: any) => ({
+          ...prev,
+          download_count: (prev.download_count || 0) + 1,
+        }));
+      }
 
       toast.success("Downloading image...");
     } catch (error) {
@@ -424,7 +460,9 @@ export default function ExplorePage() {
                 <div className="flex items-center gap-2 text-xs text-gray-400">
                   <Users className="w-3 h-3" />
                   <span>
-                    {profile.full_name || profile.email?.split("@")[0] || "Anonymous"}
+                    {profile.full_name ||
+                      profile.email?.split("@")[0] ||
+                      "Anonymous"}
                   </span>
                 </div>
               )}
@@ -640,7 +678,7 @@ export default function ExplorePage() {
             </Button>
           </div>
         )}
-        
+
         {loading && images.length > 0 && (
           <div className="flex justify-center mt-8">
             <Loader className="animate-spin w-6 h-6 text-blue-400" />
@@ -650,76 +688,138 @@ export default function ExplorePage() {
 
       {/* Image Dialog */}
       <Dialog open={imageDialogOpen} onOpenChange={setImageDialogOpen}>
-        <DialogContent className="max-w-4xl bg-gray-900 border-gray-700 text-white">
+        <DialogContent className=" w-[95vw] max-h-[95vh] bg-gray-900 border-gray-700 text-white p-0 overflow-hidden">
           {selectedImage && (
-            <>
-              <DialogHeader>
-                <DialogTitle className="text-xl">
-                  {selectedImage.prompt || "Community Image"}
-                </DialogTitle>
-                <DialogDescription className="text-gray-400">
-                  Created by{" "}
-                  {selectedImage.profiles?.full_name ||
-                    selectedImage.profiles?.email?.split("@")[0] ||
-                    "Anonymous"}
-                </DialogDescription>
+            <div className="flex flex-col h-full">
+              <DialogHeader className="px-6 pt-6 pb-4 border-b border-gray-700">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <DialogTitle className="text-2xl font-bold mb-2 line-clamp-2">
+                      {selectedImage.prompt || "Community Image"}
+                    </DialogTitle>
+                    <DialogDescription className="text-gray-400 flex items-center gap-2">
+                      <Users className="w-4 h-4" />
+                      Created by{" "}
+                      <span className="font-medium text-gray-300">
+                        {selectedImage.profiles?.full_name ||
+                          selectedImage.profiles?.email?.split("@")[0] ||
+                          "Anonymous"}
+                      </span>
+                    </DialogDescription>
+                  </div>
+                  <Badge
+                    variant="secondary"
+                    className={`text-sm border ${getActivityColor(
+                      selectedImage.activity_type || "image_generation"
+                    )}`}
+                  >
+                    <span className="mr-1">
+                      {getActivityIcon(
+                        selectedImage.activity_type || "image_generation"
+                      )}
+                    </span>
+                    {getActivityLabel(
+                      selectedImage.activity_type || "image_generation"
+                    )}
+                  </Badge>
+                </div>
               </DialogHeader>
-              <div className="space-y-4">
-                <div className="relative aspect-square w-full max-h-[70vh] rounded-lg overflow-hidden">
+
+              <div className="flex-1 overflow-auto p-6">
+                <div className="relative w-full h-full min-h-[60vh] rounded-lg overflow-hidden bg-gray-800/50 flex items-center justify-center">
                   <Image
                     src={getImageUrl(selectedImage)}
                     alt={selectedImage.prompt || "Image"}
-                    fill
-                    className="object-contain"
+                    width={1920}
+                    height={1920}
+                    className="max-w-full max-h-full w-auto h-auto object-contain"
                     unoptimized
                   />
                 </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex gap-4 text-sm text-gray-400">
-                    <span className="flex items-center gap-1">
-                      <Heart className="w-4 h-4" />
-                      {selectedImage.like_count || 0} likes
+              </div>
+
+              <div className="px-6 py-4 border-t border-gray-700 bg-gray-900/50 backdrop-blur-sm">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div className="flex gap-6 text-sm text-gray-400">
+                    <span className="flex items-center gap-2">
+                      <Heart className="w-5 h-5" />
+                      <span className="font-medium text-gray-300">
+                        {selectedImage.like_count || 0}
+                      </span>
+                      <span className="hidden sm:inline">likes</span>
                     </span>
-                    <span className="flex items-center gap-1">
-                      <Download className="w-4 h-4" />
-                      {selectedImage.download_count || 0} downloads
+                    <span className="flex items-center gap-2">
+                      <Download className="w-5 h-5" />
+                      <span className="font-medium text-gray-300">
+                        {selectedImage.download_count || 0}
+                      </span>
+                      <span className="hidden sm:inline">downloads</span>
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <Clock className="w-5 h-5" />
+                      <span className="font-medium text-gray-300">
+                        {new Date(selectedImage.created_at).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          }
+                        )}
+                      </span>
                     </span>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 w-full sm:w-auto">
                     <Button
                       onClick={() => handleLike(selectedImage.id)}
-                      variant={likedImages.has(selectedImage.id) ? "default" : "outline"}
-                      className={
+                      variant={
                         likedImages.has(selectedImage.id)
-                          ? "bg-red-500 hover:bg-red-600"
-                          : ""
+                          ? "default"
+                          : "outline"
                       }
+                      className={`flex-1 sm:flex-none ${
+                        likedImages.has(selectedImage.id)
+                          ? "bg-red-500 hover:bg-red-600 text-white"
+                          : "border-gray-600 hover:bg-gray-800"
+                      }`}
+                      size="lg"
                     >
                       <Heart
-                        className={`w-4 h-4 mr-2 ${
-                          likedImages.has(selectedImage.id) ? "fill-current" : ""
+                        className={`w-5 h-5 mr-2 ${
+                          likedImages.has(selectedImage.id)
+                            ? "fill-current"
+                            : ""
                         }`}
                       />
                       {likedImages.has(selectedImage.id) ? "Unlike" : "Like"}
                     </Button>
                     <Button
-                      onClick={() => handleDownload(selectedImage.image_url, selectedImage.id)}
+                      onClick={() =>
+                        handleDownload(
+                          selectedImage.image_url,
+                          selectedImage.id
+                        )
+                      }
                       variant="outline"
+                      className="flex-1 sm:flex-none border-gray-600 hover:bg-gray-800"
+                      size="lg"
                     >
-                      <Download className="w-4 h-4 mr-2" />
+                      <Download className="w-5 h-5 mr-2" />
                       Download
                     </Button>
                     <Button
                       onClick={() => handleShare(selectedImage)}
                       variant="outline"
+                      className="flex-1 sm:flex-none border-gray-600 hover:bg-gray-800"
+                      size="lg"
                     >
-                      <Share2 className="w-4 h-4 mr-2" />
+                      <Share2 className="w-5 h-5 mr-2" />
                       Share
                     </Button>
                   </div>
                 </div>
               </div>
-            </>
+            </div>
           )}
         </DialogContent>
       </Dialog>

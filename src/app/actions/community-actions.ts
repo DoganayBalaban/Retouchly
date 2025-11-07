@@ -88,29 +88,29 @@ export async function toggleImagePublic(
 
     if (checkError && checkError.code !== "PGRST116") {
       console.error("Error checking image:", checkError);
-      return { 
-        success: false, 
-        error: `Failed to check image: ${checkError.message}` 
+      return {
+        success: false,
+        error: `Failed to check image: ${checkError.message}`,
       };
     }
 
     if (!checkData) {
       console.error("Image not found in database:", activityId);
-      return { 
-        success: false, 
-        error: "Image not found" 
+      return {
+        success: false,
+        error: "Image not found",
       };
     }
 
     // Verify ownership
     if (checkData.user_id !== userId) {
-      console.error("User doesn't own image:", { 
-        imageUserId: checkData.user_id, 
-        currentUserId: userId 
+      console.error("User doesn't own image:", {
+        imageUserId: checkData.user_id,
+        currentUserId: userId,
       });
-      return { 
-        success: false, 
-        error: "Unauthorized: You don't own this image" 
+      return {
+        success: false,
+        error: "Unauthorized: You don't own this image",
       };
     }
 
@@ -127,33 +127,33 @@ export async function toggleImagePublic(
 
     if (updateError) {
       console.error("Error updating image:", updateError);
-      return { 
-        success: false, 
-        error: `Update failed: ${updateError.message}` 
+      return {
+        success: false,
+        error: `Update failed: ${updateError.message}`,
       };
     }
 
     if (!updatedData) {
       console.error("Update succeeded but no data returned");
       // Return success anyway since we verified ownership and update didn't error
-      return { 
-        success: true, 
-        data: { ...checkData, is_public: isPublic }, 
-        error: null 
+      return {
+        success: true,
+        data: { ...checkData, is_public: isPublic },
+        error: null,
       };
     }
 
     // Update successful
-    return { 
-      success: true, 
-      data: updatedData, 
-      error: null 
+    return {
+      success: true,
+      data: updatedData,
+      error: null,
     };
   } catch (error: any) {
     console.error("Unexpected error in toggleImagePublic:", error);
-    return { 
-      success: false, 
-      error: `Unexpected error: ${error?.message || "Unknown error"}` 
+    return {
+      success: false,
+      error: `Unexpected error: ${error?.message || "Unknown error"}`,
     };
   }
 }
@@ -175,19 +175,21 @@ export async function likeImage(activityId: string, userId: string) {
   }
 
   if (existingLike) {
-    return { success: false, error: "Already liked" };
+    return { success: false, error: "You have already liked this image" };
   }
 
   // Add like
-  const { error: likeError } = await supabase
-    .from("community_likes")
-    .insert({
-      user_id: userId,
-      activity_id: activityId,
-    });
+  const { error: likeError } = await supabase.from("community_likes").insert({
+    user_id: userId,
+    activity_id: activityId,
+  });
 
   if (likeError) {
     console.error("Error liking image:", likeError);
+    // Check if it's a unique constraint violation (23505)
+    if (likeError.code === "23505") {
+      return { success: false, error: "You have already liked this image" };
+    }
     return { success: false, error: likeError.message };
   }
 

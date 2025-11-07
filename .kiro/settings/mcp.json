@@ -1,7 +1,17 @@
 {
   "mcpServers": {
     "supabase": {
-      "url": "https://mcp.supabase.com/mcp?project_ref=ihccembzdpaowyvpsarm"
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--access-token",
+        "sbp_e6fd09bb6dd3df2525bde154a1adb93d4bb16f5e"
+      ],
+      "disabled": false,
+      "autoApprove": [
+        "list_tables"
+      ]
     }
   }
 }
