@@ -16,10 +16,10 @@ import {
   Smile,
   ImageIcon,
   Loader,
-  Grid3X3,
   Search,
   Users,
   Eye,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,13 +41,6 @@ import {
   checkIfLikedClient,
 } from "@/lib/community-client";
 import toast from "react-hot-toast";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 
 // Activity icons and labels
 const getActivityIcon = (type: string) => {
@@ -686,143 +679,155 @@ export default function ExplorePage() {
         )}
       </div>
 
-      {/* Image Dialog */}
-      <Dialog open={imageDialogOpen} onOpenChange={setImageDialogOpen}>
-        <DialogContent className=" w-[95vw] max-h-[95vh] bg-gray-900 border-gray-700 text-white p-0 overflow-hidden">
-          {selectedImage && (
-            <div className="flex flex-col h-full">
-              <DialogHeader className="px-6 pt-6 pb-4 border-b border-gray-700">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1 min-w-0">
-                    <DialogTitle className="text-2xl font-bold mb-2 line-clamp-2">
-                      {selectedImage.prompt || "Community Image"}
-                    </DialogTitle>
-                    <DialogDescription className="text-gray-400 flex items-center gap-2">
-                      <Users className="w-4 h-4" />
-                      Created by{" "}
-                      <span className="font-medium text-gray-300">
-                        {selectedImage.profiles?.full_name ||
-                          selectedImage.profiles?.email?.split("@")[0] ||
-                          "Anonymous"}
-                      </span>
-                    </DialogDescription>
-                  </div>
-                  <Badge
-                    variant="secondary"
-                    className={`text-sm border ${getActivityColor(
-                      selectedImage.activity_type || "image_generation"
-                    )}`}
-                  >
-                    <span className="mr-1">
-                      {getActivityIcon(
-                        selectedImage.activity_type || "image_generation"
-                      )}
+      {/* Custom Image Modal */}
+      {imageDialogOpen && selectedImage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          onClick={() => setImageDialogOpen(false)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="relative w-full max-w-7xl h-[95vh] bg-gray-900 rounded-2xl shadow-2xl border border-gray-700 overflow-hidden flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setImageDialogOpen(false)}
+              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-gray-800/90 hover:bg-gray-700 text-gray-300 hover:text-white transition-all duration-200 backdrop-blur-sm border border-gray-600"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            {/* Header */}
+            <div className="px-6 pt-6 pb-4 border-b border-gray-700">
+              <div className="flex items-start justify-between gap-4 pr-12">
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-2xl md:text-3xl font-bold mb-2 line-clamp-2 text-white">
+                    {selectedImage.prompt || "Community Image"}
+                  </h2>
+                  <div className="text-gray-400 flex items-center gap-2">
+                    <Users className="w-4 h-4" />
+                    <span>Created by</span>
+                    <span className="font-medium text-gray-300">
+                      {selectedImage.profiles?.full_name ||
+                        selectedImage.profiles?.email?.split("@")[0] ||
+                        "Anonymous"}
                     </span>
-                    {getActivityLabel(
+                  </div>
+                </div>
+                <Badge
+                  variant="secondary"
+                  className={`text-sm border ${getActivityColor(
+                    selectedImage.activity_type || "image_generation"
+                  )}`}
+                >
+                  <span className="mr-1">
+                    {getActivityIcon(
                       selectedImage.activity_type || "image_generation"
                     )}
-                  </Badge>
-                </div>
-              </DialogHeader>
-
-              <div className="flex-1 overflow-auto p-6">
-                <div className="relative w-full h-full min-h-[60vh] rounded-lg overflow-hidden bg-gray-800/50 flex items-center justify-center">
-                  <Image
-                    src={getImageUrl(selectedImage)}
-                    alt={selectedImage.prompt || "Image"}
-                    width={1920}
-                    height={1920}
-                    className="max-w-full max-h-full w-auto h-auto object-contain"
-                    unoptimized
-                  />
-                </div>
+                  </span>
+                  {getActivityLabel(
+                    selectedImage.activity_type || "image_generation"
+                  )}
+                </Badge>
               </div>
+            </div>
 
-              <div className="px-6 py-4 border-t border-gray-700 bg-gray-900/50 backdrop-blur-sm">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <div className="flex gap-6 text-sm text-gray-400">
-                    <span className="flex items-center gap-2">
-                      <Heart className="w-5 h-5" />
-                      <span className="font-medium text-gray-300">
-                        {selectedImage.like_count || 0}
-                      </span>
-                      <span className="hidden sm:inline">likes</span>
+            {/* Image Content */}
+            <div className="flex-1 overflow-hidden p-4 md:p-6 flex items-center justify-center">
+              <div className="relative w-full h-full max-h-[calc(95vh-200px)] rounded-lg overflow-hidden bg-gray-800/50 flex items-center justify-center">
+                <Image
+                  src={getImageUrl(selectedImage)}
+                  alt={selectedImage.prompt || "Image"}
+                  width={1920}
+                  height={1920}
+                  className="max-w-full max-h-full w-auto h-auto object-contain"
+                  unoptimized
+                />
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="px-6 py-4 border-t border-gray-700 bg-gray-900/50 backdrop-blur-sm">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex gap-6 text-sm text-gray-400">
+                  <span className="flex items-center gap-2">
+                    <Heart className="w-5 h-5" />
+                    <span className="font-medium text-gray-300">
+                      {selectedImage.like_count || 0}
                     </span>
-                    <span className="flex items-center gap-2">
-                      <Download className="w-5 h-5" />
-                      <span className="font-medium text-gray-300">
-                        {selectedImage.download_count || 0}
-                      </span>
-                      <span className="hidden sm:inline">downloads</span>
+                    <span className="hidden sm:inline">likes</span>
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <Download className="w-5 h-5" />
+                    <span className="font-medium text-gray-300">
+                      {selectedImage.download_count || 0}
                     </span>
-                    <span className="flex items-center gap-2">
-                      <Clock className="w-5 h-5" />
-                      <span className="font-medium text-gray-300">
-                        {new Date(selectedImage.created_at).toLocaleDateString(
-                          "en-US",
-                          {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          }
-                        )}
-                      </span>
+                    <span className="hidden sm:inline">downloads</span>
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <Clock className="w-5 h-5" />
+                    <span className="font-medium text-gray-300">
+                      {new Date(selectedImage.created_at).toLocaleDateString(
+                        "en-US",
+                        {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        }
+                      )}
                     </span>
-                  </div>
-                  <div className="flex gap-2 w-full sm:w-auto">
-                    <Button
-                      onClick={() => handleLike(selectedImage.id)}
-                      variant={
-                        likedImages.has(selectedImage.id)
-                          ? "default"
-                          : "outline"
-                      }
-                      className={`flex-1 sm:flex-none ${
-                        likedImages.has(selectedImage.id)
-                          ? "bg-red-500 hover:bg-red-600 text-white"
-                          : "border-gray-600 hover:bg-gray-800"
+                  </span>
+                </div>
+                <div className="flex gap-2 w-full sm:w-auto">
+                  <Button
+                    onClick={() => handleLike(selectedImage.id)}
+                    variant={
+                      likedImages.has(selectedImage.id) ? "default" : "outline"
+                    }
+                    className={`flex-1 sm:flex-none ${
+                      likedImages.has(selectedImage.id)
+                        ? "bg-red-500 hover:bg-red-600 text-white"
+                        : "border-gray-600 hover:bg-gray-800"
+                    }`}
+                    size="lg"
+                  >
+                    <Heart
+                      className={`w-5 h-5 mr-2 ${
+                        likedImages.has(selectedImage.id) ? "fill-current" : ""
                       }`}
-                      size="lg"
-                    >
-                      <Heart
-                        className={`w-5 h-5 mr-2 ${
-                          likedImages.has(selectedImage.id)
-                            ? "fill-current"
-                            : ""
-                        }`}
-                      />
-                      {likedImages.has(selectedImage.id) ? "Unlike" : "Like"}
-                    </Button>
-                    <Button
-                      onClick={() =>
-                        handleDownload(
-                          selectedImage.image_url,
-                          selectedImage.id
-                        )
-                      }
-                      variant="outline"
-                      className="flex-1 sm:flex-none border-gray-600 hover:bg-gray-800"
-                      size="lg"
-                    >
-                      <Download className="w-5 h-5 mr-2" />
-                      Download
-                    </Button>
-                    <Button
-                      onClick={() => handleShare(selectedImage)}
-                      variant="outline"
-                      className="flex-1 sm:flex-none border-gray-600 hover:bg-gray-800"
-                      size="lg"
-                    >
-                      <Share2 className="w-5 h-5 mr-2" />
-                      Share
-                    </Button>
-                  </div>
+                    />
+                    {likedImages.has(selectedImage.id) ? "Unlike" : "Like"}
+                  </Button>
+                  <Button
+                    onClick={() =>
+                      handleDownload(selectedImage.image_url, selectedImage.id)
+                    }
+                    variant="outline"
+                    className="flex-1 sm:flex-none border-gray-600 hover:bg-gray-800"
+                    size="lg"
+                  >
+                    <Download className="w-5 h-5 mr-2" />
+                    Download
+                  </Button>
+                  <Button
+                    onClick={() => handleShare(selectedImage)}
+                    variant="outline"
+                    className="flex-1 sm:flex-none border-gray-600 hover:bg-gray-800"
+                    size="lg"
+                  >
+                    <Share2 className="w-5 h-5 mr-2" />
+                    Share
+                  </Button>
                 </div>
               </div>
             </div>
-          )}
-        </DialogContent>
-      </Dialog>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }
