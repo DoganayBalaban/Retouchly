@@ -110,6 +110,12 @@ const Navbar = () => {
 
                   <nav className="flex flex-col gap-2">
                     <Link
+                      href="/explore"
+                      className="px-3 py-2 hover:bg-white/10 rounded-md text-sm font-medium transition-colors"
+                    >
+                      Explore
+                    </Link>
+                    <Link
                       href="/pricing"
                       className="px-3 py-2 hover:bg-white/10 rounded-md text-sm font-medium transition-colors"
                     >
@@ -236,6 +242,14 @@ const Navbar = () => {
             <div className="flex items-center gap-6">
               <NavigationMenu>
                 <NavigationMenuList className="gap-2">
+                  <NavigationMenuItem>
+                    <NavigationMenuLink
+                      className="px-4 py-2 text-sm font-medium text-white/90 hover:text-white transition-colors rounded-md hover:bg-white/10"
+                      asChild
+                    >
+                      <Link href="/explore">Explore</Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
                   <NavigationMenuItem>
                     <NavigationMenuLink
                       className="px-4 py-2 text-sm font-medium text-white/90 hover:text-white transition-colors rounded-md hover:bg-white/10"

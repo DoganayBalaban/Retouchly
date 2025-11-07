@@ -20,6 +20,9 @@ import {
   Sparkles,
   Scissors,
   Smile,
+  Share2,
+  Globe,
+  Lock,
 } from "lucide-react";
 import {
   getUserGeneratedImages,
@@ -28,6 +31,7 @@ import {
   removeFavorite,
   getUserFavorites,
 } from "../actions/userImages/getUserGeneratedImages";
+import { toggleImagePublicClient } from "../actions/community-actions-client";
 import Image from "next/image";
 import {
   DropdownMenu,
@@ -427,6 +431,55 @@ export default function HistoryPage() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="bg-gray-800 border-gray-700 text-white">
                       <DropdownMenuItem
+                        onClick={async () => {
+                          const {
+                            data: { user },
+                          } = await supabase.auth.getUser();
+                          if (!user) {
+                            toast.error("Please sign in");
+                            return;
+                          }
+
+                          const isCurrentlyPublic = item.is_public || false;
+                          const result = await toggleImagePublicClient(
+                            item.id,
+                            user.id,
+                            !isCurrentlyPublic
+                          );
+
+                          if (result.success) {
+                            setData((prevData: any) =>
+                              prevData.map((img: any) =>
+                                img.id === item.id
+                                  ? { ...img, is_public: !isCurrentlyPublic }
+                                  : img
+                              )
+                            );
+                            toast.success(
+                              isCurrentlyPublic
+                                ? "Image removed from community"
+                                : "Image shared to community!"
+                            );
+                          } else {
+                            toast.error(result.error || "Failed to update");
+                          }
+                        }}
+                        className="hover:bg-gray-700 focus:bg-gray-700"
+                      >
+                        {item.is_public ? (
+                          <>
+                            <Lock className="w-4 h-4 mr-2" />
+                            Make Private
+                          </>
+                        ) : (
+                          <>
+                            <Globe className="w-4 h-4 mr-2" />
+                            Share to Community
+                          </>
+                        )}
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator className="bg-gray-700" />
+                      <DropdownMenuItem
                         onClick={() => handleDelete(item.id)}
                         className="text-red-400 hover:bg-gray-700 focus:bg-gray-700"
                       >
@@ -444,6 +497,15 @@ export default function HistoryPage() {
               <div className="absolute top-2 right-2">
                 <div className="bg-red-500 rounded-full p-1">
                   <Heart className="w-4 h-4 text-white fill-current" />
+                </div>
+              </div>
+            )}
+
+            {/* Public indicator */}
+            {item.is_public && (
+              <div className="absolute top-2 left-2">
+                <div className="bg-green-500 rounded-full p-1">
+                  <Globe className="w-4 h-4 text-white" />
                 </div>
               </div>
             )}
