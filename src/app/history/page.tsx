@@ -276,15 +276,37 @@ export default function HistoryPage() {
 
   const favoriteImages = getFavoriteImages();
 
+  // URL validation helper
+  const isValidImageUrl = (url: any): boolean => {
+    if (!url) return false;
+    if (typeof url !== "string") return false;
+    if (url.trim() === "") return false;
+    if (url === "{}" || url === "null" || url === "undefined") return false;
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      // Relative URL kontrolü
+      return url.startsWith("/") || url.startsWith("./");
+    }
+  };
+
   // Filter and sort functions
   const filterAndSortImages = (images: any[]) => {
     if (!images) return [];
 
-    let filtered = images.filter(
-      (item: any) =>
+    let filtered = images.filter((item: any) => {
+      // Geçersiz image_url'leri filtrele
+      if (!isValidImageUrl(item.image_url)) {
+        return false;
+      }
+
+      return (
         item.prompt?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.image_url?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+        (typeof item.image_url === "string" &&
+          item.image_url.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+    });
 
     switch (sortBy) {
       case "newest":
@@ -312,132 +334,155 @@ export default function HistoryPage() {
   const filteredData = filterAndSortImages(data || []);
   const filteredFavorites = filterAndSortImages(favoriteImages);
 
-  const renderImageCard = (item: any, index: number) => (
-    <motion.div
-      key={item.id}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: index * 0.05 }}
-      className="group"
-    >
-      <Card className="py-0! overflow-hidden bg-gray-800/90 backdrop-blur-sm border border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-        <div className="relative aspect-square overflow-hidden">
-          <Image
-            src={item.image_url || "/placeholder-image.svg"}
-            alt={item.prompt || "Generated image"}
-            width={500}
-            height={500}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.src = "/placeholder-image.svg";
-            }}
-            unoptimized={item.image_url?.includes("replicate.delivery")}
-          />
+  const getImageUrl = (item: any): string => {
+    const url = item.image_url;
+    if (isValidImageUrl(url)) {
+      return url;
+    }
+    return "/placeholder-image.svg";
+  };
 
-          {/* Overlay with actions */}
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-end">
-            <div className="w-full p-4 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <div className="flex gap-2 justify-center">
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={() => handleDownload(item.image_url)}
-                  className="bg-white/90 hover:bg-white text-gray-800 backdrop-blur-sm"
-                >
-                  <Download className="w-4 h-4 mr-1" />
-                  Download
-                </Button>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={() => {
-                    if (isFavorite(item.id)) {
-                      handleRemoveFromFavorites(item.id);
-                    } else {
-                      handleAddToFavorites(item.id);
-                    }
-                  }}
-                  className={`backdrop-blur-sm ${
-                    isFavorite(item.id)
-                      ? "bg-red-500/90 hover:bg-red-600 text-white"
-                      : "bg-white/90 hover:bg-white text-gray-800"
-                  }`}
-                >
-                  <Heart
-                    className={`w-4 h-4 mr-1 ${
-                      isFavorite(item.id) ? "fill-current" : ""
+  const renderImageCard = (item: any, index: number) => {
+    const imageUrl = getImageUrl(item);
+
+    return (
+      <motion.div
+        key={item.id}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: index * 0.05 }}
+        className="group"
+      >
+        <Card className="py-0! overflow-hidden bg-gray-800/90 backdrop-blur-sm border border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+          <div className="relative aspect-square overflow-hidden">
+            <Image
+              src={imageUrl}
+              alt={item.prompt || "Generated image"}
+              width={500}
+              height={500}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = "/placeholder-image.svg";
+              }}
+              unoptimized={
+                imageUrl.includes("replicate.delivery") ||
+                imageUrl.startsWith("http://") ||
+                imageUrl.startsWith("https://")
+              }
+            />
+
+            {/* Overlay with actions */}
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-end">
+              <div className="w-full p-4 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="flex gap-2 justify-center">
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => {
+                      if (isValidImageUrl(item.image_url)) {
+                        handleDownload(item.image_url);
+                      } else {
+                        toast.error("Invalid image URL");
+                      }
+                    }}
+                    className="bg-white/90 hover:bg-white text-gray-800 backdrop-blur-sm"
+                    disabled={!isValidImageUrl(item.image_url)}
+                  >
+                    <Download className="w-4 h-4 mr-1" />
+                    Download
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => {
+                      if (isFavorite(item.id)) {
+                        handleRemoveFromFavorites(item.id);
+                      } else {
+                        handleAddToFavorites(item.id);
+                      }
+                    }}
+                    className={`backdrop-blur-sm ${
+                      isFavorite(item.id)
+                        ? "bg-red-500/90 hover:bg-red-600 text-white"
+                        : "bg-white/90 hover:bg-white text-gray-800"
                     }`}
-                  />
-                  {isFavorite(item.id) ? "Unfavorite" : "Favorite"}
-                </Button>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      className="bg-white/90 hover:bg-white text-gray-800 backdrop-blur-sm"
-                    >
-                      <MoreVertical className="w-4 h-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="bg-gray-800 border-gray-700 text-white">
-                    <DropdownMenuItem
-                      onClick={() => handleDelete(item.id)}
-                      className="text-red-400 hover:bg-gray-700 focus:bg-gray-700"
-                    >
-                      <Trash2 className="w-4 h-4 mr-2" />
-                      Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                  >
+                    <Heart
+                      className={`w-4 h-4 mr-1 ${
+                        isFavorite(item.id) ? "fill-current" : ""
+                      }`}
+                    />
+                    {isFavorite(item.id) ? "Unfavorite" : "Favorite"}
+                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className="bg-white/90 hover:bg-white text-gray-800 backdrop-blur-sm"
+                      >
+                        <MoreVertical className="w-4 h-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="bg-gray-800 border-gray-700 text-white">
+                      <DropdownMenuItem
+                        onClick={() => handleDelete(item.id)}
+                        className="text-red-400 hover:bg-gray-700 focus:bg-gray-700"
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Favorite indicator */}
-          {isFavorite(item.id) && (
-            <div className="absolute top-2 right-2">
-              <div className="bg-red-500 rounded-full p-1">
-                <Heart className="w-4 h-4 text-white fill-current" />
+            {/* Favorite indicator */}
+            {isFavorite(item.id) && (
+              <div className="absolute top-2 right-2">
+                <div className="bg-red-500 rounded-full p-1">
+                  <Heart className="w-4 h-4 text-white fill-current" />
+                </div>
               </div>
-            </div>
-          )}
-        </div>
-
-        <CardContent className="p-4">
-          <div className="space-y-2">
-            {item.prompt && (
-              <p className="text-sm text-gray-300 line-clamp-2 leading-relaxed">
-                {item.prompt}
-              </p>
             )}
-            <div className="flex items-center justify-between text-xs text-gray-400">
-              <span className="flex items-center gap-1">
-                <Calendar className="w-3 h-3" />
-                {new Date(item.created_at).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </span>
-              <Badge
-                variant="secondary"
-                className={`text-xs border-0 ${getActivityColor(
-                  item.activity_type || "image_generation"
-                )}`}
-              >
-                <span className="mr-1">
-                  {getActivityIcon(item.activity_type || "image_generation")}
-                </span>
-                {getActivityLabel(item.activity_type || "image_generation")}
-              </Badge>
-            </div>
           </div>
-        </CardContent>
-      </Card>
-    </motion.div>
-  );
+
+          <CardContent className="p-4">
+            <div className="space-y-2">
+              {item.prompt && (
+                <p className="text-sm text-gray-300 line-clamp-2 leading-relaxed">
+                  {item.prompt}
+                </p>
+              )}
+              <div className="flex items-center justify-between text-xs text-gray-400">
+                <span className="flex items-center gap-1">
+                  <Calendar className="w-3 h-3" />
+                  {new Date(item.created_at).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </span>
+                <Badge
+                  variant="secondary"
+                  className={`text-xs border-0 ${getActivityColor(
+                    item.activity_type || "image_generation"
+                  )}`}
+                >
+                  <span className="mr-1">
+                    {getActivityIcon(item.activity_type || "image_generation")}
+                  </span>
+                  {getActivityLabel(item.activity_type || "image_generation")}
+                </Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black">

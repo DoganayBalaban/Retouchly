@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   images: {
     remotePatterns: [
       {
@@ -13,15 +12,16 @@ const nextConfig: NextConfig = {
         hostname: "*.supabase.co",
       },
     ],
-    domains: ["ihccembzdpaowyvpsarm.supabase.co"],
   },
   // Enable standalone output for Docker
   output: "standalone",
+
   // Enable experimental features for better performance
   experimental: {
     optimizeCss: true,
   },
-  // Configure headers for better caching
+
+  // Configure headers for better caching and security
   async headers() {
     return [
       {
