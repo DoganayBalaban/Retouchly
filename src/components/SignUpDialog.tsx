@@ -40,8 +40,23 @@ const SignUpDialog = () => {
     setLoading(false);
 
     if (error) {
-      toast.error("An error occurred during registration.");
+      // Eğer email zaten kullanılıyorsa
+      if (
+        error.message.includes("already registered") ||
+        error.message.includes("User already registered")
+      ) {
+        toast.error("Bu email adresi zaten kayıtlı. Lütfen giriş yapın.");
+      } else {
+        toast.error("Kayıt sırasında bir hata oluştu.");
+      }
       console.error("Sign Up Error:", error.message);
+    } else if (
+      data.user &&
+      data.user.identities &&
+      data.user.identities.length === 0
+    ) {
+      // Supabase güvenlik için hata vermez ama identities boş gelirse email zaten kayıtlı demektir
+      toast.error("Bu email adresi zaten kayıtlı. Lütfen giriş yapın.");
     } else {
       // Dialog'u kapat ve doğrulama sayfasına yönlendir
       setOpen(false);
