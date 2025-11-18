@@ -21,6 +21,9 @@ const nextConfig: NextConfig = {
     optimizeCss: true,
   },
 
+  // External packages that should not be bundled
+  serverExternalPackages: ["iyzipay"],
+
   // Configure headers for better caching and security
   async headers() {
     return [
