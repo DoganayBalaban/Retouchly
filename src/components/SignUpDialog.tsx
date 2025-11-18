@@ -19,6 +19,7 @@ import toast from "react-hot-toast";
 
 const SignUpDialog = () => {
   const router = useRouter();
+  const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -42,7 +43,9 @@ const SignUpDialog = () => {
       toast.error("An error occurred during registration.");
       console.error("Sign Up Error:", error.message);
     } else {
-      toast.success("Registration successful! Check your email.");
+      // Dialog'u kapat ve doğrulama sayfasına yönlendir
+      setOpen(false);
+      router.push(`/auth/verify-email?email=${encodeURIComponent(email)}`);
     }
   };
 
@@ -61,7 +64,7 @@ const SignUpDialog = () => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="default">Sign Up</Button>
       </DialogTrigger>

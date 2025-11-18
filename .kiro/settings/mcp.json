@@ -10,7 +10,8 @@
       ],
       "disabled": false,
       "autoApprove": [
-        "list_tables"
+        "list_tables",
+        "execute_sql"
       ]
     }
   }
