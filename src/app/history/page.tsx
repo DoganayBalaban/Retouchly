@@ -1,51 +1,49 @@
 "use client";
-import * as motion from "motion/react-client";
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
-import { useRouter } from "next/navigation";
-import {
-  Loader,
-  Settings,
-  Download,
-  Heart,
-  Trash2,
-  Grid3X3,
-  List,
-  Search,
-  Filter,
-  Calendar,
-  Image as ImageIcon,
-  Star,
-  MoreVertical,
-  Sparkles,
-  Scissors,
-  Smile,
-  Share2,
-  Globe,
-  Lock,
-} from "lucide-react";
-import {
-  getUserGeneratedImages,
-  deleteUserGeneratedImage,
-  addFavorite,
-  removeFavorite,
-  getUserFavorites,
-} from "../actions/userImages/getUserGeneratedImages";
-import { toggleImagePublicClient } from "../actions/community-actions-client";
-import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/lib/supabase";
+import {
+  Calendar,
+  Download,
+  Filter,
+  Globe,
+  Grid3X3,
+  Heart,
+  Image as ImageIcon,
+  List,
+  Loader,
+  Lock,
+  MoreVertical,
+  Scissors,
+  Search,
+  Smile,
+  Sparkles,
+  Star,
+  Trash2,
+  Volume2,
+} from "lucide-react";
+import * as motion from "motion/react-client";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { toggleImagePublicClient } from "../actions/community-actions-client";
+import {
+  addFavorite,
+  deleteUserGeneratedImage,
+  getUserFavorites,
+  getUserGeneratedImages,
+  removeFavorite,
+} from "../actions/userImages/getUserGeneratedImages";
 
 // Activity tiplerini gösterecek yardımcı fonksiyonlar
 const getActivityIcon = (type: string) => {
@@ -58,6 +56,8 @@ const getActivityIcon = (type: string) => {
       return <Scissors className="w-4 h-4" />;
     case "image_overlay":
       return <Smile className="w-4 h-4" />;
+    case "voice_generation":
+      return <Volume2 className="w-4 h-4" />;
     default:
       return <ImageIcon className="w-4 h-4" />;
   }
@@ -73,6 +73,8 @@ const getActivityLabel = (type: string) => {
       return "Background Removed";
     case "image_overlay":
       return "Overlay Added";
+    case "voice_generation":
+      return "AI Voice";
     default:
       return "AI Processed";
   }
@@ -88,6 +90,8 @@ const getActivityColor = (type: string) => {
       return "bg-purple-100 text-purple-800";
     case "image_overlay":
       return "bg-orange-100 text-orange-800";
+    case "voice_generation":
+      return "bg-teal-100 text-teal-800";
     default:
       return "bg-gray-100 text-gray-800";
   }
@@ -102,7 +106,7 @@ export default function HistoryPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [sortBy, setSortBy] = useState<"newest" | "oldest" | "prompt">(
-    "newest"
+    "newest",
   );
 
   const router = useRouter();
@@ -186,11 +190,11 @@ export default function HistoryPage() {
       if (isDeleted) {
         toast.success("Image deleted");
         setData((prevData: any) =>
-          prevData.filter((item: any) => item.id !== imageId)
+          prevData.filter((item: any) => item.id !== imageId),
         );
         // Favorilerden de kaldır
         setFavorites((prev: any) =>
-          prev.filter((fav: any) => fav.generated_images?.id !== imageId)
+          prev.filter((fav: any) => fav.generated_images?.id !== imageId),
         );
       } else {
         toast.error("An error occurred while deleting the image");
@@ -256,7 +260,7 @@ export default function HistoryPage() {
     try {
       await removeFavorite(user.id, imageId);
       setFavorites((prev: any) =>
-        prev.filter((fav: any) => fav.generated_images?.id !== imageId)
+        prev.filter((fav: any) => fav.generated_images?.id !== imageId),
       );
       toast.success("Removed from favorites");
     } catch (error) {
@@ -271,7 +275,7 @@ export default function HistoryPage() {
     return favorites
       .map((favItem: any) => {
         const imageData = data.find(
-          (item: any) => item.id === favItem.activity_id
+          (item: any) => item.id === favItem.activity_id,
         );
         return imageData;
       })
@@ -316,18 +320,18 @@ export default function HistoryPage() {
       case "newest":
         filtered.sort(
           (a: any, b: any) =>
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
         );
         break;
       case "oldest":
         filtered.sort(
           (a: any, b: any) =>
-            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+            new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
         );
         break;
       case "prompt":
         filtered.sort((a: any, b: any) =>
-          (a.prompt || "").localeCompare(b.prompt || "")
+          (a.prompt || "").localeCompare(b.prompt || ""),
         );
         break;
     }
@@ -358,23 +362,30 @@ export default function HistoryPage() {
         className="group"
       >
         <Card className="py-0! overflow-hidden bg-gray-800/90 backdrop-blur-sm border border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-          <div className="relative aspect-square overflow-hidden">
-            <Image
-              src={imageUrl}
-              alt={item.prompt || "Generated image"}
-              width={500}
-              height={500}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = "/placeholder-image.svg";
-              }}
-              unoptimized={
-                imageUrl.includes("replicate.delivery") ||
-                imageUrl.startsWith("http://") ||
-                imageUrl.startsWith("https://")
-              }
-            />
+          <div className="relative aspect-square overflow-hidden bg-gray-900 flex items-center justify-center">
+            {item.activity_type === "voice_generation" ? (
+              <div className="flex flex-col items-center justify-center h-full w-full gap-4 text-gray-300">
+                <Volume2 className="w-16 h-16 text-blue-400" />
+                <audio controls className="w-5/6" src={imageUrl} />
+              </div>
+            ) : (
+              <Image
+                src={imageUrl}
+                alt={item.prompt || "Generated image"}
+                width={500}
+                height={500}
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = "/placeholder-image.svg";
+                }}
+                unoptimized={
+                  imageUrl.includes("replicate.delivery") ||
+                  imageUrl.startsWith("http://") ||
+                  imageUrl.startsWith("https://")
+                }
+              />
+            )}
 
             {/* Overlay with actions */}
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-end">
@@ -444,7 +455,7 @@ export default function HistoryPage() {
                           const result = await toggleImagePublicClient(
                             item.id,
                             user.id,
-                            !isCurrentlyPublic
+                            !isCurrentlyPublic,
                           );
 
                           if (result.success) {
@@ -452,13 +463,13 @@ export default function HistoryPage() {
                               prevData.map((img: any) =>
                                 img.id === item.id
                                   ? { ...img, is_public: !isCurrentlyPublic }
-                                  : img
-                              )
+                                  : img,
+                              ),
                             );
                             toast.success(
                               isCurrentlyPublic
                                 ? "Image removed from community"
-                                : "Image shared to community!"
+                                : "Image shared to community!",
                             );
                           } else {
                             toast.error(result.error || "Failed to update");
@@ -530,7 +541,7 @@ export default function HistoryPage() {
                 <Badge
                   variant="secondary"
                   className={`text-xs border-0 ${getActivityColor(
-                    item.activity_type || "image_generation"
+                    item.activity_type || "image_generation",
                   )}`}
                 >
                   <span className="mr-1">
@@ -646,8 +657,8 @@ export default function HistoryPage() {
                   {sortBy === "newest"
                     ? "Newest"
                     : sortBy === "oldest"
-                    ? "Oldest"
-                    : "Prompt"}
+                      ? "Oldest"
+                      : "Prompt"}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-gray-800 border-gray-700 text-white">
@@ -742,7 +753,7 @@ export default function HistoryPage() {
                     }`}
                   >
                     {filteredFavorites.map((item: any, index: number) =>
-                      renderImageCard(item, index)
+                      renderImageCard(item, index),
                     )}
                   </div>
                 )}
@@ -784,7 +795,7 @@ export default function HistoryPage() {
                     }`}
                   >
                     {filteredData.map((item: any, index: number) =>
-                      renderImageCard(item, index)
+                      renderImageCard(item, index),
                     )}
                   </div>
                 )}

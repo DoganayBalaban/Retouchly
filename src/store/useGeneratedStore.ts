@@ -1,12 +1,13 @@
-import { create } from "zustand";
-import { z } from "zod";
-import { imageFormSchema } from "@/components/image-generation/Configurations";
-import { generateImages } from "@/app/actions/image-actions";
 import { removeBackground } from "@/app/actions/background-actions";
-import { restoreFace } from "@/app/actions/restore-actions";
+import { generateImages } from "@/app/actions/image-actions";
 import { editImageWithAI } from "@/app/actions/image-edit-actions";
-import { supabase } from "@/lib/supabase";
+import { restoreFace } from "@/app/actions/restore-actions";
 import { saveImagesToBucket } from "@/app/actions/savedImages";
+import { generateSpeechWithAI } from "@/app/actions/voice-actions";
+import { imageFormSchema } from "@/components/image-generation/Configurations";
+import { supabase } from "@/lib/supabase";
+import { z } from "zod";
+import { create } from "zustand";
 interface Overlay {
   id: string;
   type: "emoji" | "sticker" | "text";
@@ -25,6 +26,7 @@ interface GeneratedStore {
   originalFaceImage: string | null;
   editedImage: string | null;
   originalEditImage: string | null;
+  generatedAudio: string | null;
   error: string | null;
   // Overlay states
   uploadedImage: string | null;
@@ -50,6 +52,11 @@ interface GeneratedStore {
     output_format?: "jpg" | "png" | "webp";
   }) => Promise<string | null>;
   setOriginalEditImage: (url: string | null) => void;
+  generateSpeech: (input: {
+    text: string;
+    voice?: string;
+    speed?: number;
+  }) => Promise<string | null>;
   // Overlay actions
   setUploadedImage: (url: string | null) => void;
   addOverlay: (overlay: Omit<Overlay, "id">) => void;
@@ -70,6 +77,7 @@ const useGeneratedStore = create<GeneratedStore>((set, get) => ({
   originalFaceImage: null,
   editedImage: null,
   originalEditImage: null,
+  generatedAudio: null,
   error: null,
   // Overlay states
   uploadedImage: null,
@@ -180,6 +188,31 @@ const useGeneratedStore = create<GeneratedStore>((set, get) => ({
   setOriginalEditImage: (url: string | null) => {
     set({ originalEditImage: url });
   },
+  generateSpeech: async (input: {
+    text: string;
+    voice?: string;
+    speed?: number;
+  }) => {
+    set({ loading: true, error: null, generatedAudio: null });
+    try {
+      const { error, success, data } = await generateSpeechWithAI(input);
+      console.log("generateSpeech", data);
+      if (!success || typeof data !== "string") {
+        set({
+          loading: false,
+          error: error || "Generated audio URL is missing",
+        });
+        return null;
+      }
+
+      set({ loading: false, generatedAudio: data });
+      return data;
+    } catch (error) {
+      console.error("Voice generation error:", error);
+      set({ loading: false, error: (error as Error).message });
+      return null;
+    }
+  },
 
   // Overlay actions
   setUploadedImage: (url: string | null) => {
@@ -195,7 +228,7 @@ const useGeneratedStore = create<GeneratedStore>((set, get) => ({
   updateOverlay: (id: string, updates: Partial<Overlay>) => {
     set((state) => ({
       overlays: state.overlays.map((overlay) =>
-        overlay.id === id ? { ...overlay, ...updates } : overlay
+        overlay.id === id ? { ...overlay, ...updates } : overlay,
       ),
     }));
   },

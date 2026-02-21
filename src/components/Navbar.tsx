@@ -1,15 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { LogOut, Menu, History } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
-import type { User } from "@supabase/supabase-js";
-import SignUpDialog from "./SignUpDialog";
-import SignInDialog from "./SignInDialog";
-import toast from "react-hot-toast";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -18,22 +17,23 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { Button } from "@/components/ui/button";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetTrigger,
-  SheetClose,
 } from "@/components/ui/sheet";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { supabase } from "@/lib/supabase";
+import type { User } from "@supabase/supabase-js";
+import { History, LogOut, Menu } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import SignInDialog from "./SignInDialog";
+import SignUpDialog from "./SignUpDialog";
 
 const Navbar = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -44,7 +44,7 @@ const Navbar = () => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setUser(session?.user ?? null);
-      }
+      },
     );
     return () => {
       authListener.subscription.unsubscribe();
@@ -79,6 +79,7 @@ const Navbar = () => {
     { name: "Face Restoration", href: "/face-restoration" },
     { name: "Background Remover", href: "/background-remover" },
     { name: "Image Editor", href: "/image-overlay" },
+    { name: "Text to Speech", href: "/text-to-speech" },
   ];
 
   return (

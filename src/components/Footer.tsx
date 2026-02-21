@@ -1,7 +1,6 @@
-import React from "react";
-import Link from "next/link";
+import { Github, Mail, Twitter } from "lucide-react";
 import Image from "next/image";
-import { Github, Twitter, Mail } from "lucide-react";
+import Link from "next/link";
 
 const toolLinks = [
   {
@@ -19,6 +18,10 @@ const toolLinks = [
   {
     title: "Image Editor",
     href: "/image-overlay",
+  },
+  {
+    title: "Text to Speech",
+    href: "/text-to-speech",
   },
 ];
 
