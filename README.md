@@ -64,9 +64,11 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://retouchly-omega.vercel.app/)
+![Retouchly Demo](public/readme/main.gif)
 
-_(Gelecekte buraya uygulamanın genel bir GIF'i veya daha fazla ekran görüntüsü eklenecektir.)_
+### Ana Ekran
+
+![Main Page](public/readme/retouchly-mainpage-ss.png)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -135,6 +137,8 @@ Aşağıda proje içerisindeki temel Server Actions ve API uç noktaları listel
 | :-------- | :------- | :--------------------------------------------------- |
 | `image`   | `string` | Arkaplan silme modeli için Replicate AI'a istek atar |
 
+![Background Remover](public/readme/retouchly-backgroundremover-ss.png)
+
 #### Görsel üret
 
 ```http
@@ -144,6 +148,8 @@ Aşağıda proje içerisindeki temel Server Actions ve API uç noktaları listel
 | Parametre | Tip      | Açıklama                         |
 | :-------- | :------- | :------------------------------- |
 | `image`   | `string` | Görsel üretmek için istek yapar. |
+
+![Image Generator](public/readme/retouchly-imagegenerate-ss.png)
 
 #### Görsel iyileştir
 
@@ -155,6 +161,8 @@ Aşağıda proje içerisindeki temel Server Actions ve API uç noktaları listel
 | :-------- | :------- | :--------------------------- |
 | `image`   | `string` | Bulanık görseli netleştirir. |
 
+![Face Restoration](public/readme/retouchly-faceresterasion-ss.png)
+
 #### Kaydedilen görüntüleri getir
 
 ```http
@@ -164,6 +172,8 @@ Aşağıda proje içerisindeki temel Server Actions ve API uç noktaları listel
 | Parametre | Tip      | Açıklama                       |
 | :-------- | :------- | :----------------------------- |
 | `image`   | `string` | Üretilen görüntüleri kaydeder. |
+
+![Image Editor](public/readme/retouchly-imageeditor-ss.png)
 
 #### Kullanıcının oluşturduğu görüntüleri getir
 
@@ -175,7 +185,15 @@ Aşağıda proje içerisindeki temel Server Actions ve API uç noktaları listel
 | :-------- | :------- | :---------------------------------------------------- |
 | `image`   | `string` | Belirli kullanıcının oluşturduğu görüntüleri getirir. |
 
-_(Buraya gelecekte API ve Araç kullanımları ile ilgili GIF'ler / Ekran görüntüleri gelebilir: [PLACEHOLDER-FOR-GIF])_
+![History](public/readme/retouchly-history-ss.png)
+
+#### Ekran Görüntüleri
+
+**Keşfet (Explore)**
+![Explore](public/readme/retouchly-explore-ss.png)
+
+**Fiyatlandırma (Pricing)**
+![Pricing](public/readme/retouchly-pricing-ss.png)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

@@ -6,6 +6,7 @@ import { saveImagesToBucket } from "@/app/actions/savedImages";
 import { generateSpeechWithAI } from "@/app/actions/voice-actions";
 import { imageFormSchema } from "@/components/image-generation/Configurations";
 import { supabase } from "@/lib/supabase";
+import toast from "react-hot-toast";
 import { z } from "zod";
 import { create } from "zustand";
 interface Overlay {
@@ -194,10 +195,23 @@ const useGeneratedStore = create<GeneratedStore>((set, get) => ({
     speed?: number;
   }) => {
     set({ loading: true, error: null, generatedAudio: null });
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    
+    if (!user?.id) {
+      toast.error("Kullanıcı oturumu bulunamadı.");
+      set({ loading: false, error: "Kullanıcı oturumu bulunamadı." });
+      return null;
+    }
+
     try {
       const { error, success, data } = await generateSpeechWithAI(input);
-      console.log("generateSpeech", data);
-      if (!success || typeof data !== "string") {
+      console.log("generateSpeech", data, error);
+      
+      if (!success || typeof data !== "string" || !data) {
+        toast.error(error || "Ses üretilirken hata oluştu.");
         set({
           loading: false,
           error: error || "Generated audio URL is missing",
@@ -205,10 +219,31 @@ const useGeneratedStore = create<GeneratedStore>((set, get) => ({
         return null;
       }
 
+      // Save to user_activities right away
+      const { error: insertError } = await supabase
+        .from("user_activities")
+        .insert({
+          user_id: user.id,
+          activity_type: "voice_generation",
+          prompt: input.text,
+          image_url: String(data),
+          metadata: {
+            voice: input.voice || "af_nicole",
+            speed: input.speed || 1,
+          },
+        });
+
+      if (insertError) {
+        console.error("Error saving activity:", insertError);
+      } else {
+        toast.success("Ses başarıyla üretildi!");
+      }
+
       set({ loading: false, generatedAudio: data });
       return data;
     } catch (error) {
       console.error("Voice generation error:", error);
+      toast.error((error as Error).message || "Bilinmeyen bir hata oluştu");
       set({ loading: false, error: (error as Error).message });
       return null;
     }
