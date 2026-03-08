@@ -1,48 +1,49 @@
 "use client";
 
-import * as motion from "motion/react-client";
-import { useEffect, useState, useCallback } from "react";
-import { supabase } from "@/lib/supabase";
-import Image from "next/image";
-import {
-  Heart,
-  Download,
-  Share2,
-  Filter,
-  TrendingUp,
-  Clock,
-  Sparkles,
-  Scissors,
-  Smile,
-  ImageIcon,
-  Loader,
-  Search,
-  Users,
-  Eye,
-  X,
-  Copy,
-  Link2,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import {
+  checkIfLikedClient,
+  likeImageClient,
+  unlikeImageClient,
+} from "@/lib/community-client";
+import { supabase } from "@/lib/supabase";
+import {
+  Clock,
+  Copy,
+  Download,
+  Eye,
+  Filter,
+  Heart,
+  ImageIcon,
+  Link2,
+  Loader,
+  Scissors,
+  Search,
+  Share2,
+  Smile,
+  Sparkles,
+  TrendingUp,
+  X,
+} from "lucide-react";
+import * as motion from "motion/react-client";
+import Image from "next/image";
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import {
   getCommunityImages,
   incrementDownloadCount,
 } from "../actions/community-actions";
-import {
-  likeImageClient,
-  unlikeImageClient,
-  checkIfLikedClient,
-} from "@/lib/community-client";
-import toast from "react-hot-toast";
 
 // Activity icons and labels
 const getActivityIcon = (type: string) => {
@@ -121,7 +122,7 @@ export default function ExplorePage() {
     "newest" | "most_liked" | "most_downloaded"
   >("newest");
   const [activityType, setActivityType] = useState<string | undefined>(
-    undefined
+    undefined,
   );
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedImage, setSelectedImage] = useState<any>(null);
@@ -193,7 +194,7 @@ export default function ExplorePage() {
         setLoading(false);
       }
     },
-    [sortBy, activityType]
+    [sortBy, activityType],
   );
 
   useEffect(() => {
@@ -231,8 +232,8 @@ export default function ExplorePage() {
           prev.map((img) =>
             img.id === imageId
               ? { ...img, like_count: Math.max(0, (img.like_count || 0) - 1) }
-              : img
-          )
+              : img,
+          ),
         );
         // Update selected image if it's the same
         if (selectedImage?.id === imageId) {
@@ -253,8 +254,8 @@ export default function ExplorePage() {
           prev.map((img) =>
             img.id === imageId
               ? { ...img, like_count: (img.like_count || 0) + 1 }
-              : img
-          )
+              : img,
+          ),
         );
         // Update selected image if it's the same
         if (selectedImage?.id === imageId) {
@@ -302,8 +303,8 @@ export default function ExplorePage() {
         prev.map((img) =>
           img.id === imageId
             ? { ...img, download_count: (img.download_count || 0) + 1 }
-            : img
-        )
+            : img,
+        ),
       );
       // Update selected image if it's the same
       if (selectedImage?.id === imageId) {
@@ -349,32 +350,32 @@ export default function ExplorePage() {
     switch (platform) {
       case "twitter":
         shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-          text
+          text,
         )}&url=${encodeURIComponent(url)}`;
         break;
       case "facebook":
         shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-          url
+          url,
         )}`;
         break;
       case "linkedin":
         shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-          url
+          url,
         )}`;
         break;
       case "whatsapp":
         shareUrl = `https://wa.me/?text=${encodeURIComponent(
-          text + " " + url
+          text + " " + url,
         )}`;
         break;
       case "telegram":
         shareUrl = `https://t.me/share/url?url=${encodeURIComponent(
-          url
+          url,
         )}&text=${encodeURIComponent(text)}`;
         break;
       case "reddit":
         shareUrl = `https://reddit.com/submit?url=${encodeURIComponent(
-          url
+          url,
         )}&title=${encodeURIComponent(text)}`;
         break;
     }
@@ -487,7 +488,7 @@ export default function ExplorePage() {
               <Badge
                 variant="secondary"
                 className={`text-xs border ${getActivityColor(
-                  item.activity_type || "image_generation"
+                  item.activity_type || "image_generation",
                 )}`}
               >
                 <span className="mr-1">
@@ -508,14 +509,25 @@ export default function ExplorePage() {
 
               {/* User info */}
               {profile && (
-                <div className="flex items-center gap-2 text-xs text-gray-400">
-                  <Users className="w-3 h-3" />
+                <Link
+                  href={`/profile/${item.user_id}`}
+                  className="flex items-center gap-2 text-xs text-gray-400 hover:text-blue-400 transition-colors w-fit"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Avatar className="w-5 h-5 border border-gray-700">
+                    <AvatarImage src={profile?.avatar_url} />
+                    <AvatarFallback className="bg-gray-800 text-[10px]">
+                      {(profile.full_name || profile.email || "A")
+                        .substring(0, 1)
+                        .toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
                   <span>
                     {profile.full_name ||
                       profile.email?.split("@")[0] ||
                       "Anonymous"}
                   </span>
-                </div>
+                </Link>
               )}
 
               {/* Stats */}
@@ -642,8 +654,8 @@ export default function ExplorePage() {
                   {sortBy === "newest"
                     ? "Newest"
                     : sortBy === "most_liked"
-                    ? "Most Liked"
-                    : "Most Downloaded"}
+                      ? "Most Liked"
+                      : "Most Downloaded"}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-gray-800 border-gray-700 text-white">
@@ -707,7 +719,7 @@ export default function ExplorePage() {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {filteredImages.map((item: any, index: number) =>
-                  renderImageCard(item, index)
+                  renderImageCard(item, index),
                 )}
               </div>
             )}
@@ -767,28 +779,43 @@ export default function ExplorePage() {
                     {selectedImage.prompt || "Community Image"}
                   </h2>
                   <div className="text-gray-400 flex items-center gap-2">
-                    <Users className="w-4 h-4" />
+                    <Avatar className="w-6 h-6 border border-gray-700">
+                      <AvatarImage src={selectedImage.profiles?.avatar_url} />
+                      <AvatarFallback className="bg-gray-800 text-xs">
+                        {(
+                          selectedImage.profiles?.full_name ||
+                          selectedImage.profiles?.email ||
+                          "A"
+                        )
+                          .substring(0, 1)
+                          .toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
                     <span>Created by</span>
-                    <span className="font-medium text-gray-300">
+                    <Link
+                      href={`/profile/${selectedImage.user_id}`}
+                      className="font-medium text-gray-300 hover:text-blue-400 transition-colors"
+                      onClick={() => setImageDialogOpen(false)}
+                    >
                       {selectedImage.profiles?.full_name ||
                         selectedImage.profiles?.email?.split("@")[0] ||
                         "Anonymous"}
-                    </span>
+                    </Link>
                   </div>
                 </div>
                 <Badge
                   variant="secondary"
                   className={`text-sm border ${getActivityColor(
-                    selectedImage.activity_type || "image_generation"
+                    selectedImage.activity_type || "image_generation",
                   )}`}
                 >
                   <span className="mr-1">
                     {getActivityIcon(
-                      selectedImage.activity_type || "image_generation"
+                      selectedImage.activity_type || "image_generation",
                     )}
                   </span>
                   {getActivityLabel(
-                    selectedImage.activity_type || "image_generation"
+                    selectedImage.activity_type || "image_generation",
                   )}
                 </Badge>
               </div>
@@ -835,7 +862,7 @@ export default function ExplorePage() {
                           month: "short",
                           day: "numeric",
                           year: "numeric",
-                        }
+                        },
                       )}
                     </span>
                   </span>

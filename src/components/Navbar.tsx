@@ -26,7 +26,7 @@ import {
 import { useIsMobile } from "@/hooks/use-mobile";
 import { supabase } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
-import { History, LogOut, Menu } from "lucide-react";
+import { History, LayoutDashboard, LogOut, Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -110,6 +110,14 @@ const Navbar = () => {
                   </Link>
 
                   <nav className="flex flex-col gap-2">
+                    {user && (
+                      <Link
+                        href="/dashboard"
+                        className="px-3 py-2 hover:bg-white/10 rounded-md text-sm font-medium transition-colors flex items-center gap-2"
+                      >
+                        Dashboard
+                      </Link>
+                    )}
                     <Link
                       href="/explore"
                       className="px-3 py-2 hover:bg-white/10 rounded-md text-sm font-medium transition-colors"
@@ -227,7 +235,10 @@ const Navbar = () => {
         ) : (
           /* Desktop Navigation */
           <>
-            <Link href="/" className="flex items-center gap-3 group">
+            <Link
+              href={user ? "/dashboard" : "/"}
+              className="flex items-center gap-3 group"
+            >
               <Image
                 src="/logo2.png"
                 alt="logo"
@@ -243,6 +254,16 @@ const Navbar = () => {
             <div className="flex items-center gap-6">
               <NavigationMenu>
                 <NavigationMenuList className="gap-2">
+                  {user && (
+                    <NavigationMenuItem>
+                      <NavigationMenuLink
+                        className="px-4 py-2 text-sm font-medium text-white/90 hover:text-white transition-colors rounded-md hover:bg-white/10 flex items-center gap-1.5"
+                        asChild
+                      >
+                        <Link href="/dashboard">Dashboard</Link>
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+                  )}
                   <NavigationMenuItem>
                     <NavigationMenuLink
                       className="px-4 py-2 text-sm font-medium text-white/90 hover:text-white transition-colors rounded-md hover:bg-white/10"
@@ -319,6 +340,18 @@ const Navbar = () => {
                       </p>
                     </div>
                     <DropdownMenuSeparator className="bg-white/10" />
+                    <DropdownMenuItem
+                      asChild
+                      className="cursor-pointer hover:bg-white/10 focus:bg-white/10"
+                    >
+                      <Link
+                        href="/dashboard"
+                        className="flex items-center gap-2"
+                      >
+                        <LayoutDashboard size={16} />
+                        Dashboard
+                      </Link>
+                    </DropdownMenuItem>
                     <DropdownMenuItem
                       asChild
                       className="cursor-pointer hover:bg-white/10 focus:bg-white/10"

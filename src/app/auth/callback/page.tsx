@@ -1,11 +1,11 @@
 // app/auth/callback/page.tsx
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 // Supabase will be imported dynamically
-import toast from "react-hot-toast";
 import { Loader } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function AuthCallbackPage() {
   const router = useRouter();
@@ -21,7 +21,7 @@ export default function AuthCallbackPage() {
       } else {
         toast.success("Giriş başarılı!");
         router.refresh(); // Navbar güncellensin
-        router.push("/");
+        router.push("/dashboard");
       }
     };
 

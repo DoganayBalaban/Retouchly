@@ -1,11 +1,11 @@
 "use client";
-import { HeroGeometric } from "@/components/ui/shape-landing-hero";
-import ImageShowcase from "../components/ImageShowcase";
+import StatsSection from "@/components/StatsSections";
 import Testimonials from "@/components/testimonials";
+import { HeroGeometric } from "@/components/ui/shape-landing-hero";
+import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
-import StatsSection from "@/components/StatsSections";
+import ImageShowcase from "../components/ImageShowcase";
 const page = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
@@ -18,6 +18,8 @@ const page = () => {
         console.error(error);
       } else {
         setUser(data.user);
+        router.push("/dashboard");
+        return;
       }
       setLoading(false);
     }

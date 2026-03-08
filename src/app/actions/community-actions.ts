@@ -6,10 +6,17 @@ import { supabase } from "@/lib/supabase";
 export async function getCommunityImages(options: {
   sortBy?: "newest" | "most_liked" | "most_downloaded";
   activityType?: string;
+  userId?: string;
   limit?: number;
   offset?: number;
 }) {
-  const { sortBy = "newest", activityType, limit = 50, offset = 0 } = options;
+  const {
+    sortBy = "newest",
+    activityType,
+    userId,
+    limit = 50,
+    offset = 0,
+  } = options;
 
   let query = supabase
     .from("user_activities")
@@ -17,10 +24,15 @@ export async function getCommunityImages(options: {
       `
       *
     `,
-      { count: "exact" }
+      { count: "exact" },
     )
     .eq("is_public", true)
     .range(offset, offset + limit - 1);
+
+  // Filter by user ID if provided
+  if (userId) {
+    query = query.eq("user_id", userId);
+  }
 
   // Filter by activity type if provided
   if (activityType) {
@@ -53,7 +65,7 @@ export async function getCommunityImages(options: {
     const userIds = [...new Set(data.map((item: any) => item.user_id))];
     const { data: profiles } = await supabase
       .from("profiles")
-      .select("id, full_name, email")
+      .select("id, full_name, email, avatar_url")
       .in("id", userIds);
 
     // Merge profiles with activities
@@ -72,7 +84,7 @@ export async function getCommunityImages(options: {
 export async function toggleImagePublic(
   activityId: string,
   userId: string,
-  isPublic: boolean
+  isPublic: boolean,
 ) {
   try {
     console.log("toggleImagePublic called:", { activityId, userId, isPublic });
@@ -260,7 +272,7 @@ export async function unlikeImage(activityId: string, userId: string) {
 // Check if user has liked an image
 export async function checkIfLiked(
   activityId: string,
-  userId: string
+  userId: string,
 ): Promise<boolean> {
   const { data, error } = await supabase
     .from("community_likes")
@@ -318,10 +330,11 @@ export async function getUserLikedImages(userId: string) {
         profiles:user_id (
           id,
           full_name,
-          email
+          email,
+          avatar_url
         )
       )
-    `
+    `,
     )
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
@@ -338,4 +351,53 @@ export async function getUserLikedImages(userId: string) {
         .filter((item: any) => item && item.is_public) || [],
     error: null,
   };
+}
+
+// Get public profile info
+export async function getPublicProfile(userId: string) {
+  try {
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("id, full_name, email, avatar_url")
+      .eq("id", userId)
+      .maybeSingle();
+
+    if (profileError) {
+      console.error("Error fetching profile:", profileError);
+      return { data: null, error: profileError.message };
+    }
+
+    if (!profile) {
+      return { data: null, error: "Profile not found" };
+    }
+
+    // Get stats (total public images and total likes received on them)
+    const { data: activities, error: statsError } = await supabase
+      .from("user_activities")
+      .select("like_count")
+      .eq("user_id", userId)
+      .eq("is_public", true);
+
+    if (statsError) {
+      console.error("Error fetching profile stats:", statsError);
+    }
+
+    const totalPublicImages = activities?.length || 0;
+    const totalLikesReceived =
+      activities?.reduce((sum, item) => sum + (item.like_count || 0), 0) || 0;
+
+    return {
+      data: {
+        ...profile,
+        stats: {
+          totalPublicImages,
+          totalLikesReceived,
+        },
+      },
+      error: null,
+    };
+  } catch (error: any) {
+    console.error("Unexpected error in getPublicProfile:", error);
+    return { data: null, error: error.message || "Unknown error" };
+  }
 }

@@ -1,19 +1,19 @@
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
-  DialogTrigger,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
+  DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Loader } from "lucide-react";
-import { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import toast from "react-hot-toast";
 
 const SignInDialog = () => {
@@ -35,7 +35,7 @@ const SignInDialog = () => {
     } else {
       toast.success("Sign in successful!");
       router.refresh(); // Navbar güncellensin
-      router.push("/");
+      router.push("/dashboard");
     }
   };
 
